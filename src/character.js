@@ -39,6 +39,15 @@ export default class Character {
         return Math.pow(part1 + part2, 0.5);
     }
 
+    getUnitVector() {
+        let part1 = this.goal.x - this.position.x
+        let part2 = this.goal.y - this.position.y
+        let magnitude = Math.pow(Math.pow(part1, 2) + Math.pow(part2, 2), 0.5);
+
+        return {x: part1/magnitude,
+                y: part2/magnitude};
+    }
+
     getClosestEnemy(charactersList) {
         let closest;
         let closestDist = 999999;
@@ -58,9 +67,21 @@ export default class Character {
             this.goal = character.getPos();
         }
         else {
-            console.log("YEEEEEEEEEEEEEEEEEEET");
+            console.log("deez nuts");
         }
         
+    }
+
+    isTouching(charactersList) {
+        for (var i = 0; i< charactersList.length; i++) {
+            let pos = charactersList[i].getPos();
+            console.log(this.position)
+            console.log(pos);
+            if (this.position.x < pos.x + this.width && this.position.x + this.width > pos.x && this.position.y + this.height > pos.y && this.position.y < pos.y + this.height && this.position.x != pos.x) {
+                return true;
+            }
+        }
+        return false;
     }
 
     move(charactersList) {
@@ -71,23 +92,36 @@ export default class Character {
 
         // checking to see if distance to goal == 0
         if (d1 != 0 && d2 != 0) {
-            this.vx = (d1) / Math.abs(d1);
-            this.vy = (d2) / Math.abs(d2);
+            let unitVector = this.getUnitVector();
+            this.vx = unitVector.x;
+            this.vy = unitVector.y;
         }
         
 
-        console.log(this.goal.x, this.position.x, this.goal.y, this.position.y, this.name);
-        console.log(this.vx, this.vy);
+        //console.log(this.goal.x, this.position.x, this.goal.y, this.position.y, this.name);
+        //console.log(this.vx, this.vy);
 
+        let touching = this.isTouching(charactersList);
 
-        if (this.position.x > 0 && this.position.x < 920) {
-            this.position.x += this.vx;
+        if (!touching) {
+            
+            if (this.position.x > 1 && this.position.x < 919) {
+                this.position.x += this.vx;
+            }
+            
+    
+            if (this.position.y > 1 && this.position.y < 679) {
+                this.position.y += this.vy;
+    
+            }
+            
+        }
+        else {
+            console.log("AHH ITS TOUCHING", this.name);
         }
 
-        if (this.position.y > 0 && this.position.y < 680) {
-            this.position.y += this.vy;
 
-        }
+        
         
     
     }

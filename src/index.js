@@ -22,6 +22,7 @@ function gameLoop(timestamp) {
         characterList[i].move(characterList);
         characterList[i].draw(ctx);
         
+        
     }
     
     requestAnimationFrame(gameLoop);
