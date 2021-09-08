@@ -16,6 +16,9 @@ export default class Character {
         this.goal = 0;
 
         this.position = pos;
+
+        this.knockbacked = false;
+        this.deltaTime = 0;
     }
 
     draw(ctx) {
@@ -74,11 +77,25 @@ export default class Character {
         return closest
     }
 
+    getTime() {
+        return this.deltaTime;
+    }
+
     isDead() {
         if (this.health <= 0) {
             return true;
         }
         return false;
+    }
+
+    isKBed() {
+
+        return this.knockbacked;
+    }
+
+    setKBed(bool) {
+        this.deltaTime = 0;
+        this.knockbacked = bool;
     }
 
     setGoal(character) {
@@ -89,11 +106,11 @@ export default class Character {
             this.goal = {x: this.gameWidth / 2 - this.width / 2,
                         y: this.gameHeight / 2- this.height / 2};
         }
-        
     }
 
     isTouching(charactersList) {
         for (var i = 0; i< charactersList.length; i++) {
+            let char = charactersList[i];
             let pos = charactersList[i].getPos();
             if (this.position.x < pos.x + this.width && this.position.x + this.width > pos.x && this.position.y + this.height > pos.y && this.position.y < pos.y + this.height && this.position.x != pos.x) {
                 return true;
@@ -103,30 +120,44 @@ export default class Character {
     }
 
     keepInside() {
-        if (this.position.x <= 0) {
+        if (this.position.x <= 1) {
             this.position.x = 5;
+            this.vx = 0;
         }
 
-        if (this.position.x >= this.gameWidth - this.width) {
+        if (this.position.x >= this.gameWidth - this.width - 1) {
             this.position.x =  this.gameWidth - this.width - 5;
+            this.vx = 0;
         }
 
-        if (this.position.y <= 0) {
+        if (this.position.y <= 1) {
             this.position.y = 5;
+            this.vy = 0;
         }
 
-        if (this.position.y >= this.gameHeight - this.height) {
+        if (this.position.y >= this.gameHeight - this.height - 1) {
             this.position.y = this.gameHeight - this.height - 5;
+            this.vy = 0;
         }
     }
 
-    bounce() {
-        this.position.x -= (this.vx * 500);
-        this.position.y -= (this.vy * 500);
+    bounce(charactersList, dt) {
+        this.keepInside();
+        let touching = this.isTouching(charactersList);
+
+        if (!touching) {
+            this.vx *= 0.95;
+            this.vy *= 0.95;
+            this.position.x += this.vx;
+            this.position.y += this.vy;
+        }
+        
+
+        this.deltaTime += dt;
 
     }
 
-    move(charactersList) {
+    move(charactersList, deltaTime) {
         //keeps objects inside game play box
         this.keepInside();
 
@@ -140,6 +171,7 @@ export default class Character {
         if (d1 != 0 && d2 != 0) {
             // gets a unit vector to get speed of this object
             let unitVector = this.getUnitVector();
+
             this.vx = unitVector.x;
             this.vy = unitVector.y;
         }
@@ -163,7 +195,15 @@ export default class Character {
             
         }
         else {
-            this.bounce();
+            this.knockbacked = true;
+            this.deltaTime = deltaTime;
+            this.position.x -= (this.vx * 5);
+            this.position.y -= (this.vy * 5);
+
+            this.vx = (this.vx * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1);
+            this.vy = (this.vy * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1);
+            
+
             this.health -= 10;
             console.log("AHH ITS TOUCHING", this.name);
         }

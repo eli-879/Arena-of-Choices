@@ -1,32 +1,42 @@
 import Character from './character.js';
-import InputHandler from './input.js';
 
-let characterSize = 40;
+var frameNumber = 0;
 
 function gameLoop(timestamp) {
 
     let deltaTime = timestamp - lastTime;
     lastTime = timestamp;
+    frameNumber++;
 
 
     ctx.clearRect(0,0, canvas.width, canvas.height);
     
 
     for (var i = 0; i < characterList.length; i++) {
-        characterList[i].update(deltaTime);
-        characterList[i].move(characterList);
+
+        if (characterList[i].isKBed()) {
+            
+            characterList[i].bounce(characterList, deltaTime);
+
+            if (characterList[i].getTime() > 1000) {
+                characterList[i].setKBed(false);
+            }
+
+        }
+        else {
+            characterList[i].move(characterList, deltaTime);
+        }
+
+
         characterList[i].draw(ctx);
+
         if (characterList[i].isDead()) {
             deathList.push(characterList[i].getName());
             characterList.splice(i, 1);
         }
-        
-        
-        
     }
 
     var element = document.getElementById("deathlist");
-    console.log(deathList);
     element.innerHTML = "";
     for (var i = 0; i < deathList.length; i++) {
         element.innerHTML = element.innerHTML + (i+1) + ". " +  deathList[i] + "<br />";
@@ -41,6 +51,18 @@ function getRandomTile(max_tiles) {
     return Math.floor(Math.random() * max_tiles);
 }
 
+function checkXYOverlap(xpos, ypos, characterList) {
+    for (const character of characterList) {
+        if (character.getPos().x == xpos && character.getPos().y == ypos) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
+let characterSize = 40;
 let canvas = document.getElementById("gameScreen");
 canvas.height = 720;
 canvas.width = 960;
@@ -71,8 +93,16 @@ document.getElementById("start").addEventListener("click", function(s) {
     characterList = [];
 
     for (var i = 0; i < names.length; i++) {
-        let xp = getRandomTile(10) * characterSize * 2 + characterSize;
-        let yp = getRandomTile(8) * characterSize * 2 + characterSize;
+        var xp = getRandomTile(10) * characterSize * 2 + characterSize;
+        var yp = getRandomTile(8) * characterSize * 2 + characterSize;
+
+        while (checkXYOverlap(xp, yp, characterList)) {
+            console.log(xp, yp);
+            xp = getRandomTile(10) * characterSize * 2 + characterSize;
+            yp = getRandomTile(8) * characterSize * 2 + characterSize;
+        }
+        
+        
         let pos = {x: xp, 
                     y: yp,};
         let character = new Character(GAME_WIDTH, GAME_HEIGHT, names[i], pos, ctx);
@@ -80,7 +110,9 @@ document.getElementById("start").addEventListener("click", function(s) {
         characterList.push(character);
         
     }
-    console.log(characterList);
+
+    document.getElementById("deathlist").innerHTML = "";
+
 });
 
 
