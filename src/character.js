@@ -19,7 +19,7 @@ export default class Character {
         this.position = pos;
 
         this.knockbacked = false;
-        this.deltaTime = 0;
+        this.time = 0;
     }
 
     draw(ctx) {
@@ -83,7 +83,7 @@ export default class Character {
     }
 
     getTime() {
-        return this.deltaTime;
+        return this.time;
     }
 
     getVX() {
@@ -107,7 +107,7 @@ export default class Character {
     }
 
     setKBed(bool) {
-        this.deltaTime = 0;
+        this.time = 0;
         this.knockbacked = bool;
     }
 
@@ -122,7 +122,7 @@ export default class Character {
     }
 
     setTime(dt) {
-        this.deltaTime = dt;
+        this.time = dt;
     }
 
     setXPos(xp) {
@@ -204,7 +204,7 @@ export default class Character {
         }
         
 
-        this.deltaTime += dt;
+        this.time += dt;
 
     }
 
@@ -240,7 +240,7 @@ export default class Character {
             
     
             if (this.position.y > 0 && this.position.y < this.gameHeight-this.height-1) {
-                this.position.y += this.vy;
+                this.position.y += this.vy ;
     
             }
             
@@ -248,7 +248,7 @@ export default class Character {
         else {
            
             this.knockbacked = true;
-            this.deltaTime = deltaTime;
+            this.time = deltaTime;
             this.position.x -= (this.vx * 10);
             this.position.y -= (this.vy * 10);
 
