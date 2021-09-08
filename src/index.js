@@ -22,13 +22,14 @@ function gameLoop(timestamp) {
         }
         
         
+        
     }
 
     var element = document.getElementById("deathlist");
     console.log(deathList);
     element.innerHTML = "";
-    for (const name of deathList) {
-        element.innerHTML = element.innerHTML + name + "\n";
+    for (var i = 0; i < deathList.length; i++) {
+        element.innerHTML = element.innerHTML + (i+1) + ". " +  deathList[i] + "<br />";
     }
     
     requestAnimationFrame(gameLoop);

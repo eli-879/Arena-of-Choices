@@ -3,7 +3,7 @@ export default class Character {
     constructor(gameWidth, gameHeight, name, pos, ctx) {
         this.gameHeight = gameHeight;
         this.gameWidth = gameWidth;
-        this.health = 20;
+        this.health = 100;
         this.height = 40;
         this.width = 40;
         this.name = name;
@@ -86,7 +86,8 @@ export default class Character {
             this.goal = character.getPos();
         }
         else {
-            console.log("deez nuts");
+            this.goal = {x: this.gameWidth / 2 - this.width / 2,
+                        y: this.gameHeight / 2- this.height / 2};
         }
         
     }
