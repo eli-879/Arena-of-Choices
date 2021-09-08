@@ -17,10 +17,18 @@ function gameLoop(timestamp) {
         characterList[i].move(characterList);
         characterList[i].draw(ctx);
         if (characterList[i].isDead()) {
+            deathList.push(characterList[i].getName());
             characterList.splice(i, 1);
         }
         
         
+    }
+
+    var element = document.getElementById("deathlist");
+    console.log(deathList);
+    element.innerHTML = "";
+    for (const name of deathList) {
+        element.innerHTML = element.innerHTML + name + "\n";
     }
     
     requestAnimationFrame(gameLoop);
@@ -48,6 +56,7 @@ ctx.clearRect(0,0, canvas.width, canvas.height);
 
 let names = [];
 let characterList = [];
+let deathList = [];
 
 
 document.getElementById("start").addEventListener("click", function(s) {

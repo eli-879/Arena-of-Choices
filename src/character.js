@@ -3,7 +3,7 @@ export default class Character {
     constructor(gameWidth, gameHeight, name, pos, ctx) {
         this.gameHeight = gameHeight;
         this.gameWidth = gameWidth;
-        this.health = 100;
+        this.health = 20;
         this.height = 40;
         this.width = 40;
         this.name = name;
@@ -37,6 +37,10 @@ export default class Character {
 
     getPos() {
         return this.position;
+    }
+
+    getName() {
+        return this.name;
     }
 
     getDist(character) {
