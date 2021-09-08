@@ -3,12 +3,7 @@ import InputHandler from './input.js';
 
 let characterSize = 40;
 
-let frameNumber = 0;
-let previousTime = 0;
-
 function gameLoop(timestamp) {
-
-    ++frameNumber;
 
     let deltaTime = timestamp - lastTime;
     lastTime = timestamp;
@@ -21,6 +16,9 @@ function gameLoop(timestamp) {
         characterList[i].update(deltaTime);
         characterList[i].move(characterList);
         characterList[i].draw(ctx);
+        if (characterList[i].isDead()) {
+            characterList.splice(i, 1);
+        }
         
         
     }
@@ -28,9 +26,6 @@ function gameLoop(timestamp) {
     requestAnimationFrame(gameLoop);
 }
 
-function charBehavior(character) {
-    //character.getPos().x += 1;
-}
 
 function getRandomTile(max_tiles) {
     // tile size of 50x50 - 10 up, 16 across
@@ -60,6 +55,7 @@ document.getElementById("start").addEventListener("click", function(s) {
         for (var i = names.length - 1; i > -1; i--) {
             if (names[i].trim() == "") {
                 names.splice(i, 1);
+                
             }
         }
     characterList = [];
