@@ -3,6 +3,7 @@ export default class Character {
     constructor(gameWidth, gameHeight, name, pos, ctx) {
         this.gameHeight = gameHeight;
         this.gameWidth = gameWidth;
+        this.maxHealth = 100;
         this.health = 100;
         this.height = 40;
         this.width = 40;
@@ -30,7 +31,7 @@ export default class Character {
 
     drawHealth(ctx) {
         ctx.fillStyle = "green";
-        ctx.fillRect(this.position.x, this.position.y + this.height + 30, (this.health / 100.0 * this.width), 10);
+        ctx.fillRect(this.position.x, this.position.y + this.height + 30, (this.health / this.maxHealth * this.width), 10);
     }
 
     update(dt) {
@@ -63,22 +64,34 @@ export default class Character {
                 y: part2/magnitude};
     }
 
-    getClosestEnemy(charactersList) {
+    getClosestEnemy(characterList) {
         let closest;
         let closestDist = 999999;
-        for (var i = 0; i < charactersList.length; i++) {
-            var dist = this.getDist(charactersList[i])
+        for (var i = 0; i < characterList.length; i++) {
+            var dist = this.getDist(characterList[i])
             if (dist < closestDist && dist != 0) {
                 closestDist = dist;
-                closest = charactersList[i];
+                closest = characterList[i];
             }
         }
         
         return closest
     }
 
+    hit() {
+        this.health -= 10;
+    }
+
     getTime() {
         return this.deltaTime;
+    }
+
+    getVX() {
+        return this.vx;
+    }
+
+    getVY() {
+        return this.vy;
     }
 
     isDead() {
@@ -108,15 +121,47 @@ export default class Character {
         }
     }
 
-    isTouching(charactersList) {
-        for (var i = 0; i< charactersList.length; i++) {
-            let char = charactersList[i];
-            let pos = charactersList[i].getPos();
+    setTime(dt) {
+        this.deltaTime = dt;
+    }
+
+    setXPos(xp) {
+        this.position.x = xp;
+    }
+
+    setYPos(yp) {
+        this.position.y = yp;
+    }
+
+    setVX(vx) {
+        this.vx = vx;
+    }
+
+    setVY(vy) {
+        this.vy = vy;
+    }
+
+    isTouching(characterList) {
+        for (var i = 0; i< characterList.length; i++) {
+            let char = characterList[i];
+            let pos = char.getPos();
             if (this.position.x < pos.x + this.width && this.position.x + this.width > pos.x && this.position.y + this.height > pos.y && this.position.y < pos.y + this.height && this.position.x != pos.x) {
                 return true;
             }
         }
         return false;
+    }
+
+    getTouching(characterList) {
+        for (var i = 0; i< characterList.length; i++) {
+            let char = characterList[i];
+            let pos = char.getPos();
+            if (this.position.x < pos.x + this.width && this.position.x + this.width > pos.x && this.position.y + this.height > pos.y && this.position.y < pos.y + this.height && this.position.x != pos.x) {
+                return char;
+            }
+        }
+        return false;
+
     }
 
     keepInside() {
@@ -141,13 +186,19 @@ export default class Character {
         }
     }
 
-    bounce(charactersList, dt) {
+    bounce(characterList, dt) {
         this.keepInside();
-        let touching = this.isTouching(charactersList);
+        let touching = this.isTouching(characterList);
 
         if (!touching) {
             this.vx *= 0.95;
             this.vy *= 0.95;
+            this.position.x += this.vx;
+            this.position.y += this.vy;
+        }
+        else {
+            this.vx *= -1;
+            this.vy *= -1;
             this.position.x += this.vx;
             this.position.y += this.vy;
         }
@@ -157,12 +208,12 @@ export default class Character {
 
     }
 
-    move(charactersList, deltaTime) {
+    move(characterList, deltaTime) {
         //keeps objects inside game play box
         this.keepInside();
 
         // gets the goal of this character by calculating closest enemy that is not itself
-        this.setGoal(this.getClosestEnemy(charactersList));
+        this.setGoal(this.getClosestEnemy(characterList));
         
         let d1 = (this.goal.x - this.position.x);
         let d2 = (this.goal.y - this.position.y);
@@ -178,7 +229,7 @@ export default class Character {
         
 
         // checking if a box touches another box
-        let touching = this.isTouching(charactersList);
+        var touching = this.isTouching(characterList);
 
         // if not touching continue to move towards towards goal
         if (!touching) {
@@ -195,16 +246,20 @@ export default class Character {
             
         }
         else {
+           
             this.knockbacked = true;
             this.deltaTime = deltaTime;
-            this.position.x -= (this.vx * 5);
-            this.position.y -= (this.vy * 5);
+            this.position.x -= (this.vx * 10);
+            this.position.y -= (this.vy * 10);
 
             this.vx = (this.vx * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1);
             this.vy = (this.vy * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1);
-            
+                
 
             this.health -= 10;
+            
+        
+            
             console.log("AHH ITS TOUCHING", this.name);
         }
 
