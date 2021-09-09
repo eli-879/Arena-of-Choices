@@ -3,8 +3,8 @@ export default class Character {
     constructor(gameWidth, gameHeight, name, pos, ctx) {
         this.gameHeight = gameHeight;
         this.gameWidth = gameWidth;
-        this.maxHealth = 100;
-        this.health = 100;
+        this.maxHealth = 20;
+        this.health = 20;
         this.height = 40;
         this.width = 40;
         this.name = name;

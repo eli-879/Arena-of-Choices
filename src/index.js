@@ -111,8 +111,11 @@ document.getElementById("start").addEventListener("click", function(s) {
         characterList.push(character);
         
     }
+    
+    var ele = document.getElementById("deathlist");
+    deathList = [];
+    ele.innerHTML = "";
 
-    document.getElementById("deathlist").innerHTML = "";
 
 });
 
