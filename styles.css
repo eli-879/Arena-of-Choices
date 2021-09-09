@@ -55,3 +55,14 @@ body {
     height: 720px;
     border: 1px solid black;
 }
+
+nav {
+    background-color: white;
+    overflow: hidden;
+    text-align: center;
+    font-size: 25px;
+
+    
+    
+    
+}
