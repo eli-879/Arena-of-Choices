@@ -35,6 +35,8 @@ function gameLoop(timestamp) {
             delete characterList[i];
             characterList.splice(i, 1);
         }
+
+        
     }
 
     var element = document.getElementById("deathlist");

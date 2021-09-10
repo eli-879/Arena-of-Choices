@@ -10,11 +10,11 @@ export default class Character {
         this.name = name;
         this.nameLength = ctx.measureText(this.name);
 
-        this.speed = 5;
+        this.speed = 75;
         this.vx = 1;
         this.vy = 1;
 
-        this.goal = 0;
+        this.goal = {x:0, y:0};
 
         this.position = pos;
 
@@ -78,8 +78,18 @@ export default class Character {
         return closest
     }
 
-    hit() {
-        this.health -= 10;
+    hit(deltaTime) {
+        if (!this.knockbacked) {
+            this.knockbacked = true;
+            this.time = deltaTime;
+            this.position.x -= (this.vx * 10);
+            this.position.y -= (this.vy * 10);
+            this.vx = (this.vx * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1);
+            this.vy = (this.vy * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1);
+                
+            this.health -= 10;
+        }
+        
     }
 
     getTime() {
@@ -186,6 +196,10 @@ export default class Character {
         }
     }
 
+    calculateSpeed() {
+
+    }
+
     bounce(characterList, dt) {
         this.keepInside();
         let touching = this.isTouching(characterList);
@@ -197,19 +211,16 @@ export default class Character {
             this.position.y += this.vy;
         }
         else {
-            this.vx *= -1;
-            this.vy *= -1;
+            this.vx *= -0.75;
+            this.vy *= -0.75;
             this.position.x += this.vx;
             this.position.y += this.vy;
         }
-        
-
         this.time += dt;
-
     }
 
     move(characterList, deltaTime) {
-        //keeps objects inside game play box
+        //keeps objects inside gameplay box
         this.keepInside();
 
         // gets the goal of this character by calculating closest enemy that is not itself
@@ -223,16 +234,20 @@ export default class Character {
             // gets a unit vector to get speed of this object
             let unitVector = this.getUnitVector();
 
-            this.vx = unitVector.x;
-            this.vy = unitVector.y;
+            // 75 pixels total movement per second
+            unitVector.x *= this.speed;
+            unitVector.y *= this.speed;
+
+            this.vx = unitVector.x * deltaTime / 1000;
+            this.vy = unitVector.y * deltaTime / 1000;
         }
         
 
         // checking if a box touches another box
-        var touching = this.isTouching(characterList);
+        var touching = this.getTouching(characterList);
 
         // if not touching continue to move towards towards goal
-        if (!touching) {
+        if (touching == false) {
             
             if (this.position.x > 0 && this.position.x < this.gameWidth-this.width-1) {
                 this.position.x += this.vx;
@@ -240,34 +255,19 @@ export default class Character {
             
     
             if (this.position.y > 0 && this.position.y < this.gameHeight-this.height-1) {
-                this.position.y += this.vy ;
-    
+                this.position.y += this.vy;
             }
             
         }
         else {
-           
-            this.knockbacked = true;
-            this.time = deltaTime;
-            this.position.x -= (this.vx * 10);
-            this.position.y -= (this.vy * 10);
+            var coinflip = Math.floor(Math.random() * 2);
 
-            this.vx = (this.vx * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1);
-            this.vy = (this.vy * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1);
-                
-
-            this.health -= 10;
-            
-        
-            
-            console.log("AHH ITS TOUCHING", this.name);
+            if(coinflip == 0) {
+                this.hit(deltaTime);
+            }
+            else {
+                touching.hit(deltaTime);
+            }            
         }
-
-
-        
-        
-    
     }
-
-
 }
