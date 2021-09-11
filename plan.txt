@@ -1,8 +1,8 @@
 next goals -
 bug fixes with collisions
-critical strikes
+critical strikes -
 while somebody is knock backed make it incapable to deal damage to other characters
-animation
+animation - crits, moving, attacks
 sprites
 sound effects
 cleaner code structure
