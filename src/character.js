@@ -3,8 +3,8 @@ export default class Character {
     constructor(gameWidth, gameHeight, name, pos, ctx) {
         this.gameHeight = gameHeight;
         this.gameWidth = gameWidth;
-        this.maxHealth = 100;
-        this.health = 100;
+
+        // character visual traits
         this.height = 40;
         this.width = 40;
         this.name = name;
@@ -14,12 +14,17 @@ export default class Character {
         this.vx = 1;
         this.vy = 1;
 
-        this.goal = 0;
+        this.goal = {x:0, y:0};
 
         this.position = pos;
-
         this.knockbacked = false;
         this.time = 0;
+
+        // character combat attributes
+        this.dmg = 10;
+        this.critChance = 10;
+        this.maxHealth = 100;
+        this.health = 100;
     }
 
     draw(ctx) {
@@ -34,9 +39,20 @@ export default class Character {
         ctx.fillRect(this.position.x, this.position.y + this.height + 30, (this.health / this.maxHealth * this.width), 10);
     }
 
-    update(dt) {
-        if (!dt) return;        
+    hit(deltaTime, target) {
+        if (!this.knockbacked) {
+            this.knockbacked = true;
+            this.time = deltaTime;
+            this.position.x -= (this.vx * 10);
+            this.position.y -= (this.vy * 10);
+            this.vx = (this.vx * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1);
+            this.vy = (this.vy * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1);
+                
+            this.health -= 10;
+        }
+        
     }
+
 
 
     getPos() {
@@ -261,11 +277,7 @@ export default class Character {
         
             
             console.log("AHH ITS TOUCHING", this.name);
-        }
-
-
-        
-        
+        }        
     
     }
 
