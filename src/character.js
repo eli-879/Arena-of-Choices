@@ -24,7 +24,7 @@ export default class Character {
 
         // character attributes
         this.maxHealth = 100;
-        this.health = 20;
+        this.health = 100;
         this.dmg = 10;
     }
 
