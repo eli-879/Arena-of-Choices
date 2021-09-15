@@ -12,7 +12,7 @@ export default class Character {
         this.nameLength = ctx.measureText(this.name);
 
         // character movement
-        this.speed = 75;
+        this.speed = 15;
         this.velocity = {x:50, y:50};
         this.goal = {x:0, y:0};
         this.position = pos;
@@ -24,6 +24,8 @@ export default class Character {
         this.health = 100;
         this.dmg = 10;
     }
+
+    // Drawing methods
 
     draw(ctx) {
         ctx.fillStyle = "#f00";
@@ -40,6 +42,8 @@ export default class Character {
     update(dt) {
         if (!dt) return;        
     }
+
+    // Most getters and setters
 
     getName() {
         return this.name;
@@ -82,8 +86,80 @@ export default class Character {
         return this.width;
     }
 
-    
+    getGoal() {
+        return this.goal;
+    }
 
+    isKBed() {
+        return this.knockbacked;
+    }
 
+    setKBed(bool) {
+        this.knockbacked = bool;
+    }
+
+    // Movement related methods
+
+    getClosestEnemy(characterList) {
+        let closest;
+        let closestDist = 999999;
+        for (var i = 0; i < characterList.length; i++) {
+            var dist = this.getDist(characterList[i])
+            if (dist < closestDist && dist != 0) {
+                closestDist = dist;
+                closest = characterList[i];
+            }
+        }
+        
+        return closest
+    }
+
+    setGoal(character) {
+        if (character != null) {
+            this.goal = character.getPosition();
+        }
+        else {
+            this.goal = {x: this.gameWidth / 2 - this.width / 2,
+                        y: this.gameHeight / 2- this.height / 2};
+        }
+    }
+
+    getDist(character) {
+        let pos = character.getPosition();
+        let part1 = Math.pow(this.position.x - pos.x, 2);
+        let part2 = Math.pow(this.position.y - pos.y, 2);
+
+        return Math.pow(part1 + part2, 0.5);
+    }
+
+    getUnitVector() {
+        let part1 = this.goal.x - this.position.x
+        let part2 = this.goal.y - this.position.y
+        let magnitude = Math.pow(Math.pow(part1, 2) + Math.pow(part2, 2), 0.5);
+
+        return {x: part1/magnitude,
+                y: part2/magnitude};
+    }
+
+    updateVelocities() {
+        let d1 = (this.goal.x - this.position.x);
+        let d2 = (this.goal.y - this.position.y);
+
+        // checking to see if distance to goal == 0
+        if (d1 != 0 && d2 != 0) {
+            // gets a unit vector to get speed of this object
+            let unitVector = this.getUnitVector();
+
+            // 75 pixels total movement per second
+            this.velocity.x = unitVector.x * this.speed;
+            this.velocity.y = unitVector.y * this.speed;
+        }
+
+    }
+
+    hit(other) {
+        other.setKBed(true);
+        
+    }
 
 }

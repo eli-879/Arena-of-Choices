@@ -1,7 +1,7 @@
 
 export default class Collision {
 
-    constructer(obj1, obj2, dir, time) {
+    constructor(obj1, obj2, dir, time) {
         this.objectIndex1 = obj1;
         this.objectIndex2 = obj2;
         this.direction = dir;
