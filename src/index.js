@@ -11,6 +11,13 @@ function gameLoop(timestamp) {
     ctx.clearRect(0,0, canvas.width, canvas.height);
     
     updateGame(deltaTime, ctx);
+    
+
+    var element = document.getElementById("deathlist");
+    element.innerHTML = "";
+    for (var i = 0; i < deathList.length; i++) {
+        element.innerHTML = element.innerHTML + (i+1) + ". " +  deathList[i] + "<br />";
+    }
 
     requestAnimationFrame(gameLoop);
 }
@@ -22,7 +29,6 @@ function updateGame(dt, ctx) {
         if (hit != null) {
 
             step = Math.max(hit.getTime(), MIN_STEP);
-            console.log(hit);
             updateObjects(step);
             updateVelocities(hit, step);
         }
@@ -33,7 +39,6 @@ function updateGame(dt, ctx) {
 
         for (var i = 0; i < characterList.length; i++) {
             characterList[i].draw(ctx);
-            //console.log(characterList[i].getPosition());
         }
 
         dt -= step;
@@ -49,8 +54,6 @@ function findFirstCollision(dt) {
         for (var j = i+1; j < characterList.length; j++) {
             var hit = findCollision(i, j, dt);
             if (hit != null) {
-                //console.log(hit, result);
-                //console.log(hit.getTime(), result.getTime());
                 if (result == null || hit.getTime() < result.getTime()) {
                     result = hit;
                 }
@@ -65,7 +68,7 @@ function findCollision(i, j, dt) {
     var obj2 = characterList[j];
     var obj1Pos = obj1.getPosition();
     var obj2Pos = obj2.getPosition();
-    if (obj1Pos.x < obj2Pos.x + obj2.getWidth() && obj1Pos.x + obj1.getWidth() > obj2Pos.x && obj1Pos.y + obj1.getHeight() > obj2Pos.y && obj1Pos.y < obj2Pos.y + obj2.getHeight()) {
+    if (obj1Pos.x <= obj2Pos.x + obj2.getWidth() && obj1Pos.x + obj1.getWidth() >= obj2Pos.x && obj1Pos.y + obj1.getHeight() >= obj2Pos.y && obj1Pos.y <= obj2Pos.y + obj2.getHeight()) {
         var dir = 0;
         let col = new Collision(obj1, obj2, dir, dt);
         return col;
@@ -80,6 +83,17 @@ function updateObjects(step) {
         var v = character.getVelocity();
 
         character.keepInside();
+
+        console.log(character.getGoal(), character.getPosition());
+
+        character.cooldownAttackTimer(step);
+
+        if (character.isDead()) {
+            deathList.push(character.getName());
+            
+            characterList.splice(i, 1);
+            continue;
+        }
 
         if (character.isKBed()) {
             character.setVX(v.x * 0.95);
@@ -97,13 +111,8 @@ function updateObjects(step) {
             character.setGoal(character.getClosestEnemy(characterList));
             character.updateVelocities();
     
-            //console.log(character.getGoal(), pos.x, pos.y, character.getName());
-            //console.log(v.x, v.y, character.getName());
-    
             character.setPosition(pos.x + (step * v.x / 1000), pos.y + (step * v.y / 1000));
         }
-        console.log(character.getTime(), character.getVelocity(), character.getName());
-
         
 
     }
@@ -113,20 +122,29 @@ function updateVelocities(collision, step) {
     var obj1 = collision.getObj1();
     var obj2 = collision.getObj2();
     if (obj1 != null && obj2 != null) {
-        if (obj1.isKBed() && !obj2.isKBed()) {
-            obj2.hit(obj1, step);
+        if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() != 0 ) {
+            if (!obj1.isKBed() && !obj1.isKBed()) {
+                obj1.hit(obj2, step);
+            }
+            
         }
-        else if (!obj1.isKBed() && obj2.isKBed()) {
-            obj1.hit(obj2,step);
+        else if (obj1.getAttackTimer() != 0 && obj2.getAttackTimer() == 0) {
+            if (!obj1.isKBed() && !obj1.isKBed()) {
+                obj2.hit(obj1, step);
+            }
         }
-        else {
+        else if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() == 0){
             var coinflip = Math.floor(Math.random() * 2);
 
             if(coinflip == 0) {
-                obj1.hit(obj2, step);
+                if (!obj1.isKBed() && !obj1.isKBed()) {
+                    obj1.hit(obj2, step);
+                }
             }
             else {
-                obj2.hit(obj1, step); 
+                if (!obj1.isKBed() && !obj1.isKBed()) {
+                    obj2.hit(obj1, step);
+                }
             }
         }
     }

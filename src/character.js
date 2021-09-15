@@ -19,10 +19,12 @@ export default class Character {
         this.position = pos;
         this.knockbacked = false;
         this.time = 0;
+        this.attackTimer = 0;
+        this.attackCD = 750;
 
         // character attributes
         this.maxHealth = 100;
-        this.health = 100;
+        this.health = 20;
         this.dmg = 10;
     }
 
@@ -33,11 +35,21 @@ export default class Character {
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
         ctx.fillText(this.name, this.position.x - (this.nameLength.width / 2)  + 20, this.position.y + 60);
         this.drawHealth(ctx);
+        this.drawAttackCD(ctx);
+
+        if (this.knockbacked) {
+            ctx.fillText("KBed", this.position.x, this.position.y -10)
+        }
     }
 
     drawHealth(ctx) {
         ctx.fillStyle = "green";
         ctx.fillRect(this.position.x, this.position.y + this.height + 30, (this.health / this.maxHealth * this.width), 10);
+    }
+
+    drawAttackCD(ctx) {
+        ctx.fillStyle = "blue";
+        ctx.fillRect(this.position.x, this.position.y + this.height + 50, (this.attackTimer / this.attackCD * this.width), 10);
     }
 
     update(dt) {
@@ -120,38 +132,55 @@ export default class Character {
         this.health -= dmg;
     }
 
+    isDead() {
+        if (this.health <= 0) {
+            return true;
+        }
+        return false;
+    }
+
+    getAttackTimer() {
+        return this.attackTimer;
+    }
+
+    setAttackTimer(time) {
+        this.attackTimer = time;
+    }
+
+    cooldownAttackTimer(dt) {
+        if (this.attackTimer > 0) {
+            this.attackTimer -= dt;
+        }
+        else {
+            this.attackTimer = 0;
+        }
+        
+    }
+
     // Movement related methods
 
     keepInside() {
         if (this.position.x <= 1) {
             this.position.x = 5;
-            this.velocity.x *= -0.5;
+            this.velocity.x = 0;
         }
 
         if (this.position.x >= this.gameWidth - this.width - 1) {
             this.position.x =  this.gameWidth - this.width - 5;
-            this.velocity.x *= -0.5;
+            this.velocity.x = 0;
         }
 
         if (this.position.y <= 1) {
             this.position.y = 5;
-            this.velocity.y *= -0.5;
+            this.velocity.y = 0;
         }
 
         if (this.position.y >= this.gameHeight - this.height - 1) {
             this.position.y = this.gameHeight - this.height - 5;
-            this.velocity.y *= -0.5;
+            this.velocity.y = 0;
         }
     }
 
-    bounce(dt) {
-        this.velocity.x *= 0.95;
-        this.velocity.y *= 0.95;
-        this.position.x += this.velocity.x;
-        this.position.y += this.velocity.y;
-       
-        this.time += dt;
-    }
 
 
     getClosestEnemy(characterList) {
@@ -159,7 +188,7 @@ export default class Character {
         let closestDist = 999999;
         for (var i = 0; i < characterList.length; i++) {
             var dist = this.getDist(characterList[i])
-            if (dist < closestDist && dist != 0) {
+            if (dist < closestDist && dist != 0 && !characterList[i].isKBed()) {
                 closestDist = dist;
                 closest = characterList[i];
             }
@@ -176,6 +205,10 @@ export default class Character {
             this.goal = {x: this.gameWidth / 2 - this.width / 2,
                         y: this.gameHeight / 2- this.height / 2};
         }
+    }
+
+    getGoal() {
+        return this.goal;
     }
 
     getDist(character) {
@@ -215,25 +248,26 @@ export default class Character {
        
         other.setTime(dt);
         
-        console.log(other.getVelocity());
-
         var otherV = other.getVelocity();
 
-        other.addPosition(-(otherV.x), -(otherV.y))
+        other.addPosition(Math.sign(otherV.x) * (-10), Math.sign(otherV.y) * (-10));
        
         // TODO - multiplication up to a limit
         if (other.isKBed()) {
-            other.setVX((otherV.x * -1));
-            other.setVY((otherV.y * -1));
+            console.log("collateral!!!", other.getName(), other.getVelocity());
+            other.setVX((otherV.x * -0.5));
+            other.setVY((otherV.y * -0.5));
         }
         else {
-            other.setVX((otherV.x * -7.5));
-            other.setVY((otherV.y * -7.5));
+            other.setVX((otherV.x * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
+            other.setVY((otherV.y * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
         }
 
         other.setKBed(true);
 
         other.minusHealth(this.dmg);
+
+        this.attackTimer = this.attackCD;
         
     }
 
