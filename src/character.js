@@ -12,7 +12,8 @@ export default class Character {
         this.nameLength = ctx.measureText(this.name);
 
         // character movement
-        this.speed = 15;
+        this.speed = 75;
+        this.maxSpeed = 100;
         this.velocity = {x:50, y:50};
         this.goal = {x:0, y:0};
         this.position = pos;
@@ -57,6 +58,11 @@ export default class Character {
         this.position.x = newX;
         this.position.y = newY;
     }
+    
+    addPosition(dx, dy) {
+        this.position.x += dx;
+        this.position.y += dy;
+    }
 
     getVelocity() {
         return this.velocity;
@@ -98,7 +104,55 @@ export default class Character {
         this.knockbacked = bool;
     }
 
+    getTime() {
+        return this.time;
+    }
+
+    addTime(dt) {
+        this.time += dt;
+    }
+
+    setTime(dt) {
+        this.time = dt;
+    }
+
+    minusHealth(dmg) {
+        this.health -= dmg;
+    }
+
     // Movement related methods
+
+    keepInside() {
+        if (this.position.x <= 1) {
+            this.position.x = 5;
+            this.velocity.x *= -0.5;
+        }
+
+        if (this.position.x >= this.gameWidth - this.width - 1) {
+            this.position.x =  this.gameWidth - this.width - 5;
+            this.velocity.x *= -0.5;
+        }
+
+        if (this.position.y <= 1) {
+            this.position.y = 5;
+            this.velocity.y *= -0.5;
+        }
+
+        if (this.position.y >= this.gameHeight - this.height - 1) {
+            this.position.y = this.gameHeight - this.height - 5;
+            this.velocity.y *= -0.5;
+        }
+    }
+
+    bounce(dt) {
+        this.velocity.x *= 0.95;
+        this.velocity.y *= 0.95;
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
+       
+        this.time += dt;
+    }
+
 
     getClosestEnemy(characterList) {
         let closest;
@@ -157,8 +211,29 @@ export default class Character {
 
     }
 
-    hit(other) {
+    hit(other, dt) {
+       
+        other.setTime(dt);
+        
+        console.log(other.getVelocity());
+
+        var otherV = other.getVelocity();
+
+        other.addPosition(-(otherV.x), -(otherV.y))
+       
+        // TODO - multiplication up to a limit
+        if (other.isKBed()) {
+            other.setVX((otherV.x * -1));
+            other.setVY((otherV.y * -1));
+        }
+        else {
+            other.setVX((otherV.x * -7.5));
+            other.setVY((otherV.y * -7.5));
+        }
+
         other.setKBed(true);
+
+        other.minusHealth(this.dmg);
         
     }
 

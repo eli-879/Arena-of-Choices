@@ -20,10 +20,9 @@ function updateGame(dt, ctx) {
     do {
         var hit = findFirstCollision(step);
         if (hit != null) {
-            if (hit.getTime() )
 
             step = Math.max(hit.getTime(), MIN_STEP);
-            
+            console.log(hit);
             updateObjects(step);
             updateVelocities(hit, step);
         }
@@ -45,7 +44,7 @@ function updateGame(dt, ctx) {
 }
 
 function findFirstCollision(dt) {
-    var result = new Collision(null, null, null, 100);
+    var result = null
     for (var i = 0; i < characterList.length; i++) {
         for (var j = i+1; j < characterList.length; j++) {
             var hit = findCollision(i, j, dt);
@@ -77,18 +76,36 @@ function findCollision(i, j, dt) {
 function updateObjects(step) {
     for (var i = 0; i < characterList.length; i++) {
         var character = characterList[i];
-
-        character.setGoal(character.getClosestEnemy(characterList));
-        character.updateVelocities();
-
         var pos = character.getPosition();
         var v = character.getVelocity();
 
-        //console.log(character.getGoal(), pos.x, pos.y, character.getName());
-        //console.log(v.x, v.y, character.getName());
+        character.keepInside();
 
-        character.setPosition(pos.x + step * v.x / 1000, pos.y + step * v.y / 1000);
+        if (character.isKBed()) {
+            character.setVX(v.x * 0.95);
+            character.setVY(v.y * 0.95);
+            character.setPosition(pos.x + step * v.x / 1000, pos.y + step * v.y / 1000);
+            character.addTime(step);
+
+            if (character.getTime() > 1000) {
+                character.setKBed(false);
+                character.setTime(0);
+            }
+
+        }
+        else {
+            character.setGoal(character.getClosestEnemy(characterList));
+            character.updateVelocities();
+    
+            //console.log(character.getGoal(), pos.x, pos.y, character.getName());
+            //console.log(v.x, v.y, character.getName());
+    
+            character.setPosition(pos.x + (step * v.x / 1000), pos.y + (step * v.y / 1000));
+        }
+        console.log(character.getTime(), character.getVelocity(), character.getName());
+
         
+
     }
 }
 
@@ -97,19 +114,19 @@ function updateVelocities(collision, step) {
     var obj2 = collision.getObj2();
     if (obj1 != null && obj2 != null) {
         if (obj1.isKBed() && !obj2.isKBed()) {
-            obj2.hit(obj1);
+            obj2.hit(obj1, step);
         }
         else if (!obj1.isKBed() && obj2.isKBed()) {
-            obj1.hit(obj2);
+            obj1.hit(obj2,step);
         }
         else {
             var coinflip = Math.floor(Math.random() * 2);
 
             if(coinflip == 0) {
-                obj1.hit(obj2);
+                obj1.hit(obj2, step);
             }
             else {
-                obj2.hit(obj1); 
+                obj2.hit(obj1, step); 
             }
         }
     }
