@@ -108,6 +108,9 @@ function updateObjects(step) {
 
             if (character.getTime() > 1000) {
                 character.setKBed(false);
+                character.setRunning(true);
+                
+                character.setSprite("running");
                 character.setTime(0);
             }
         }
@@ -125,13 +128,13 @@ function updateVelocities(collision, step) {
     var obj2 = collision.getObj2();
     if (obj1 != null && obj2 != null) {
         if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() != 0 ) {
-            if (!obj1.isKBed() && !obj1.isKBed()) {
+            if (!obj1.isKBed() && !obj2.isKBed()) {
                 obj1.hit(obj2, step);
             }
             
         }
         else if (obj1.getAttackTimer() != 0 && obj2.getAttackTimer() == 0) {
-            if (!obj1.isKBed() && !obj1.isKBed()) {
+            if (!obj1.isKBed() && !obj2.isKBed()) {
                 obj2.hit(obj1, step);
             }
         }
@@ -139,12 +142,12 @@ function updateVelocities(collision, step) {
             var coinflip = Math.floor(Math.random() * 2);
 
             if(coinflip == 0) {
-                if (!obj1.isKBed() && !obj1.isKBed()) {
+                if (!obj1.isKBed() && !obj2.isKBed()) {
                     obj1.hit(obj2, step);
                 }
             }
             else {
-                if (!obj1.isKBed() && !obj1.isKBed()) {
+                if (!obj1.isKBed() && !obj2.isKBed()) {
                     obj2.hit(obj1, step);
                 }
             }

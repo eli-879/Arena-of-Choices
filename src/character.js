@@ -13,10 +13,16 @@ export default class Character {
         this.nameLength = ctx.measureText(this.name);
         this.image = image;
         this.imageTimer = 0;
+        this.imageTimerMax = 150;
         this.border = 0;
         this.spacing = 0;
         this.row = 2;
         this.col = 0;
+
+        this.spriteDict = {running: [[0, 2], [3, 2]],
+                            KBed: [[0, 3], [5, 3]],
+                            attacking: [[0, 1], [3, 1]]
+                        };
 
         // character movement
         this.speed = 75;
@@ -25,6 +31,8 @@ export default class Character {
         this.goal = {x:0, y:0};
         this.position = pos;
         this.knockbacked = false;
+        this.running = true;
+        this.attacking = false;
         this.time = 0;
         this.attackTimer = 0;
         this.attackCD = 750;
@@ -47,9 +55,15 @@ export default class Character {
 
         if (this.knockbacked) {
             ctx.fillText("KBed", this.position.x, this.position.y - 10)
+            this.drawSpriteKBed(ctx);
+        }
+        else if (this.running) {
+            this.drawSpriteRunning(ctx);
+        }
+        else if (this.attacking) {
+
         }
 
-        this.drawSpriteRunning(ctx);
     }
 
     drawHealth(ctx) {
@@ -63,20 +77,47 @@ export default class Character {
     }
 
     drawSpriteRunning(ctx) {
-        if (this.imageTimer > 500) {
+        if (this.imageTimer > this.imageTimerMax) {
             
             this.col += 1;
             
             this.imageTimer = 0;
         }
-        var sprite = this.getSprite();
-        ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
+        var sprite = this.getSpriteRunning("running");
+        if (this.velocity.x > 0) {
+            ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
+        }
+        else {
+            ctx.scale(-1, 1);
+            ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, - this.position.x - this.width, this.position.y, this.width, this.height); 
+            ctx.scale(-1, 1);
+        }
+        
     }
 
-    drawSpriteHitting(ctx) {
-        if (this.imageTimer > 500) {
+    drawSpriteAttacking(ctx) {
+        if (this.imageTimer > this.imageTimerMax) {
             this.col += 1
             this.imageTimer = 0;
+        }
+    }
+
+    drawSpriteKBed(ctx) {
+        if (this.imageTimer > this.imageTimerMax) {
+            
+            this.col += 1;
+            
+            this.imageTimer = 0;
+        }
+        
+        var sprite = this.getSpriteKBed("KBed");
+        if (this.velocity.x < 0) {
+            ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
+        }
+        else {
+            ctx.scale(-1, 1);
+            ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, - this.position.x - this.width, this.position.y, this.width, this.height); 
+            ctx.scale(-1, 1);
         }
     }
 
@@ -93,14 +134,25 @@ export default class Character {
         }
     }
 
-    getSprite() {
-        if (this.col == 3) {
-            this.col = 0;
+    getSpriteRunning(condition) {
+
+        if (this.col == this.spriteDict[condition][1][0]) {
+            this.col = this.spriteDict[condition][0][0];
             //this.row += 1
         }
+        
+        console.log(this.row, this.col);
 
-        if (this.row == 7) {
-            this.row = 0;
+        var spritePos = this.spritePositionToImagePosition(this.row, this.col);
+
+        return spritePos;
+    }
+
+    getSpriteKBed(condition) {
+
+        if (this.col == this.spriteDict[condition][1][0]) {
+            this.col = this.spriteDict[condition][1][0] - 1;
+            //this.row += 1
         }
 
         console.log(this.row, this.col);
@@ -108,6 +160,26 @@ export default class Character {
         var spritePos = this.spritePositionToImagePosition(this.row, this.col);
 
         return spritePos;
+    }
+
+    getSpriteAttacking(condition) {
+
+        if (this.col == this.spriteDict[condition][1][0]) {
+            this.col = this.spriteDict[condition][1][0] - 1;
+            //this.row += 1
+        }
+
+        console.log(this.row, this.col);
+
+        var spritePos = this.spritePositionToImagePosition(this.row, this.col);
+
+        return spritePos;
+    }
+
+    setSprite(condition) {
+        this.col = this.spriteDict[condition][0][0];
+        
+        this.row = this.spriteDict[condition][0][1];
     }
 
     // Most getters and setters
@@ -193,6 +265,10 @@ export default class Character {
         return false;
     }
 
+    setAttacking(bool) {
+        this.attacking = bool;
+    }
+
     getAttackTimer() {
         return this.attackTimer;
     }
@@ -207,8 +283,15 @@ export default class Character {
         }
         else {
             this.attackTimer = 0;
-        }
-        
+        }   
+    }
+
+    getRunning() {
+        return this.running;
+    }
+
+    setRunning(bool) {
+        this.running = bool;
     }
 
     // Movement related methods
@@ -308,7 +391,6 @@ export default class Character {
        
         // TODO - multiplication up to a limit
         if (other.isKBed()) {
-            console.log("collateral!!!", other.getName(), other.getVelocity());
             other.setVX((otherV.x * -0.5));
             other.setVY((otherV.y * -0.5));
         }
@@ -318,8 +400,14 @@ export default class Character {
         }
 
         other.setKBed(true);
+        other.setRunning(false);
+
+        //this.setAttacking(true);
+        //this.setRunning(false);
 
         other.minusHealth(this.dmg);
+        other.setSprite("KBed");
+        
 
         this.attackTimer = this.attackCD;
         
