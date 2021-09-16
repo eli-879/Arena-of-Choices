@@ -1,15 +1,22 @@
 export default class Character {
     // TODO: When a character gets kbed into another character, they seem to get stuck within each other - NEED FIX
 
-    constructor(gameWidth, gameHeight, name, pos, ctx) {
+    constructor(gameWidth, gameHeight, name, pos, image, ctx) {
         this.gameHeight = gameHeight;
         this.gameWidth = gameWidth;
+        
 
         // character visuals
-        this.height = 40;
-        this.width = 40;
+        this.height = 80;
+        this.width = 80;
         this.name = name;
         this.nameLength = ctx.measureText(this.name);
+        this.image = image;
+        this.imageTimer = 0;
+        this.border = 0;
+        this.spacing = 0;
+        this.row = 2;
+        this.col = 0;
 
         // character movement
         this.speed = 75;
@@ -30,16 +37,19 @@ export default class Character {
 
     // Drawing methods
 
-    draw(ctx) {
+    draw(ctx, dt) {
+        this.imageTimer += dt;
         ctx.fillStyle = "#f00";
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
-        ctx.fillText(this.name, this.position.x - (this.nameLength.width / 2)  + 20, this.position.y + 60);
+        //ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+        ctx.fillText(this.name, this.position.x - (this.nameLength.width / 2)  + 20, this.position.y + this.height + 20);
         this.drawHealth(ctx);
         this.drawAttackCD(ctx);
 
         if (this.knockbacked) {
-            ctx.fillText("KBed", this.position.x, this.position.y -10)
+            ctx.fillText("KBed", this.position.x, this.position.y - 10)
         }
+
+        this.drawSpriteRunning(ctx);
     }
 
     drawHealth(ctx) {
@@ -52,8 +62,52 @@ export default class Character {
         ctx.fillRect(this.position.x, this.position.y + this.height + 50, (this.attackTimer / this.attackCD * this.width), 10);
     }
 
-    update(dt) {
-        if (!dt) return;        
+    drawSpriteRunning(ctx) {
+        if (this.imageTimer > 500) {
+            
+            this.col += 1;
+            
+            this.imageTimer = 0;
+        }
+        var sprite = this.getSprite();
+        ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
+    }
+
+    drawSpriteHitting(ctx) {
+        if (this.imageTimer > 500) {
+            this.col += 1
+            this.imageTimer = 0;
+        }
+    }
+
+    spritePositionToImagePosition(row, col) {
+        return {
+            x: (
+                this.border +
+                col * (this.spacing + this.width)
+            ),
+            y: (
+                this.border +
+                row * (this.spacing + this.height)
+            )
+        }
+    }
+
+    getSprite() {
+        if (this.col == 3) {
+            this.col = 0;
+            //this.row += 1
+        }
+
+        if (this.row == 7) {
+            this.row = 0;
+        }
+
+        console.log(this.row, this.col);
+
+        var spritePos = this.spritePositionToImagePosition(this.row, this.col);
+
+        return spritePos;
     }
 
     // Most getters and setters

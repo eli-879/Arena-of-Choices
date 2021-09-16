@@ -1,7 +1,13 @@
 import Character from './character.js';
 import Collision from './collision.js';
 
-let MIN_STEP = 10;
+const MIN_STEP = 10;
+const SPRITE_HEIGHT = 80;
+const SPRITE_WIDTH = 80;
+const BORDER_WIDTH = 0;
+const SPACING_WIDTH = 0;
+
+
 
 function gameLoop(timestamp) {
 
@@ -12,7 +18,6 @@ function gameLoop(timestamp) {
     
     updateGame(deltaTime, ctx);
     
-
     var element = document.getElementById("deathlist");
     element.innerHTML = "";
     for (var i = 0; i < deathList.length; i++) {
@@ -38,7 +43,7 @@ function updateGame(dt, ctx) {
         }
 
         for (var i = 0; i < characterList.length; i++) {
-            characterList[i].draw(ctx);
+            characterList[i].draw(ctx, step);
         }
 
         dt -= step;
@@ -105,7 +110,6 @@ function updateObjects(step) {
                 character.setKBed(false);
                 character.setTime(0);
             }
-
         }
         else {
             character.setGoal(character.getClosestEnemy(characterList));
@@ -113,8 +117,6 @@ function updateObjects(step) {
     
             character.setPosition(pos.x + (step * v.x / 1000), pos.y + (step * v.y / 1000));
         }
-        
-
     }
 }
 
@@ -164,6 +166,21 @@ function getRandomTile(max_tiles) {
     return Math.floor(Math.random() * max_tiles);
 }
 
+function spritePositionToImagePosition(row, col) {
+    return {
+        x: (
+            BORDER_WIDTH +
+            row * (SPACING_WIDTH + SPRITE_WIDTH)
+        ),
+        y: (
+            BORDER_WIDTH +
+            col * (SPACING_WIDTH + SPRITE_HEIGHT)
+        )
+    }
+}
+
+
+
 
 var characterSize = 40;
 var canvas = document.getElementById("gameScreen");
@@ -181,6 +198,10 @@ ctx.clearRect(0,0, canvas.width, canvas.height);
 var names = [];
 var characterList = [];
 var deathList = [];
+
+var spriteSheetURL = "Assets/output-onlinepngtools.png";
+
+
 
 
 document.getElementById("start").addEventListener("click", function(s) {
@@ -204,9 +225,17 @@ document.getElementById("start").addEventListener("click", function(s) {
         
         
         let pos = {x: xp, y: yp};   
+
+        var position = spritePositionToImagePosition(1, 0);
+
+        var image = new Image();
+        image.src = spriteSheetURL;
+        image.crossOrigin = true;
+        
+
             
         
-        let character = new Character(GAME_WIDTH, GAME_HEIGHT, names[i], pos, ctx);
+        let character = new Character(GAME_WIDTH, GAME_HEIGHT, names[i], pos, image, ctx);
         
         characterList.push(character);
         
