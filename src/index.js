@@ -176,19 +176,6 @@ function getRandomTile(max_tiles) {
     return Math.floor(Math.random() * max_tiles);
 }
 
-function spritePositionToImagePosition(row, col) {
-    return {
-        x: (
-            BORDER_WIDTH +
-            row * (SPACING_WIDTH + SPRITE_WIDTH)
-        ),
-        y: (
-            BORDER_WIDTH +
-            col * (SPACING_WIDTH + SPRITE_HEIGHT)
-        )
-    }
-}
-
 var canvas = document.getElementById("gameScreen");
 canvas.height = 720;
 canvas.width = 960;
@@ -219,18 +206,16 @@ document.getElementById("start").addEventListener("click", function(s) {
     characterList = [];
 
     for (var i = 0; i < names.length; i++) {
-        var xp = getRandomTile(10) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
-        var yp = getRandomTile(8) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+        var xp = getRandomTile(5) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+        var yp = getRandomTile(3) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
 
         while (checkXYOverlap(xp, yp, characterList)) {
-            xp = getRandomTile(10) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
-            yp = getRandomTile(8) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+            xp = getRandomTile(5) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+            yp = getRandomTile(3) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
         }
         
         
         let pos = {x: xp, y: yp};   
-
-        var position = spritePositionToImagePosition(1, 0);
 
         var image = new Image();
         image.src = spriteSheetURL;
