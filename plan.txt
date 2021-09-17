@@ -1,6 +1,8 @@
-enter x amount of names and select amount of teams
-spawn in x amount of computer characters with names entered
-computer characters fight
-after each death, put the next dead persons name into each team - e.g if max dies first, max goes to team 1, then if jack dies next, jack goes to team 2 and so on until all teams have at least one
-
-
+next goals -
+bug fixes with collisions
+critical strikes -
+while somebody is knock backed make it incapable to deal damage to other characters
+animation - crits, moving, attacks
+sprites
+sound effects
+cleaner code structure
