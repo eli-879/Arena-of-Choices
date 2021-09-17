@@ -172,7 +172,7 @@ function checkXYOverlap(xpos, ypos, characterList) {
 }
 
 function getRandomTile(max_tiles) {
-    // tile size of 50x50 - 10 up, 16 across
+    // tile size of 80x80 - 9 up, 12 across
     return Math.floor(Math.random() * max_tiles);
 }
 
@@ -189,10 +189,6 @@ function spritePositionToImagePosition(row, col) {
     }
 }
 
-
-
-
-var characterSize = 40;
 var canvas = document.getElementById("gameScreen");
 canvas.height = 720;
 canvas.width = 960;
@@ -212,8 +208,6 @@ var deathList = [];
 var spriteSheetURL = "Assets/firzen.png";
 
 
-
-
 document.getElementById("start").addEventListener("click", function(s) {
     names = $("#entries").val().split('\n');
         for (var i = names.length - 1; i > -1; i--) {
@@ -225,12 +219,12 @@ document.getElementById("start").addEventListener("click", function(s) {
     characterList = [];
 
     for (var i = 0; i < names.length; i++) {
-        var xp = getRandomTile(10) * characterSize * 2 + characterSize;
-        var yp = getRandomTile(8) * characterSize * 2 + characterSize;
+        var xp = getRandomTile(10) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+        var yp = getRandomTile(8) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
 
         while (checkXYOverlap(xp, yp, characterList)) {
-            xp = getRandomTile(10) * characterSize * 2 + characterSize;
-            yp = getRandomTile(8) * characterSize * 2 + characterSize;
+            xp = getRandomTile(10) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+            yp = getRandomTile(8) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
         }
         
         

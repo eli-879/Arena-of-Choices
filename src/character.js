@@ -4,21 +4,6 @@ export default class Character {
     constructor(gameWidth, gameHeight, name, pos, image, id, ctx) {
         this.gameHeight = gameHeight;
         this.gameWidth = gameWidth;
-<<<<<<< HEAD
-
-        // character visual traits
-        this.height = 40;
-        this.width = 40;
-        this.name = name;
-        this.nameLength = ctx.measureText(this.name);
-
-        this.speed = 5;
-        this.vx = 1;
-        this.vy = 1;
-
-        this.goal = {x:0, y:0};
-
-=======
         this.id = id;
         
 
@@ -47,21 +32,12 @@ export default class Character {
         this.maxSpeed = 100;
         this.velocity = {x:50, y:50};
         this.goal = {x:0, y:0};
->>>>>>> moving-collision-outside-of-character-object
         this.position = pos;
         this.knockbacked = false;
         this.running = true;
         this.attacking = false;
         this.winning = false;
         this.time = 0;
-<<<<<<< HEAD
-
-        // character combat attributes
-        this.dmg = 10;
-        this.critChance = 10;
-        this.maxHealth = 100;
-        this.health = 100;
-=======
         this.attackTimer = 0;
         this.attackCD = 1100;
         this.timeforAttackAnimation = this.attackCD - ((this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax) - 200;
@@ -70,7 +46,6 @@ export default class Character {
         this.maxHealth = 100;
         this.health = 100;
         this.dmg = 10;
->>>>>>> moving-collision-outside-of-character-object
     }
 
     // Drawing methods
@@ -104,24 +79,9 @@ export default class Character {
         ctx.fillRect(this.position.x, this.position.y + this.height + 30, (this.health / this.maxHealth * this.width), 10);
     }
 
-<<<<<<< HEAD
-    hit(deltaTime, target) {
-        if (!this.knockbacked) {
-            this.knockbacked = true;
-            this.time = deltaTime;
-            this.position.x -= (this.vx * 10);
-            this.position.y -= (this.vy * 10);
-            this.vx = (this.vx * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1);
-            this.vy = (this.vy * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1);
-                
-            this.health -= 10;
-        }
-        
-=======
     drawAttackCD(ctx) {
         ctx.fillStyle = "blue";
         ctx.fillRect(this.position.x, this.position.y + this.height + 50, (this.attackTimer / this.attackCD * this.width), 10);
->>>>>>> moving-collision-outside-of-character-object
     }
 
     drawSpriteRunning(ctx) {
@@ -159,12 +119,6 @@ export default class Character {
             ctx.scale(-1, 1);
         }
 
-<<<<<<< HEAD
-
-    getPos() {
-        return this.position;
-=======
->>>>>>> moving-collision-outside-of-character-object
     }
 
     drawSpriteKBed(ctx) {
@@ -497,12 +451,6 @@ export default class Character {
        
         other.setTime(dt);
         
-<<<<<<< HEAD
-            
-            console.log("AHH ITS TOUCHING", this.name);
-        }        
-    
-=======
         var otherV = other.getVelocity();
 
         other.addPosition(Math.sign(otherV.x) * (-10), Math.sign(otherV.y) * (-10));
@@ -530,7 +478,6 @@ export default class Character {
 
         this.attackTimer = this.attackCD;
         
->>>>>>> moving-collision-outside-of-character-object
     }
 
 }
