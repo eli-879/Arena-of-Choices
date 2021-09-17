@@ -120,6 +120,13 @@ function updateObjects(step) {
     
             character.setPosition(pos.x + (step * v.x / 1000), pos.y + (step * v.y / 1000));
         }
+
+        if (character.getAttackTimer() < character.getTimeForAttackAnimation() && !character.isKBed() && character.getAttacking()) {
+            character.setSprite("running");
+            character.setAttacking(false);
+            character.setRunning(true);
+
+        }
     }
 }
 
@@ -202,7 +209,7 @@ var names = [];
 var characterList = [];
 var deathList = [];
 
-var spriteSheetURL = "Assets/output-onlinepngtools.png";
+var spriteSheetURL = "Assets/firzen.png";
 
 
 
@@ -235,10 +242,7 @@ document.getElementById("start").addEventListener("click", function(s) {
         image.src = spriteSheetURL;
         image.crossOrigin = true;
         
-
-            
-        
-        let character = new Character(GAME_WIDTH, GAME_HEIGHT, names[i], pos, image, ctx);
+        let character = new Character(GAME_WIDTH, GAME_HEIGHT, names[i], pos, image, i, ctx);
         
         characterList.push(character);
         
