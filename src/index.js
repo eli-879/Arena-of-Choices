@@ -125,7 +125,10 @@ function updateObjects(step) {
             character.setSprite("running");
             character.setAttacking(false);
             character.setRunning(true);
+        }
 
+        if (character.isRunning()) {
+            character.updateDirection();
         }
     }
 }

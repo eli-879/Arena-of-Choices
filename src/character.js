@@ -23,7 +23,7 @@ export default class Character {
 
         this.spriteDict = {running: [[0, 2], [3, 2]],
                             KBed: [[0, 3], [5, 3]],
-                            attacking: [[7, 1], [10, 1]],
+                            attacking: [[4, 1], [7, 1]],
                             winning: [[4, 1], [7, 1]]
                         };
 
@@ -350,6 +350,18 @@ export default class Character {
         return this.id;
     }
 
+    getFacing() {
+        return this.facing;
+    }
+
+    setFacing(dir) {
+        this.facing = dir;
+    }
+
+    isRunning() {
+        return this.running;
+    }
+
     // Movement related methods
 
     keepInside() {
@@ -438,13 +450,22 @@ export default class Character {
             this.velocity.y = unitVector.y * this.speed;
         }
 
+        //if (this.velocity.x < 0) {
+        //    this.facing = "left";
+        //}
+        //else if (this.velocity.x > 0) {
+        //    this.facing = "right";
+        //}
+
+    }
+
+    updateDirection() {
         if (this.velocity.x < 0) {
             this.facing = "left";
         }
         else if (this.velocity.x > 0) {
             this.facing = "right";
         }
-
     }
 
     hit(other, dt) {
