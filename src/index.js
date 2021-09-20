@@ -1,6 +1,10 @@
 import Character from './character.js';
 import Collision from './collision.js';
 
+const express = require('express');
+const app = express();
+app.listen(3000, () => console.log('listening at 3000'));
+
 const MIN_STEP = 10;
 const SPRITE_HEIGHT = 80;
 const SPRITE_WIDTH = 80;
