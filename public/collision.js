@@ -21,3 +21,4 @@ export default class Collision {
         return this.time;
     }
 }
+
