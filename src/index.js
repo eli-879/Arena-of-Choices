@@ -8,6 +8,14 @@ const BORDER_WIDTH = 0;
 const SPACING_WIDTH = 0;
 
 
+const states = {
+    RUNNING: "running",
+    KNOCKEDBACK: "knockedback",
+    ATTACKING: "attacking",
+    WINNING: "winning",
+}
+
+
 
 function gameLoop(timestamp) {
 
@@ -89,8 +97,6 @@ function updateObjects(step) {
 
         character.keepInside();
 
-        console.log(character.getGoal(), character.getPosition());
-
         character.cooldownAttackTimer(step);
 
         if (character.isDead()) {
@@ -100,20 +106,19 @@ function updateObjects(step) {
             continue;
         }
 
-        if (character.isKBed()) {
+        if (character.getStatus() == states.KNOCKEDBACK) {
             character.setVX(v.x * 0.95);
             character.setVY(v.y * 0.95);
             character.setPosition(pos.x + step * v.x / 1000, pos.y + step * v.y / 1000);
             character.addTime(step);
 
             if (character.getTime() > 1000) {
-                character.setKBed(false);
-                character.setRunning(true);
-                
-                character.setSprite("running");
+                character.setStatus(states.RUNNING);
+                character.setSprite(states.RUNNING);
                 character.setTime(0);
             }
         }
+
         else {
             character.setGoal(character.getClosestEnemy(characterList));
             character.updateVelocities();
@@ -121,13 +126,12 @@ function updateObjects(step) {
             character.setPosition(pos.x + (step * v.x / 1000), pos.y + (step * v.y / 1000));
         }
 
-        if (character.getAttackTimer() < character.getTimeForAttackAnimation() && !character.isKBed() && character.getAttacking()) {
-            character.setSprite("running");
-            character.setAttacking(false);
-            character.setRunning(true);
+        if (character.getAttackTimer() < character.getTimeForAttackAnimation() && character.getStatus() == states.ATTACKING) {
+            character.setSprite(states.RUNNING);
+            character.setStatus(states.RUNNING);
         }
 
-        if (character.isRunning()) {
+        if (character.getStatus() == states.RUNNING) {
             character.updateDirection();
         }
     }
@@ -138,31 +142,57 @@ function updateVelocities(collision, step) {
     var obj2 = collision.getObj2();
     if (obj1 != null && obj2 != null) {
         if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() != 0 ) {
-            if (!obj1.isKBed() && !obj2.isKBed()) {
+            if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
                 obj1.hit(obj2, step);
+                updateStatus(obj1, obj2);
+                updateHealth(obj1, obj2);
+                
             }
             
         }
         else if (obj1.getAttackTimer() != 0 && obj2.getAttackTimer() == 0) {
-            if (!obj1.isKBed() && !obj2.isKBed()) {
+            if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
                 obj2.hit(obj1, step);
+                updateStatus(obj2, obj1);
+                updateHealth(obj2, obj1);
             }
         }
         else if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() == 0){
             var coinflip = Math.floor(Math.random() * 2);
 
             if(coinflip == 0) {
-                if (!obj1.isKBed() && !obj2.isKBed()) {
+                if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
                     obj1.hit(obj2, step);
+                    updateStatus(obj1, obj2);
+                    updateHealth(obj1, obj2);
                 }
             }
             else {
-                if (!obj1.isKBed() && !obj2.isKBed()) {
+                if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
                     obj2.hit(obj1, step);
+                    updateStatus(obj2, obj1);
+                    updateHealth(obj2, obj1);
                 }
             }
         }
     }
+}
+
+function updateStatus(obj1, obj2) {
+    // obj1 is the hitter, obj2 is the hittee(is that a word?)
+    obj1.setStatus(states.ATTACKING);
+    obj1.setSprite(states.ATTACKING);
+
+    obj2.setStatus(states.KNOCKEDBACK);
+    obj2.setSprite(states.KNOCKEDBACK);
+
+}
+
+function updateHealth(obj1, obj2) {
+    // obj1 is the hitter, obj2 is the hittee
+    var dmg = obj1.getDmg();
+    obj2.minusHealth(dmg);
+
 }
 
 function checkXYOverlap(xpos, ypos, characterList) {
@@ -195,7 +225,7 @@ var names = [];
 var characterList = [];
 var deathList = [];
 
-var spriteSheetURL = "Assets/firzen.png";
+var spriteSheetURL = "Assets/output-onlinepngtools.png";
 
 
 document.getElementById("start").addEventListener("click", function(s) {
@@ -232,9 +262,7 @@ document.getElementById("start").addEventListener("click", function(s) {
     
     var ele = document.getElementById("deathlist");
     deathList = [];
-    ele.innerHTML = "";
-
-
+    ele.innerHTML = "";S
 });
 
 let lastTime = 0;

@@ -1,5 +1,4 @@
 export default class Character {
-    // TODO: When a character gets kbed into another character, they seem to get stuck within each other - NEED FIX
 
     constructor(gameWidth, gameHeight, name, pos, image, id, ctx) {
         this.gameHeight = gameHeight;
@@ -19,13 +18,21 @@ export default class Character {
         this.spacing = 0;
         this.row = 2;
         this.col = 0;
-        this.facing = "right";
+        
+
+        this.directions = {
+            RIGHT: "right",
+            LEFT: "left",
+        }
+        this.facing = this.directions.RIGHT;
 
         this.spriteDict = {running: [[0, 2], [3, 2]],
-                            KBed: [[0, 3], [5, 3]],
-                            attacking: [[4, 1], [7, 1]],
+                            knockedback: [[0, 3], [5, 3]],
+                            attacking: [[0, 1], [3, 1]],
                             winning: [[4, 1], [7, 1]]
                         };
+
+        
 
         // character movement
         this.speed = 75;
@@ -33,10 +40,22 @@ export default class Character {
         this.velocity = {x:50, y:50};
         this.goal = {x:0, y:0};
         this.position = pos;
+        
+
+        this.states = {
+            RUNNING: "running",
+            KNOCKBACKED: "knockedback",
+            ATTACKING: "attacking",
+            WINNING: "winning",
+        }
+
+        this.status = this.states.RUNNING;
+
         this.knockbacked = false;
         this.running = true;
         this.attacking = false;
         this.winning = false;
+        
         this.time = 0;
         this.attackTimer = 0;
         this.attackCD = 1100;
@@ -53,23 +72,28 @@ export default class Character {
     draw(ctx, dt) {
         this.imageTimer += dt;
         ctx.fillStyle = "#f00";
-        //ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
         ctx.fillText(this.name, this.position.x - (this.nameLength.width / 2)  + 20, this.position.y + this.height + 20);
         this.drawHealth(ctx);
         this.drawAttackCD(ctx);
 
-        if (this.knockbacked) {
-            ctx.fillText("KBed", this.position.x, this.position.y - 10)
-            this.drawSpriteKBed(ctx);
+        if (this.imageTimer > this.imageTimerMax) {
+            this.col += 1
+            this.imageTimer = 0;
         }
-        else if (this.running) {
-            this.drawSpriteRunning(ctx);
-        }
-        else if (this.attacking) {
-            this.drawSpriteAttacking(ctx);
-        }
-        else if (this.winning) {
-            this.drawSpriteWinning(ctx);
+
+        switch (this.status) {
+            case (this.states.RUNNING):
+                this.drawSpriteRunning(ctx);
+                break;
+            case (this.states.KNOCKBACKED):
+                ctx.fillText("KBed", this.position.x, this.position.y - 10)
+                this.drawSpriteKBed(ctx);
+                break;
+            case (this.states.ATTACKING):
+                this.drawSpriteAttacking(ctx);
+                break;
+            case (this.states.WINNING):
+                break;
         }
 
     }
@@ -85,14 +109,8 @@ export default class Character {
     }
 
     drawSpriteRunning(ctx) {
-        if (this.imageTimer > this.imageTimerMax) {
-            
-            this.col += 1;
-            
-            this.imageTimer = 0;
-        }
         var sprite = this.getSpriteRunning("running");
-        if (this.facing == "right") {
+        if (this.facing == this.directions.RIGHT) {
             ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
         }
         else {
@@ -104,13 +122,8 @@ export default class Character {
     }
 
     drawSpriteAttacking(ctx) {
-        if (this.imageTimer > this.imageTimerMax) {
-            this.col += 1
-            this.imageTimer = 0;
-        }
-
         var sprite = this.getSpriteKBed("attacking");
-        if (this.facing == "right") {
+        if (this.facing == this.directions.RIGHT) {
             ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
         }
         else {
@@ -121,16 +134,9 @@ export default class Character {
 
     }
 
-    drawSpriteKBed(ctx) {
-        if (this.imageTimer > this.imageTimerMax) {
-            
-            this.col += 1;
-            
-            this.imageTimer = 0;
-        }
-        
-        var sprite = this.getSpriteKBed("KBed");
-        if (this.facing == "right") {
+    drawSpriteKBed(ctx) {        
+        var sprite = this.getSpriteKBed("knockedback");
+        if (this.facing == this.directions.RIGHT) {
             ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
         }
         else {
@@ -140,16 +146,9 @@ export default class Character {
         }
     }
 
-    drawSpriteWinning(ctx) {
-        if (this.imageTimer > this.imageTimerMax) {
-            
-            this.col += 1;
-            
-            this.imageTimer = 0;
-        }
-        
+    drawSpriteWinning(ctx) {        
         var sprite = this.getSpriteKBed("winning");
-        if (this.facing == "right") {
+        if (this.facing == this.directions.RIGHT) {
             ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
         }
         else {
@@ -176,53 +175,38 @@ export default class Character {
 
         if (this.col == this.spriteDict[condition][1][0]) {
             this.col = this.spriteDict[condition][0][0];
-            //this.row += 1
         }
         
         return this.spritePositionToImagePosition(this.row, this.col);
     }
 
     getSpriteKBed(condition) {
-
         if (this.col == this.spriteDict[condition][1][0]) {
             this.col = this.spriteDict[condition][1][0] - 1;
-            //this.row += 1
         }
 
         return this.spritePositionToImagePosition(this.row, this.col);
     }
 
     getSpriteAttacking(condition) {
-
         if (this.col == this.spriteDict[condition][1][0]) {
             this.attacking = false;
-
-            //this.row += 1
         }
 
-        console.log(this.row, this.col);
-
-        var spritePos = this.spritePositionToImagePosition(this.row, this.col);
-
-        return spritePos;
+        return this.spritePositionToImagePosition(this.row, this.col);
     }
 
     getSpriteWinning(condition) {
 
         if (this.col == this.spriteDict[condition][1][0]) {
             this.col = this.spriteDict[condition][0][0];
-
         }
 
-        console.log(this.row, this.col);
-
-        var spritePos = this.spritePositionToImagePosition(this.row, this.col);
-
-        return spritePos;
+        return this.spritePositionToImagePosition(this.row, this.col);
     }
+
     setSprite(condition) {
         this.col = this.spriteDict[condition][0][0];
-        
         this.row = this.spriteDict[condition][0][1];
     }
 
@@ -278,14 +262,6 @@ export default class Character {
         return this.goal;
     }
 
-    isKBed() {
-        return this.knockbacked;
-    }
-
-    setKBed(bool) {
-        this.knockbacked = bool;
-    }
-
     getTime() {
         return this.time;
     }
@@ -309,14 +285,6 @@ export default class Character {
         return false;
     }
 
-    setAttacking(bool) {
-        this.attacking = bool;
-    }
-
-    getAttacking() {
-        return this.attacking;
-    }
-
     getAttackTimer() {
         return this.attackTimer;
     }
@@ -338,13 +306,6 @@ export default class Character {
         return this.timeforAttackAnimation;
     }
 
-    getRunning() {
-        return this.running;
-    }
-
-    setRunning(bool) {
-        this.running = bool;
-    }
 
     getID() {
         return this.id;
@@ -358,9 +319,18 @@ export default class Character {
         this.facing = dir;
     }
 
-    isRunning() {
-        return this.running;
+    setStatus(status) {
+        this.status = status;
     }
+    
+    getStatus() {
+        return this.status;
+    }
+
+    getDmg() {
+        return this.dmg;
+    }
+
 
     // Movement related methods
 
@@ -391,7 +361,7 @@ export default class Character {
         let closestDist = 999999;
         for (var i = 0; i < characterList.length; i++) {
             var dist = this.getDist(characterList[i])
-            if (dist < closestDist && characterList[i].getID() != this.id && !characterList[i].isKBed()) {
+            if (dist < closestDist && characterList[i].getID() != this.id && characterList[i].getStatus() != this.states.KNOCKBACKED) {
                 closestDist = dist;
                 closest = characterList[i];
             }
@@ -409,10 +379,7 @@ export default class Character {
                         y: this.position.y};
             this.velocity.x = 0;
             this.velocity.y = 0;
-            //this.winning = true;
-            //this.running = false;
         }
-        
     }
 
     getGoal() {
@@ -449,14 +416,6 @@ export default class Character {
             this.velocity.x = unitVector.x * this.speed;
             this.velocity.y = unitVector.y * this.speed;
         }
-
-        //if (this.velocity.x < 0) {
-        //    this.facing = "left";
-        //}
-        //else if (this.velocity.x > 0) {
-        //    this.facing = "right";
-        //}
-
     }
 
     updateDirection() {
@@ -474,29 +433,11 @@ export default class Character {
         
         var otherV = other.getVelocity();
 
-        other.addPosition(Math.sign(otherV.x) * (-10), Math.sign(otherV.y) * (-10));
-       
-        // TODO - multiplication up to a limit
-        if (other.isKBed()) {
-            other.setVX((otherV.x * -0.5));
-            other.setVY((otherV.y * -0.5));
-        }
-        else {
-            other.setVX((otherV.x * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
-            other.setVY((otherV.y * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
-        }
-
-        other.setKBed(true);
-        other.setRunning(false);
-
-        this.setAttacking(true);
-        this.setRunning(false);
-        this.setSprite("attacking");
-
-        other.minusHealth(this.dmg);
-        other.setSprite("KBed");
+        other.addPosition(Math.sign(otherV.x) * (-10), Math.sign(otherV.y) * (-10));       
         
-
+        other.setVX((otherV.x * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
+        other.setVY((otherV.y * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
+        
         this.attackTimer = this.attackCD;
         
     }
