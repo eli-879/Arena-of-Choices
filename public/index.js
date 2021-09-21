@@ -7,6 +7,8 @@ const SPRITE_WIDTH = 80;
 const BORDER_WIDTH = 0;
 const SPACING_WIDTH = 0;
 
+var PLAYERS = 0;
+
 
 const states = {
     RUNNING: "running",
@@ -15,7 +17,6 @@ const states = {
     WINNING: "winning",
 }
 
-console.log("D");
 
 function gameLoop(timestamp) {
 
@@ -30,6 +31,26 @@ function gameLoop(timestamp) {
     element.innerHTML = "";
     for (var i = 0; i < deathList.length; i++) {
         element.innerHTML = element.innerHTML + (i+1) + ". " +  deathList[i] + "<br />";
+    }
+
+    if (deathList.length == PLAYERS - 1) {
+        const data = {deathList};
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify(data)
+        }
+
+        var json;
+        fetch('/api', options)
+        .then(response => response.json())
+        .then((json) => {
+            console.log(json);
+        })
+
+        PLAYERS = 0;
     }
 
     requestAnimationFrame(gameLoop);
@@ -238,6 +259,8 @@ document.getElementById("start").addEventListener("click", function(s) {
         }
     characterList = [];
 
+    PLAYERS = names.length;
+
     for (var i = 0; i < names.length; i++) {
         var xp = getRandomTile(5) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
         var yp = getRandomTile(3) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
@@ -260,9 +283,6 @@ document.getElementById("start").addEventListener("click", function(s) {
         
     }
     
-    var ele = document.getElementById("deathlist");
-    deathList = [];
-    ele.innerHTML = "";S
 });
 
 let lastTime = 0;
