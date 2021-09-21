@@ -43,7 +43,7 @@ function gameLoop(timestamp) {
             body: JSON.stringify(data)
         }
 
-        var json;
+        
         fetch('/api', options)
         .then(response => response.json())
         .then((json) => {
