@@ -1,6 +1,7 @@
 import Woody from './woody.js';
 import Firzen from './firzen.js';
 import Henry from './henry.js';
+import Julian from './julian.js';
 import Collision from './collision.js';
 
 const MIN_STEP = 10;
@@ -284,6 +285,9 @@ document.getElementById("start").addEventListener("click", function(s) {
         }
         else if (rand == 2) {
             var character = new Woody(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);
+        }
+        else if (rand == 3) {
+            var character = new Julian(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);
         }
         
         characterList.push(character);

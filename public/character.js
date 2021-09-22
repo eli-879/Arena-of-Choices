@@ -114,7 +114,6 @@ export default class Character {
 
     drawSpriteAttacking(ctx) {
         var sprite = this.getSpriteOneLoop("attacking");
-        console.log(this.col, this.row);
         if (this.facing == this.directions.RIGHT) {
             ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
         }

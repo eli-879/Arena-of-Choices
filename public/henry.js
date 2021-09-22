@@ -25,23 +25,10 @@ export default class Henry extends Character {
                
     }
 
-    getSpriteOneLoop(condition) {
-        if (this.col == this.spriteDict[condition][1][0] && condition == "knockbacked") {
-            this.col = this.spriteDict[condition][1][0] - 1;
-        }
-        
-        if (condition == "attacking") {
-            if (this.col == this.spriteDict[condition][1][0]) {
-                this.col = this.spriteDict[condition][1][0] - 1;
-            }
-        }
-        
-        return this.spritePositionToImagePosition(this.col, this.row);
-    }
+
 
     drawSpriteAttacking(ctx) {
         var sprite = this.getSpriteOneLoop("attacking");
-        console.log(this.col, this.row);
         if (this.facing == this.directions.RIGHT) {
             ctx.drawImage(this.imageAttacking, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
         }
