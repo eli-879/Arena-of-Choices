@@ -2,6 +2,7 @@ import Woody from './woody.js';
 import Firzen from './firzen.js';
 import Henry from './henry.js';
 import Julian from './julian.js';
+import Justin from './justin.js';
 import Collision from './collision.js';
 
 const MIN_STEP = 10;
@@ -220,6 +221,11 @@ function updateHealth(obj1, obj2) {
 
 }
 
+function beginAttack(obj1) {
+    obj1.setStatus(states.ATTACKING);
+    obj1.setSprite(states.ATTACKING);  
+}
+
 function checkXYOverlap(xpos, ypos, characterList) {
     for (const character of characterList) {
         if (character.getPosition().x == xpos && character.getPosition().y == ypos) {
@@ -275,7 +281,7 @@ document.getElementById("start").addEventListener("click", function(s) {
         
         let pos = {x: xp, y: yp};
         
-        let rand = Math.floor(Math.random() * 3);
+        let rand = Math.floor(Math.random() * 4);
 
         if (rand == 0) {
             var character = new Henry(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);
@@ -287,7 +293,7 @@ document.getElementById("start").addEventListener("click", function(s) {
             var character = new Woody(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);
         }
         else if (rand == 3) {
-            var character = new Julian(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);
+            var character = new Justin(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);
         }
         
         characterList.push(character);

@@ -12,7 +12,7 @@ export default class Character {
         this.name = name;
         this.nameLength = ctx.measureText(this.name);
         this.imageTimer = 0;
-        this.imageTimerMax = 150;
+        this.imageTimerMax = 125;
         this.border = 0;
         this.spacing = 0;
         this.row = 2;
@@ -402,17 +402,24 @@ export default class Character {
     }
 
     hit(other, dt) {
-       
-        other.setTime(dt);
-        
-        var otherV = other.getVelocity();
 
-        other.addPosition(Math.sign(otherV.x) * (-10), Math.sign(otherV.y) * (-10));       
+        if (this.status == this.states.ATTACKING ) {
+
+        }
+        else {
+            other.setTime(dt);
         
-        other.setVX((otherV.x * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
-        other.setVY((otherV.y * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
+            var otherV = other.getVelocity();
+    
+            other.addPosition(Math.sign(otherV.x) * (-10), Math.sign(otherV.y) * (-10));       
+            
+            other.setVX((otherV.x * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
+            other.setVY((otherV.y * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
+            
+            this.attackTimer = this.attackCD;
+        }
+       
         
-        this.attackTimer = this.attackCD;
         
     }
 
