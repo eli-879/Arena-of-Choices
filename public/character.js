@@ -1,6 +1,6 @@
 export default class Character {
 
-    constructor(gameWidth, gameHeight, name, pos, image, id, ctx) {
+    constructor(gameWidth, gameHeight, name, pos, id, ctx) {
         this.gameHeight = gameHeight;
         this.gameWidth = gameWidth;
         this.id = id;
@@ -11,7 +11,6 @@ export default class Character {
         this.width = 80;
         this.name = name;
         this.nameLength = ctx.measureText(this.name);
-        this.image = image;
         this.imageTimer = 0;
         this.imageTimerMax = 150;
         this.border = 0;
@@ -26,11 +25,7 @@ export default class Character {
         }
         this.facing = this.directions.RIGHT;
 
-        this.spriteDict = {running: [[0, 2], [3, 2]],
-                            knockedback: [[0, 3], [5, 3]],
-                            attacking: [[0, 1], [3, 1]],
-                            winning: [[4, 1], [7, 1]]
-                        };
+        this.spriteDict;
 
         
 
@@ -50,16 +45,11 @@ export default class Character {
         }
 
         this.status = this.states.RUNNING;
-
-        this.knockbacked = false;
-        this.running = true;
-        this.attacking = false;
-        this.winning = false;
         
         this.time = 0;
         this.attackTimer = 0;
         this.attackCD = 1100;
-        this.timeforAttackAnimation = this.attackCD - ((this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax) - 200;
+        //this.timeforAttackAnimation = this.attackCD - ((this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax) - 200;
 
         // character attributes
         this.maxHealth = 100;
@@ -76,10 +66,7 @@ export default class Character {
         this.drawHealth(ctx);
         this.drawAttackCD(ctx);
 
-        if (this.imageTimer > this.imageTimerMax) {
-            this.col += 1
-            this.imageTimer = 0;
-        }
+        
 
         switch (this.status) {
             case (this.states.RUNNING):
@@ -96,6 +83,10 @@ export default class Character {
                 break;
         }
 
+        if (this.imageTimer > this.imageTimerMax) {
+            this.col += 1
+            this.imageTimer = 0;
+        }
     }
 
     drawHealth(ctx) {
@@ -109,7 +100,7 @@ export default class Character {
     }
 
     drawSpriteRunning(ctx) {
-        var sprite = this.getSpriteRunning("running");
+        var sprite = this.getSpriteConstantLoop("running");
         if (this.facing == this.directions.RIGHT) {
             ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
         }
@@ -122,7 +113,8 @@ export default class Character {
     }
 
     drawSpriteAttacking(ctx) {
-        var sprite = this.getSpriteKBed("attacking");
+        var sprite = this.getSpriteOneLoop("attacking");
+        console.log(this.col, this.row);
         if (this.facing == this.directions.RIGHT) {
             ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
         }
@@ -135,7 +127,7 @@ export default class Character {
     }
 
     drawSpriteKBed(ctx) {        
-        var sprite = this.getSpriteKBed("knockedback");
+        var sprite = this.getSpriteOneLoop("knockedback");
         if (this.facing == this.directions.RIGHT) {
             ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
         }
@@ -158,7 +150,7 @@ export default class Character {
         }
     }
 
-    spritePositionToImagePosition(row, col) {
+    spritePositionToImagePosition(col, row) {
         return {
             x: (
                 this.border +
@@ -171,38 +163,21 @@ export default class Character {
         }
     }
 
-    getSpriteRunning(condition) {
+    getSpriteConstantLoop(condition) {
 
         if (this.col == this.spriteDict[condition][1][0]) {
             this.col = this.spriteDict[condition][0][0];
         }
         
-        return this.spritePositionToImagePosition(this.row, this.col);
+        return this.spritePositionToImagePosition(this.col, this.row);
     }
 
-    getSpriteKBed(condition) {
+    getSpriteOneLoop(condition) {
         if (this.col == this.spriteDict[condition][1][0]) {
             this.col = this.spriteDict[condition][1][0] - 1;
         }
 
-        return this.spritePositionToImagePosition(this.row, this.col);
-    }
-
-    getSpriteAttacking(condition) {
-        if (this.col == this.spriteDict[condition][1][0]) {
-            this.attacking = false;
-        }
-
-        return this.spritePositionToImagePosition(this.row, this.col);
-    }
-
-    getSpriteWinning(condition) {
-
-        if (this.col == this.spriteDict[condition][1][0]) {
-            this.col = this.spriteDict[condition][0][0];
-        }
-
-        return this.spritePositionToImagePosition(this.row, this.col);
+        return this.spritePositionToImagePosition(this.col, this.row);
     }
 
     setSprite(condition) {

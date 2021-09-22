@@ -1,4 +1,6 @@
-import Character from './character.js';
+import Woody from './woody.js';
+import Firzen from './firzen.js';
+import Henry from './henry.js';
 import Collision from './collision.js';
 
 const MIN_STEP = 10;
@@ -34,6 +36,7 @@ function gameLoop(timestamp) {
     }
 
     if (deathList.length == PLAYERS - 1) {
+        deathList.push(characterList[0].getName());
         const data = {deathList};
         const options = {
             method: 'POST',
@@ -246,8 +249,6 @@ var names = [];
 var characterList = [];
 var deathList = [];
 
-var spriteSheetURL = "Assets/output-onlinepngtools.png";
-
 
 document.getElementById("start").addEventListener("click", function(s) {
     names = $("#entries").val().split('\n');
@@ -271,13 +272,19 @@ document.getElementById("start").addEventListener("click", function(s) {
         }
         
         
-        let pos = {x: xp, y: yp};   
-
-        var image = new Image();
-        image.src = spriteSheetURL;
-        image.crossOrigin = true;
+        let pos = {x: xp, y: yp};
         
-        let character = new Character(GAME_WIDTH, GAME_HEIGHT, names[i], pos, image, i, ctx);
+        let rand = Math.floor(Math.random() * 3);
+
+        if (rand == 0) {
+            var character = new Henry(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);
+        }
+        else if (rand == 1) {
+            var character = new Firzen(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);
+        }
+        else if (rand == 2) {
+            var character = new Woody(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);
+        }
         
         characterList.push(character);
         
