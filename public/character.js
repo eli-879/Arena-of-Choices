@@ -276,6 +276,10 @@ export default class Character {
         }   
     }
 
+    getAttackCD() {
+        return this.attackCD;
+    }
+
     getTimeForAttackAnimation() {
         return this.timeforAttackAnimation;
     }
@@ -403,24 +407,16 @@ export default class Character {
 
     hit(other, dt) {
 
-        if (this.status == this.states.ATTACKING ) {
-
-        }
-        else {
-            other.setTime(dt);
-        
-            var otherV = other.getVelocity();
+        other.setTime(dt);
     
-            other.addPosition(Math.sign(otherV.x) * (-10), Math.sign(otherV.y) * (-10));       
-            
-            other.setVX((otherV.x * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
-            other.setVY((otherV.y * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
-            
-            this.attackTimer = this.attackCD;
-        }
-       
+        var otherV = other.getVelocity();
+
+        other.addPosition(Math.sign(otherV.x) * (-10), Math.sign(otherV.y) * (-10));       
         
+        other.setVX((otherV.x * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
+        other.setVY((otherV.y * -7.5) + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
         
+        //this.attackTimer = this.attackCD;
     }
 
 }

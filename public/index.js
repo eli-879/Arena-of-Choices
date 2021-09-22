@@ -21,6 +21,8 @@ const states = {
     WINNING: "winning",
 }
 
+var attackersList = [];
+
 
 function gameLoop(timestamp) {
 
@@ -78,6 +80,8 @@ function updateGame(dt, ctx) {
 
         for (var i = 0; i < characterList.length; i++) {
             characterList[i].draw(ctx, step);
+            console.log(characterList[i].getStatus());
+
         }
 
         dt -= step;
@@ -122,6 +126,7 @@ function updateObjects(step) {
         var v = character.getVelocity();
 
         character.keepInside();
+
 
         character.cooldownAttackTimer(step);
 
@@ -169,18 +174,15 @@ function updateVelocities(collision, step) {
     if (obj1 != null && obj2 != null) {
         if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() != 0 ) {
             if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
-                obj1.hit(obj2, step);
-                updateStatus(obj1, obj2);
-                updateHealth(obj1, obj2);
-                
+                beginAttack(obj1);
+                attackersList.push(obj1);
             }
             
         }
         else if (obj1.getAttackTimer() != 0 && obj2.getAttackTimer() == 0) {
             if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
-                obj2.hit(obj1, step);
-                updateStatus(obj2, obj1);
-                updateHealth(obj2, obj1);
+                beginAttack(obj2);
+                attackersList.push(obj2);
             }
         }
         else if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() == 0){
@@ -188,18 +190,29 @@ function updateVelocities(collision, step) {
 
             if(coinflip == 0) {
                 if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
-                    obj1.hit(obj2, step);
-                    updateStatus(obj1, obj2);
-                    updateHealth(obj1, obj2);
+                    beginAttack(obj1);
+                    attackersList.push(obj1);
                 }
             }
             else {
                 if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
-                    obj2.hit(obj1, step);
-                    updateStatus(obj2, obj1);
-                    updateHealth(obj2, obj1);
+                    beginAttack(obj2);
+                    attackersList.push(obj2);
                 }
             }
+        }
+        for (var i = 0; i < attackersList.length; i++) {
+            if (attackersList[i].getAttackTimer() < 1000) {
+                for (var j = 0; j < characterList.length; j++) {
+                    if (checkInAttackRadius(attackersList[i], characterList[j])) {
+                        attackersList[i].hit(characterList[j], step);
+                        updateStatus(attackersList[i], characterList[j]);
+                        updateHealth(attackersList[i], characterList[j]);
+                    }
+                    
+                }
+                attackersList.splice(i, 1);
+            } 
         }
     }
 }
@@ -207,7 +220,7 @@ function updateVelocities(collision, step) {
 function updateStatus(obj1, obj2) {
     // obj1 is the hitter, obj2 is the hittee(is that a word?)
     obj1.setStatus(states.ATTACKING);
-    obj1.setSprite(states.ATTACKING);
+    //obj1.setSprite(states.ATTACKING);
 
     obj2.setStatus(states.KNOCKEDBACK);
     obj2.setSprite(states.KNOCKEDBACK);
@@ -224,6 +237,21 @@ function updateHealth(obj1, obj2) {
 function beginAttack(obj1) {
     obj1.setStatus(states.ATTACKING);
     obj1.setSprite(states.ATTACKING);  
+    obj1.setAttackTimer(obj1.getAttackCD());
+
+}
+
+function checkInAttackRadius(obj1, obj2) {
+    //obj1 is attacker, obj2 is attackee
+    var obj1Pos = obj1.getPosition();
+    var obj1PosX2 = obj1Pos.x + 50;
+
+    var obj2Pos = obj2.getPosition();
+
+    if (obj2Pos.x <= obj1PosX2 && obj2Pos.x + obj2.getWidth() >= obj1Pos.x && obj2Pos.y <= obj1Pos.y + obj1.getHeight() && obj2Pos.y + obj2.getHeight() >= obj1Pos.y) {
+        return true;
+    }
+    return false;
 }
 
 function checkXYOverlap(xpos, ypos, characterList) {
