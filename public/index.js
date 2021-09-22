@@ -55,7 +55,8 @@ function gameLoop(timestamp) {
             console.log(json);
         })
 
-        PLAYERS = 0;
+        PLAYERS = -999;
+
     }
 
     requestAnimationFrame(gameLoop);
@@ -78,6 +79,15 @@ function updateGame(dt, ctx) {
 
         for (var i = 0; i < characterList.length; i++) {
             characterList[i].draw(ctx, step);
+        }
+
+        if (characterList.length == 1) {
+            if (characterList[0].getStatus() != states.WINNING) {
+                characterList[0].setSprite(states.WINNING);
+
+            }
+            characterList[0].setStatus(states.WINNING);
+            
         }
 
         dt -= step;
@@ -245,7 +255,7 @@ canvas.height = 720;
 canvas.width = 960;
 
 var ctx = canvas.getContext("2d");
-ctx.font = "16px serif";
+ctx.font = "16px Arial";
 
 const GAME_WIDTH = 960;
 const GAME_HEIGHT = 720;
@@ -281,7 +291,7 @@ document.getElementById("start").addEventListener("click", function(s) {
         
         let pos = {x: xp, y: yp};
         
-        let rand = Math.floor(Math.random() * 4);
+        let rand = Math.floor(Math.random() * 2);
 
         if (rand == 0) {
             var character = new Henry(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);

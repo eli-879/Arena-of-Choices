@@ -11,6 +11,8 @@ export default class Character {
         this.width = 80;
         this.name = name;
         this.nameLength = ctx.measureText(this.name);
+        this.image;
+        this.imageWinning;
         this.imageTimer = 0;
         this.imageTimerMax = 125;
         this.border = 0;
@@ -62,7 +64,7 @@ export default class Character {
     draw(ctx, dt) {
         this.imageTimer += dt;
         ctx.fillStyle = "#f00";
-        ctx.fillText(this.name, this.position.x - (this.nameLength.width / 2)  + 20, this.position.y + this.height + 20);
+        ctx.fillText(this.name, this.position.x - (this.nameLength.width / 2)  + 40, this.position.y + this.height + 20);
         this.drawHealth(ctx);
         this.drawAttackCD(ctx);
 
@@ -80,6 +82,7 @@ export default class Character {
                 this.drawSpriteAttacking(ctx);
                 break;
             case (this.states.WINNING):
+                this.drawSpriteWinning(ctx);
                 break;
         }
 
@@ -91,7 +94,9 @@ export default class Character {
 
     drawHealth(ctx) {
         ctx.fillStyle = "green";
-        ctx.fillRect(this.position.x, this.position.y + this.height + 30, (this.health / this.maxHealth * this.width), 10);
+        ctx.font = "14px Arial";
+        ctx.fillRect(this.position.x, this.position.y + this.height + 35, (this.health / this.maxHealth * this.width), 10);
+        ctx.fillText(this.health + " HP", this.position.x, this.position.y + this.height + 35)
     }
 
     drawAttackCD(ctx) {
@@ -138,13 +143,13 @@ export default class Character {
     }
 
     drawSpriteWinning(ctx) {        
-        var sprite = this.getSpriteKBed("winning");
+        var sprite = this.getSpriteConstantLoop("winning");
         if (this.facing == this.directions.RIGHT) {
-            ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
+            ctx.drawImage(this.imageWinning, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
         }
         else {
             ctx.scale(-1, 1);
-            ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, - this.position.x - this.width, this.position.y, this.width, this.height); 
+            ctx.drawImage(this.imageWinning, sprite.x, sprite.y, 80, 80, - this.position.x - this.width, this.position.y, this.width, this.height); 
             ctx.scale(-1, 1);
         }
     }
@@ -353,6 +358,7 @@ export default class Character {
                         y: this.position.y};
             this.velocity.x = 0;
             this.velocity.y = 0;
+            
         }
     }
 
