@@ -291,7 +291,7 @@ document.getElementById("start").addEventListener("click", function(s) {
         
         let pos = {x: xp, y: yp};
         
-        let rand = Math.floor(Math.random() * 2);
+        let rand = Math.floor(Math.random() * 4);
 
         if (rand == 0) {
             var character = new Henry(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);

@@ -30,8 +30,6 @@ export default class Henry extends Character {
                
     }
 
-
-
     drawSpriteAttacking(ctx) {
         var sprite = this.getSpriteOneLoop("attacking");
         if (this.facing == this.directions.RIGHT) {
