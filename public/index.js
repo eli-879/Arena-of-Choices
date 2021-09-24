@@ -321,6 +321,8 @@ document.getElementById("start").addEventListener("click", function(s) {
                 
             }
         }
+
+    deathList = [];
     characterList = [];
 
     PLAYERS = names.length;
