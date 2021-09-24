@@ -1,7 +1,7 @@
 {
   "name": "src",
   "version": "1.0.0",
-  "description": "Team selector",
+  "description": "Arena of Choices",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,8 +9,9 @@
   },
   "keywords": [
     "fighting",
-    "team",
-    "selector"
+    "arena",
+    "selector",
+    "choices"
   ],
   "author": "Eric Li",
   "license": "MIT",
