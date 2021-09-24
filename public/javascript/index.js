@@ -24,45 +24,45 @@ const states = {
 // load all assets first
 
 var woodyImage = new Image();
-woodyImage.src = "Assets/woody.png";
+woodyImage.src = "../Assets/woody.png";
 woodyImage.crossOrigin = true;
 
 var woodyImageWinning = new Image();
-woodyImageWinning.src = "Assets/woody2.png";
+woodyImageWinning.src = "../Assets/woody2.png";
 woodyImageWinning.crossOrigin = true;
 
 var woodyAssets = [woodyImage, woodyImageWinning];
 
 var firzenImage = new Image();
-firzenImage.src = "Assets/firzen.png";
+firzenImage.src = "../Assets/firzen.png";
 firzenImage.crossOrigin = true;
 
 var firzenImageWinning = new Image();
-firzenImageWinning.src = "Assets/firzen1.png";
+firzenImageWinning.src = "../Assets/firzen1.png";
 firzenImageWinning.crossOrigin = true;
 
 var firzenAssets = [firzenImage, firzenImageWinning];
 
 var henryImage = new Image();
-henryImage.src = "Assets/henry.png";
+henryImage.src = "../Assets/henry.png";
 henryImage.crossOrigin = true;
 
 var henryImageAttacking = new Image();
-henryImageAttacking.src = "Assets/henryAttacking.png";
+henryImageAttacking.src = "../Assets/henryAttacking.png";
 henryImageAttacking.crossOrigin = true;
 
 var henryImageWinning = new Image();
-henryImageWinning.src = "Assets/henry2.png";
+henryImageWinning.src = "../Assets/henry2.png";
 henryImageWinning.crossOrigin = true;
 
 var henryAssets = [henryImage, henryImageAttacking, henryImageWinning];
 
 var justinImage = new Image();
-justinImage.src = "Assets/justin0.png";
+justinImage.src = "../Assets/justin0.png";
 justinImage.crossOrigin = true;
 
 var justinImageAttacking = new Image();
-justinImageAttacking.src = "Assets/justin1.png";
+justinImageAttacking.src = "../Assets/justin1.png";
 justinImageAttacking.crossOrigin = true;
 
 var justinAssets = [justinImage, justinImageAttacking];
