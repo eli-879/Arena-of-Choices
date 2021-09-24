@@ -85,7 +85,10 @@ function gameLoop(timestamp) {
 
     if (deathList.length == PLAYERS - 1) {
         deathList.push(characterList[0].getName());
-        const data = {deathList};
+
+        const data = {deathList, beginning};
+
+        
         const options = {
             method: 'POST',
             headers: {
@@ -94,7 +97,6 @@ function gameLoop(timestamp) {
             body: JSON.stringify(data)
         }
 
-        
         fetch('/api', options)
         .then(response => response.json())
         .then((json) => {
@@ -310,6 +312,7 @@ ctx.clearRect(0,0, canvas.width, canvas.height);
 
 var names = [];
 var characterList = [];
+var beginning = [];
 var deathList = [];
 
 
@@ -321,6 +324,9 @@ document.getElementById("start").addEventListener("click", function(s) {
                 
             }
         }
+
+    beginning.push(names);
+    console.log(beginning);
 
     deathList = [];
     characterList = [];

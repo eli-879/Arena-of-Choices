@@ -1,7 +1,7 @@
 *, *::before, *::after {
     box-sizing: border-box;
     font-family: BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: normal;
+    
  }
 
 head {
@@ -71,5 +71,5 @@ nav {
     overflow: hidden;
     text-align: left;
     font-size: 25px;
-
+    background-color: #a0e1f0;
 }

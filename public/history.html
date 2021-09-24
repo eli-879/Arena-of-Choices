@@ -5,7 +5,48 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arena of Choices</title>
-    <link href="styles.css" rel="stylesheet">
+    <link href="styles/styles.css" rel="stylesheet">
 
 </head>
+
+<body>
+    <nav>
+        <p>Arena of Choices</p>
+    </nav>
+
+    <h2 id="recents">Recent Arena Showdowns</h2>
+    <br>
+
+    <script>
+        async function getData() {
+            const response = await fetch('/api');
+            const data = await response.json();
+
+            for (item of data) {
+                const root = document.createElement("div");
+                const startOrder = document.createElement("div");
+                const deaths = document.createElement("div");
+                const time = document.createElement("div");
+
+                startOrder.textContent = `Starting Order: ${item.beginning}`;
+                deaths.textContent = `Deaths: ${item.deathList}`;
+            
+                const dateString = new Date(item.timestamp).toLocaleString();
+                time.textContent = "Time: " + dateString;
+
+                const br = document.createElement("br");
+
+                root.append(startOrder, deaths, time, br);
+
+                document.body.append(root);
+            }
+        }
+
+        getData();
+        
+    </script>
+
+
+
+</body>
 

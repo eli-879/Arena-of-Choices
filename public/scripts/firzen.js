@@ -22,8 +22,6 @@ export default class Firzen extends Character {
 
     drawSpriteWinning(ctx) {        
         var sprite = this.getSpriteConstantLoop("winning");
-        console.log(sprite);
-        console.log(this.status);
         if (this.facing == this.directions.RIGHT) {
             ctx.drawImage(this.imageWinning, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
         }
