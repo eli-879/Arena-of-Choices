@@ -11,7 +11,8 @@
 
 <body>
     <nav>
-        <p>Arena of Choices</p>
+        <a id="link", href="index.html">Arena of Choices</a>
+        <a id="link", href="history.html">Recent</a>
     </nav>
 
     <h2 id="recents">Recent Arena Showdowns</h2>
@@ -37,6 +38,8 @@
                 const br = document.createElement("br");
 
                 root.append(startOrder, deaths, time, br);
+
+                root.style.margin = "25px";
 
                 document.body.append(root);
             }

@@ -10,7 +10,7 @@ head {
 body {
     padding: 0;
     margin: 0;
-    background-color: #caebf2;
+    background: linear-gradient(to right, #77cefa, #7eecac);
 }
 
 .columns {
@@ -65,11 +65,34 @@ body {
     image-rendering: crisp-edges;
     background-color: white;
 }
-
 nav {
+    display: flex;
+    height: 90px;
+}
+
+nav p {
     padding-left: 50px;
-    overflow: hidden;
-    text-align: left;
+    padding-right: 50px;
+    overflow: auto;    
+    display: flex;
     font-size: 25px;
-    background-color: #a0e1f0;
+}
+
+nav a {
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    padding: 25px 25px;
+    color: black;
+    font-size: 25px;
+    margin: 0;
+
+}
+
+nav a:hover {
+    background-color: #3ad5f8;
+}
+
+#recents {
+    margin: 25px;
 }
