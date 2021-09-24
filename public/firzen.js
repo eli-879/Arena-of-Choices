@@ -1,19 +1,11 @@
 import Character from './character.js';
 
 export default class Firzen extends Character {
-    constructor(gameWidth, gameHeight, name, pos, image, id, ctx) {
-        super(gameWidth, gameHeight, name, pos, image, id, ctx);
+    constructor(gameWidth, gameHeight, name, pos, image, id, assets, ctx) {
+        super(gameWidth, gameHeight, name, pos, image, id, assets, ctx);
 
-        this.spriteSheetFirzen = "Assets/firzen.png";
-        this.spriteSheetFirzenWinning = "Assets/firzen1.png";
-
-        this.image = new Image();
-        this.image.src = this.spriteSheetFirzen;
-        this.image.crossOrigin = true;
-
-        this.imageWinning = new Image();
-        this.imageWinning.src = this.spriteSheetFirzenWinning;
-        this.imageWinning.crossOrigin = true;
+        this.image = this.assets[0];
+        this.imageWinning = this.assets[1];
 
         this.spriteDict = {running: [[0, 2], [3, 2]],
                             knockedback: [[0, 3], [5, 3]],

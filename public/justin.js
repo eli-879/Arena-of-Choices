@@ -1,19 +1,11 @@
 import Character from './character.js';
 
 export default class Justin extends Character {
-    constructor(gameWidth, gameHeight, name, pos, image, id, ctx) {
-        super(gameWidth, gameHeight, name, pos, image, id, ctx);
+    constructor(gameWidth, gameHeight, name, pos, image, id, assets, ctx) {
+        super(gameWidth, gameHeight, name, pos, image, id, assets, ctx);
 
-        this.spriteSheetJustin1 = "Assets/justin0.png";
-        this.spriteSheetJustin2 = "Assets/justin1.png";
-
-        this.image = new Image();
-        this.image.src = this.spriteSheetJustin1;
-        this.image.crossOrigin = true;
-
-        this.imageAttacking = new Image();
-        this.imageAttacking.src = this.spriteSheetJustin2
-        this.imageAttacking.crossOrigin = true;
+        this.image = this.assets[0];
+        this.imageAttacking = this.assets[1];
 
         this.spriteDict = {running: [[0, 2], [3, 2]],
                             knockedback: [[0, 3], [5, 3]],

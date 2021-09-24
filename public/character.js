@@ -1,6 +1,6 @@
 export default class Character {
 
-    constructor(gameWidth, gameHeight, name, pos, id, ctx) {
+    constructor(gameWidth, gameHeight, name, pos, id, assets, ctx) {
         this.gameHeight = gameHeight;
         this.gameWidth = gameWidth;
         this.id = id;
@@ -19,6 +19,8 @@ export default class Character {
         this.spacing = 0;
         this.row = 2;
         this.col = 0;
+
+        this.assets = assets;
         
 
         this.directions = {

@@ -21,6 +21,52 @@ const states = {
     WINNING: "winning",
 }
 
+// load all assets first
+
+var woodyImage = new Image();
+woodyImage.src = "Assets/woody.png";
+woodyImage.crossOrigin = true;
+
+var woodyImageWinning = new Image();
+woodyImageWinning.src = "Assets/woody2.png";
+woodyImageWinning.crossOrigin = true;
+
+var woodyAssets = [woodyImage, woodyImageWinning];
+
+var firzenImage = new Image();
+firzenImage.src = "Assets/firzen.png";
+firzenImage.crossOrigin = true;
+
+var firzenImageWinning = new Image();
+firzenImageWinning.src = "Assets/firzen1.png";
+firzenImageWinning.crossOrigin = true;
+
+var firzenAssets = [firzenImage, firzenImageWinning];
+
+var henryImage = new Image();
+henryImage.src = "Assets/henry.png";
+henryImage.crossOrigin = true;
+
+var henryImageAttacking = new Image();
+henryImageAttacking.src = "Assets/henryAttacking.png";
+henryImageAttacking.crossOrigin = true;
+
+var henryImageWinning = new Image();
+henryImageWinning.src = "Assets/henry2.png";
+henryImageWinning.crossOrigin = true;
+
+var henryAssets = [henryImage, henryImageAttacking, henryImageWinning];
+
+var justinImage = new Image();
+justinImage.src = "Assets/justin0.png";
+justinImage.crossOrigin = true;
+
+var justinImageAttacking = new Image();
+justinImageAttacking.src = "Assets/justin1.png";
+justinImageAttacking.crossOrigin = true;
+
+var justinAssets = [justinImage, justinImageAttacking];
+
 
 function gameLoop(timestamp) {
 
@@ -294,16 +340,16 @@ document.getElementById("start").addEventListener("click", function(s) {
         let rand = Math.floor(Math.random() * 4);
 
         if (rand == 0) {
-            var character = new Henry(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);
+            var character = new Henry(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, henryAssets, ctx);
         }
         else if (rand == 1) {
-            var character = new Firzen(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);
+            var character = new Firzen(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, firzenAssets, ctx);
         }
         else if (rand == 2) {
-            var character = new Woody(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);
+            var character = new Woody(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, woodyAssets, ctx);
         }
         else if (rand == 3) {
-            var character = new Justin(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, ctx);
+            var character = new Justin(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, justinAssets, ctx);
         }
         
         characterList.push(character);

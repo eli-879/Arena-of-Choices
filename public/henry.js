@@ -1,24 +1,14 @@
 import Character from './character.js';
 
 export default class Henry extends Character {
-    constructor(gameWidth, gameHeight, name, pos, image, id, ctx) {
-        super(gameWidth, gameHeight, name, pos, image, id, ctx);
+    constructor(gameWidth, gameHeight, name, pos, image, id, assets, ctx) {
+        super(gameWidth, gameHeight, name, pos, image, id, assets, ctx);
 
-        this.spriteSheetHenry = "Assets/henry.png";
-        this.spriteSheetHenryAttacking = "Assets/henry_attack.png";
-        this.spriteSheetHenryWinning = "Assets/henry2.png";
+        this.image = this.assets[0];
+        this.imageAttacking = this.assets[1];
+        this.imageWinning = this.assets[2];
 
-        this.image = new Image();
-        this.image.src = this.spriteSheetHenry;
-        this.image.crossOrigin = true;
-
-        this.imageAttacking = new Image();
-        this.imageAttacking.src = this.spriteSheetHenryAttacking
-        this.imageAttacking.crossOrigin = true;
-
-        this.imageWinning = new Image();
-        this.imageWinning.src = this.spriteSheetHenryWinning;
-        this.imageWinning.crossOrigin = true;
+        console.log(this.image);
 
         this.spriteDict = {running: [[0, 2], [3, 2]],
                             knockedback: [[0, 3], [5, 3]],
