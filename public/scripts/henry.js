@@ -32,15 +32,5 @@ export default class Henry extends Character {
 
     }
 
-    drawSpriteWinning(ctx) {        
-        var sprite = this.getSpriteConstantLoop("winning");
-        if (this.facing == this.directions.RIGHT) {
-            ctx.drawImage(this.imageWinning, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
-        }
-        else {
-            ctx.scale(-1, 1);
-            ctx.drawImage(this.imageWinning, sprite.x, sprite.y, 80, 80, - this.position.x - this.width, this.position.y, this.width, this.height); 
-            ctx.scale(-1, 1);
-        }
-    }
+    
 }

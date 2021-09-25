@@ -33,6 +33,8 @@ export default class Justin extends Character {
 
     drawSpriteWinning(ctx) {        
         var sprite = this.getSpriteConstantLoop("winning");
+        ctx.fillStyle = "purple";
+        ctx.fillText("WINNER", this.position.x, this.position.y - 10);
         if (this.facing == this.directions.RIGHT) {
             ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
         }

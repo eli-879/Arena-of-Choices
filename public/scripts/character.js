@@ -47,6 +47,7 @@ export default class Character {
             KNOCKBACKED: "knockedback",
             ATTACKING: "attacking",
             WINNING: "winning",
+            DEAD: "dead"
         }
 
         this.status = this.states.RUNNING;
@@ -58,7 +59,7 @@ export default class Character {
 
         // character attributes
         this.maxHealth = 100;
-        this.health = 100;
+        this.health = 20;
         this.dmg = 10;
     }
 
@@ -68,17 +69,18 @@ export default class Character {
         this.imageTimer += dt;
         ctx.fillStyle = "#f00";
         ctx.fillText(this.name, this.position.x - (this.nameLength.width / 2)  + 40, this.position.y + this.height + 20);
-        this.drawHealth(ctx);
-        this.drawAttackCD(ctx);
 
+        if (this.status != this.states.DEAD) {
+            this.drawHealth(ctx);
+            this.drawAttackCD(ctx);
+        }
         
-
         switch (this.status) {
             case (this.states.RUNNING):
                 this.drawSpriteRunning(ctx);
                 break;
             case (this.states.KNOCKBACKED):
-                ctx.fillText("KBed", this.position.x, this.position.y - 10)
+                
                 this.drawSpriteKBed(ctx);
                 break;
             case (this.states.ATTACKING):
@@ -87,6 +89,8 @@ export default class Character {
             case (this.states.WINNING):
                 this.drawSpriteWinning(ctx);
                 break;
+            case (this.states.DEAD):
+                this.drawSpriteDead(ctx);
         }
 
         if (this.imageTimer > this.imageTimerMax) {
@@ -135,6 +139,7 @@ export default class Character {
 
     drawSpriteKBed(ctx) {        
         var sprite = this.getSpriteOneLoop("knockedback");
+        ctx.fillText("KBed", this.position.x, this.position.y - 10);
         if (this.facing == this.directions.RIGHT) {
             ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
         }
@@ -147,12 +152,26 @@ export default class Character {
 
     drawSpriteWinning(ctx) {        
         var sprite = this.getSpriteConstantLoop("winning");
+        ctx.fillStyle = "purple";
+        ctx.fillText("WINNER", this.position.x + 30, this.position.y - 10);
         if (this.facing == this.directions.RIGHT) {
             ctx.drawImage(this.imageWinning, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
         }
         else {
             ctx.scale(-1, 1);
             ctx.drawImage(this.imageWinning, sprite.x, sprite.y, 80, 80, - this.position.x - this.width, this.position.y, this.width, this.height); 
+            ctx.scale(-1, 1);
+        }
+    }
+
+    drawSpriteDead(ctx) {        
+        var sprite = this.getSpriteOneLoop("knockedback");
+        if (this.facing == this.directions.RIGHT) {
+            ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
+        }
+        else {
+            ctx.scale(-1, 1);
+            ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, - this.position.x - this.width, this.position.y, this.width, this.height); 
             ctx.scale(-1, 1);
         }
     }

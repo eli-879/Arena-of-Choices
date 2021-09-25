@@ -19,6 +19,7 @@ const states = {
     KNOCKEDBACK: "knockedback",
     ATTACKING: "attacking",
     WINNING: "winning",
+    DEAD: "dead"
 }
 
 // load all assets first
@@ -79,14 +80,14 @@ function gameLoop(timestamp) {
     
     var element = document.getElementById("deathlist");
     element.innerHTML = "";
-    for (var i = 0; i < deathList.length; i++) {
-        element.innerHTML = element.innerHTML + (i+1) + ". " +  deathList[i] + "<br />";
+    for (var i = 0; i < deathListNames.length; i++) {
+        element.innerHTML = element.innerHTML + (i+1) + ". " +  deathListNames[i] + "<br />";
     }
 
-    if (deathList.length == PLAYERS - 1) {
-        deathList.push(characterList[0].getName());
+    if (deathListNames.length == PLAYERS - 1) {
+        deathListNames.push(characterList[0].getName());
 
-        const data = {deathList, beginning};
+        const data = {deathListNames, beginning};
 
         
         const options = {
@@ -129,6 +130,10 @@ function updateGame(dt, ctx) {
             characterList[i].draw(ctx, step);
         }
 
+        for (var i = 0; i < deathListObjects.length; i++) {
+            deathListObjects[i].draw(ctx, step);
+        }
+
         if (characterList.length == 1) {
             if (characterList[0].getStatus() != states.WINNING) {
                 characterList[0].setSprite(states.WINNING);
@@ -155,13 +160,16 @@ function updateObjects(step) {
 
         character.keepInside();
 
-        //console.log(character.getTimeForAttackAnimation() + character.getName());
         character.cooldownAttackTimer(step);
 
         if (character.isDead()) {
-            deathList.push(character.getName());
+            deathListNames.push(character.getName());
+
+            character.setStatus(states.DEAD);
+            deathListObjects.push(character);
             
             characterList.splice(i, 1);
+            
             continue;
         }
 
@@ -315,10 +323,6 @@ function updateHealth(obj1, obj2) {
 
 }
 
-function beginAttack(obj1) {
-    obj1.setStatus(states.ATTACKING);
-    obj1.setSprite(states.ATTACKING);  
-}
 
 function checkXYOverlap(xpos, ypos, characterList) {
     for (const character of characterList) {
@@ -349,7 +353,8 @@ ctx.clearRect(0,0, canvas.width, canvas.height);
 var names = [];
 var characterList = [];
 var beginning = [];
-var deathList = [];
+var deathListNames = [];
+var deathListObjects = [];
 
 
 document.getElementById("start").addEventListener("click", function(s) {
@@ -362,9 +367,9 @@ document.getElementById("start").addEventListener("click", function(s) {
         }
 
     beginning.push(names);
-    //console.log(beginning);
 
-    deathList = [];
+    deathListNames = [];
+    deathListObjects = [];
     characterList = [];
 
     PLAYERS = names.length;
