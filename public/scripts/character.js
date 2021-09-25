@@ -1,5 +1,6 @@
 export default class Character {
 
+
     constructor(gameWidth, gameHeight, name, pos, id, assets, ctx) {
         this.gameHeight = gameHeight;
         this.gameWidth = gameWidth;
@@ -52,8 +53,8 @@ export default class Character {
         
         this.time = 0;
         this.attackTimer = 0;
-        this.attackCD = 1100;
-        //this.timeforAttackAnimation = this.attackCD - ((this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax) - 200;
+        this.attackCD = 900;
+        
 
         // character attributes
         this.maxHealth = 100;
@@ -243,15 +244,15 @@ export default class Character {
         return this.goal;
     }
 
-    getTime() {
+    getTimeKnockedback() {
         return this.time;
     }
 
-    addTime(dt) {
+    addTimeKnockedback(dt) {
         this.time += dt;
     }
 
-    setTime(dt) {
+    setTimeKnockedback(dt) {
         this.time = dt;
     }
 
@@ -275,11 +276,11 @@ export default class Character {
     }
 
     cooldownAttackTimer(dt) {
-        if (this.attackTimer > 0) {
-            this.attackTimer -= dt;
+        if (this.attackTimer - dt < 0) {
+            this.attackTimer = 0;
         }
         else {
-            this.attackTimer = 0;
+            this.attackTimer -= dt;
         }   
     }
 
@@ -311,7 +312,6 @@ export default class Character {
     getDmg() {
         return this.dmg;
     }
-
 
     // Movement related methods
 
@@ -347,7 +347,6 @@ export default class Character {
                 closest = characterList[i];
             }
         }
-        
         return closest
     }
 
@@ -415,7 +414,7 @@ export default class Character {
 
         }
         else {
-            other.setTime(dt);
+            other.setTimeKnockedback(dt);
         
             var otherV = other.getVelocity();
     
@@ -426,9 +425,7 @@ export default class Character {
             
             this.attackTimer = this.attackCD;
         }
-       
-        
-        
+    
     }
 
 }

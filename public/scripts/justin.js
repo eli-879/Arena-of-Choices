@@ -12,9 +12,10 @@ export default class Justin extends Character {
                             attacking: [[0, 1], [7, 1]],
                             winning: [[2, 4], [6, 4]]
                         };
-
-        this.timeforAttackAnimation = this.attackCD - ((this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax) - 200;
-               
+        this.timeforAttackAnimation = (this.attackCD - ((this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax)) * 0.5;   
+        if (this.timeforAttackAnimation <= 0) {
+            console.log("ERROR 0 for timeForAttackAnimation");
+        }               
     }
 
     drawSpriteAttacking(ctx) {

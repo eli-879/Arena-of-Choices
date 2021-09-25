@@ -12,9 +12,11 @@ export default class Woody extends Character {
                             attacking: [[0, 1], [3, 1]],
                             winning: [[1, 3], [10, 3]]
                         };
-
-        this.timeforAttackAnimation = this.attackCD - ((this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax) - 200;
-
+        
+        this.timeforAttackAnimation = (this.attackCD - ((this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax)) * 0.5;  
+        if (this.timeforAttackAnimation <= 0) {
+            console.log("ERROR 0 for timeForAttackAnimation");
+        } 
 
     }
 

@@ -8,16 +8,15 @@ export default class Henry extends Character {
         this.imageAttacking = this.assets[1];
         this.imageWinning = this.assets[2];
 
-        console.log(this.image);
-
         this.spriteDict = {running: [[0, 2], [3, 2]],
                             knockedback: [[0, 3], [5, 3]],
                             attacking: [[0, 0], [4, 0]],
                             winning: [[0, 0], [4, 0]]
                         };
-
-        this.timeforAttackAnimation = this.attackCD - ((this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax) - 200;
-               
+        this.timeforAttackAnimation = (this.attackCD - ((this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax)) * 0.5;           
+        if (this.timeforAttackAnimation <= 0) {
+            console.log("ERROR 0 for timeForAttackAnimation");
+        }
     }
 
     drawSpriteAttacking(ctx) {

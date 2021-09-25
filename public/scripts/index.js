@@ -118,7 +118,7 @@ function updateGame(dt, ctx) {
 
             step = Math.max(hit.getTime(), MIN_STEP);
             updateObjects(step);
-            updateVelocities(hit, step);
+            handleCollisions(step);
         }
         else {
             updateObjects(step);
@@ -145,33 +145,7 @@ function updateGame(dt, ctx) {
 
 }
 
-function findFirstCollision(dt) {
-    var result = null
-    for (var i = 0; i < characterList.length; i++) {
-        for (var j = i+1; j < characterList.length; j++) {
-            var hit = findCollision(i, j, dt);
-            if (hit != null) {
-                if (result == null || hit.getTime() < result.getTime()) {
-                    result = hit;
-                }
-            }
-        }
-    }
-    return result;
-}
 
-function findCollision(i, j, dt) {
-    var obj1 = characterList[i];
-    var obj2 = characterList[j];
-    var obj1Pos = obj1.getPosition();
-    var obj2Pos = obj2.getPosition();
-    if (obj1Pos.x <= obj2Pos.x + obj2.getWidth() && obj1Pos.x + obj1.getWidth() >= obj2Pos.x && obj1Pos.y + obj1.getHeight() >= obj2Pos.y && obj1Pos.y <= obj2Pos.y + obj2.getHeight()) {
-        var dir = 0;
-        let col = new Collision(obj1, obj2, dir, dt);
-        return col;
-    }
-    return null;
-}
 
 function updateObjects(step) {
     for (var i = 0; i < characterList.length; i++) {
@@ -181,6 +155,7 @@ function updateObjects(step) {
 
         character.keepInside();
 
+        //console.log(character.getTimeForAttackAnimation() + character.getName());
         character.cooldownAttackTimer(step);
 
         if (character.isDead()) {
@@ -194,12 +169,12 @@ function updateObjects(step) {
             character.setVX(v.x * 0.95);
             character.setVY(v.y * 0.95);
             character.setPosition(pos.x + step * v.x / 1000, pos.y + step * v.y / 1000);
-            character.addTime(step);
+            character.addTimeKnockedback(step);
 
-            if (character.getTime() > 1000) {
+            if (character.getTimeKnockedback() > 1000) {
                 character.setStatus(states.RUNNING);
                 character.setSprite(states.RUNNING);
-                character.setTime(0);
+                character.setTimeKnockedback(0);
             }
         }
 
@@ -229,8 +204,7 @@ function updateVelocities(collision, step) {
             if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
                 obj1.hit(obj2, step);
                 updateStatus(obj1, obj2);
-                updateHealth(obj1, obj2);
-                
+                updateHealth(obj1, obj2); 
             }
             
         }
@@ -260,6 +234,68 @@ function updateVelocities(collision, step) {
             }
         }
     }
+}
+
+function handleCollisions(step) {
+    var allCollisions = findAllCollisions(step);
+    var uniqueCollisions = [];
+    var charactersSeen = [];
+
+    for (var i = 0; i < allCollisions.length; i++) {
+        let obj1 = allCollisions[i].getObj1();
+        let obj2 = allCollisions[i].getObj2();
+
+        if (charactersSeen.includes(obj1.getName()) || charactersSeen.includes(obj2.getName())) {
+            continue;
+        }
+        else {
+            charactersSeen.push(obj1.getName());
+            charactersSeen.push(obj2.getName());
+            uniqueCollisions.push(allCollisions[i]);
+        }
+    }
+
+    for (var collision of uniqueCollisions) {
+        updateVelocities(collision, step);
+    }
+}
+
+function findAllCollisions(dt) {
+    var collisions = [];
+    for (var i = 0; i < characterList.length; ++i) {
+        for (var j = i+1; j < characterList.length; ++j) {
+            var hit = findCollision(i, j, dt);
+            if (hit != null) {
+                collisions.push(hit);
+            }
+        }
+    }
+    return collisions;
+}
+
+function findFirstCollision(dt) {
+    for (var i = 0; i < characterList.length; i++) {
+        for (var j = i+1; j < characterList.length; j++) {
+            var hit = findCollision(i, j, dt);
+            if (hit != null) {
+                return hit;
+            }
+        }
+    }
+    
+}
+
+function findCollision(i, j, dt) {
+    var obj1 = characterList[i];
+    var obj2 = characterList[j];
+    var obj1Pos = obj1.getPosition();
+    var obj2Pos = obj2.getPosition();
+    if (obj1Pos.x <= obj2Pos.x + obj2.getWidth() && obj1Pos.x + obj1.getWidth() >= obj2Pos.x && obj1Pos.y + obj1.getHeight() >= obj2Pos.y && obj1Pos.y <= obj2Pos.y + obj2.getHeight()) {
+        var dir = 0;
+        let col = new Collision(obj1, obj2, dir, dt);
+        return col;
+    }
+    return null;
 }
 
 function updateStatus(obj1, obj2) {
@@ -326,7 +362,7 @@ document.getElementById("start").addEventListener("click", function(s) {
         }
 
     beginning.push(names);
-    console.log(beginning);
+    //console.log(beginning);
 
     deathList = [];
     characterList = [];
@@ -344,6 +380,7 @@ document.getElementById("start").addEventListener("click", function(s) {
         
         
         let pos = {x: xp, y: yp};
+
         
         let rand = Math.floor(Math.random() * 4);
 

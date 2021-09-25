@@ -34,9 +34,7 @@ export default class Julian extends Character {
                         };
 
         this.frameCounter = 0;
-        
-        this.timeforAttackAnimation = this.attackCD - ((this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax) - 200;
-            
+    
     }
 
     draw(ctx, dt) {

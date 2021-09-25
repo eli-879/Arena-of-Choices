@@ -13,11 +13,10 @@ export default class Firzen extends Character {
                             winning: [[4, 0], [10, 0]]
                         };
         
-        this.timeforAttackAnimation = this.attackCD - ((this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax) - 200;
-
-        
-
-                        
+        this.timeforAttackAnimation = (this.attackCD - ((this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax)) * 0.5;
+        if (this.timeforAttackAnimation <= 0) {
+            console.log("ERROR 0 for timeForAttackAnimation");
+        }                    
     }
 
     drawSpriteWinning(ctx) {        
