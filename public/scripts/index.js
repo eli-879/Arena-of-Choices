@@ -89,7 +89,6 @@ function gameLoop(timestamp) {
 
         const data = {deathListNames, beginning};
 
-        
         const options = {
             method: 'POST',
             headers: {
