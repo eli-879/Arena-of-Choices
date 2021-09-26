@@ -14,11 +14,11 @@ const SPACING_WIDTH = 0;
 var PLAYERS = 0;
 
 const states = {
-    RUNNING: "running",
-    KNOCKEDBACK: "knockedback",
-    ATTACKING: "attacking",
-    WINNING: "winning",
-    DEAD: "dead",
+	RUNNING: "running",
+	KNOCKEDBACK: "knockedback",
+	ATTACKING: "attacking",
+	WINNING: "winning",
+	DEAD: "dead",
 };
 
 // load all assets first
@@ -67,284 +67,290 @@ justinImageAttacking.crossOrigin = true;
 
 var justinAssets = [justinImage, justinImageAttacking];
 
+var bg = new Image();
+bg.src = "Assets/bg1.png";
+bg.crossOrigin = true;
+
 function gameLoop(timestamp) {
-    let deltaTime = timestamp - lastTime;
-    lastTime = timestamp;
+	let deltaTime = timestamp - lastTime;
+	lastTime = timestamp;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    updateGame(deltaTime, ctx);
+	updateGame(deltaTime, ctx);
 
-    var element = document.getElementById("deathlist");
-    element.innerHTML = "";
-    for (var i = 0; i < deathListNames.length; i++) {
-        element.innerHTML =
-            element.innerHTML + (i + 1) + ". " + deathListNames[i] + "<br />";
-    }
+	var element = document.getElementById("deathlist");
+	element.innerHTML = "";
+	for (var i = 0; i < deathListNames.length; i++) {
+		element.innerHTML =
+			element.innerHTML + (i + 1) + ". " + deathListNames[i] + "<br />";
+	}
 
-    if (deathListNames.length == PLAYERS - 1) {
-        deathListNames.push(characterList[0].getName());
+	if (deathListNames.length == PLAYERS - 1) {
+		deathListNames.push(characterList[0].getName());
 
-        const data = { deathListNames, beginning };
+		const data = { deathListNames, beginning };
 
-        const options = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        };
+		const options = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(data),
+		};
 
-        fetch("/api", options)
-            .then((response) => response.json())
-            .then((json) => {
-                console.log(json);
-            });
+		fetch("/api", options)
+			.then((response) => response.json())
+			.then((json) => {
+				console.log(json);
+			});
 
-        PLAYERS = -999;
-    }
+		PLAYERS = -999;
+	}
 
-    requestAnimationFrame(gameLoop);
+	requestAnimationFrame(gameLoop);
 }
 
 function updateGame(dt, ctx) {
-    let step = dt;
-    do {
-        var hit = findFirstCollision(step);
-        if (hit != null) {
-            step = Math.max(hit.getTime(), MIN_STEP);
-            updateObjects(step);
-            handleCollisions(step);
-        } else {
-            updateObjects(step);
-        }
+	let step = dt;
+	do {
+		var hit = findFirstCollision(step);
+		if (hit != null) {
+			step = Math.max(hit.getTime(), MIN_STEP);
+			updateObjects(step);
+			handleCollisions(step);
+		} else {
+			updateObjects(step);
+		}
 
-        for (var i = 0; i < deathListObjects.length; i++) {
-            deathListObjects[i].draw(ctx, step);
-        }
+		ctx.drawImage(bg, 0, 0);
 
-        for (var i = 0; i < characterList.length; i++) {
-            characterList[i].draw(ctx, step);
-        }
+		for (var i = 0; i < deathListObjects.length; i++) {
+			deathListObjects[i].draw(ctx, step);
+		}
 
-        if (characterList.length == 1) {
-            if (characterList[0].getStatus() != states.WINNING) {
-                characterList[0].setSprite(states.WINNING);
-            }
-            characterList[0].setStatus(states.WINNING);
-        }
+		for (var i = 0; i < characterList.length; i++) {
+			characterList[i].draw(ctx, step);
+		}
 
-        dt -= step;
-        step = dt;
-    } while (dt > 0);
+		if (characterList.length == 1) {
+			if (characterList[0].getStatus() != states.WINNING) {
+				characterList[0].setSprite(states.WINNING);
+			}
+			characterList[0].setStatus(states.WINNING);
+		}
+
+		dt -= step;
+		step = dt;
+	} while (dt > 0);
 }
 
 function updateObjects(step) {
-    for (var i = 0; i < characterList.length; i++) {
-        var character = characterList[i];
-        var pos = character.getPosition();
-        var v = character.getVelocity();
+	for (var i = 0; i < characterList.length; i++) {
+		var character = characterList[i];
+		var pos = character.getPosition();
+		var v = character.getVelocity();
 
-        character.keepInside();
+		character.keepInside();
 
-        character.cooldownAttackTimer(step);
+		character.cooldownAttackTimer(step);
 
-        if (character.isDead()) {
-            deathListNames.push(character.getName());
+		if (character.isDead()) {
+			deathListNames.push(character.getName());
 
-            character.setStatus(states.DEAD);
-            deathListObjects.push(character);
+			character.setStatus(states.DEAD);
+			deathListObjects.push(character);
 
-            characterList.splice(i, 1);
+			characterList.splice(i, 1);
 
-            continue;
-        }
+			continue;
+		}
 
-        if (character.getStatus() == states.KNOCKEDBACK) {
-            character.setVX(v.x * 0.95);
-            character.setVY(v.y * 0.95);
-            character.setPosition(
-                pos.x + (step * v.x) / 1000,
-                pos.y + (step * v.y) / 1000
-            );
-            character.addTimeKnockedback(step);
+		if (character.getStatus() == states.KNOCKEDBACK) {
+			character.setVX(v.x * 0.95);
+			character.setVY(v.y * 0.95);
+			character.setPosition(
+				pos.x + (step * v.x) / 1000,
+				pos.y + (step * v.y) / 1000
+			);
+			character.addTimeKnockedback(step);
 
-            if (character.getTimeKnockedback() > 1000) {
-                character.setStatus(states.RUNNING);
-                character.setSprite(states.RUNNING);
-                character.setTimeKnockedback(0);
-            }
-        } else {
-            character.setGoal(character.getClosestEnemy(characterList));
-            character.updateVelocities();
+			if (character.getTimeKnockedback() > 1000) {
+				character.setStatus(states.RUNNING);
+				character.setSprite(states.RUNNING);
+				character.setTimeKnockedback(0);
+			}
+		} else {
+			character.setGoal(character.getClosestEnemy(characterList));
+			character.updateVelocities();
 
-            character.setPosition(
-                pos.x + (step * v.x) / 1000,
-                pos.y + (step * v.y) / 1000
-            );
-        }
+			character.setPosition(
+				pos.x + (step * v.x) / 1000,
+				pos.y + (step * v.y) / 1000
+			);
+		}
 
-        if (
-            character.getAttackTimer() <
-                character.getTimeForAttackAnimation() &&
-            character.getStatus() == states.ATTACKING
-        ) {
-            character.setSprite(states.RUNNING);
-            character.setStatus(states.RUNNING);
-        }
+		if (
+			character.getAttackTimer() <
+				character.getTimeForAttackAnimation() &&
+			character.getStatus() == states.ATTACKING
+		) {
+			character.setSprite(states.RUNNING);
+			character.setStatus(states.RUNNING);
+		}
 
-        if (character.getStatus() == states.RUNNING) {
-            character.updateDirection();
-        }
-    }
+		if (character.getStatus() == states.RUNNING) {
+			character.updateDirection();
+		}
+	}
 }
 
 function updateVelocities(collision, step) {
-    var obj1 = collision.getObj1();
-    var obj2 = collision.getObj2();
-    if (obj1 != null && obj2 != null) {
-        if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() != 0) {
-            if (
-                obj1.getStatus() != states.KNOCKEDBACK &&
-                obj2.getStatus() != states.KNOCKEDBACK
-            ) {
-                obj1.hit(obj2, step);
-                updateStatus(obj1, obj2);
-                updateHealth(obj1, obj2);
-            }
-        } else if (obj1.getAttackTimer() != 0 && obj2.getAttackTimer() == 0) {
-            if (
-                obj1.getStatus() != states.KNOCKEDBACK &&
-                obj2.getStatus() != states.KNOCKEDBACK
-            ) {
-                obj2.hit(obj1, step);
-                updateStatus(obj2, obj1);
-                updateHealth(obj2, obj1);
-            }
-        } else if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() == 0) {
-            var coinflip = Math.floor(Math.random() * 2);
+	var obj1 = collision.getObj1();
+	var obj2 = collision.getObj2();
+	if (obj1 != null && obj2 != null) {
+		if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() != 0) {
+			if (
+				obj1.getStatus() != states.KNOCKEDBACK &&
+				obj2.getStatus() != states.KNOCKEDBACK
+			) {
+				obj1.hit(obj2, step);
+				updateStatus(obj1, obj2);
+				updateHealth(obj1, obj2);
+			}
+		} else if (obj1.getAttackTimer() != 0 && obj2.getAttackTimer() == 0) {
+			if (
+				obj1.getStatus() != states.KNOCKEDBACK &&
+				obj2.getStatus() != states.KNOCKEDBACK
+			) {
+				obj2.hit(obj1, step);
+				updateStatus(obj2, obj1);
+				updateHealth(obj2, obj1);
+			}
+		} else if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() == 0) {
+			var coinflip = Math.floor(Math.random() * 2);
 
-            if (coinflip == 0) {
-                if (
-                    obj1.getStatus() != states.KNOCKEDBACK &&
-                    obj2.getStatus() != states.KNOCKEDBACK
-                ) {
-                    obj1.hit(obj2, step);
-                    updateStatus(obj1, obj2);
-                    updateHealth(obj1, obj2);
-                }
-            } else {
-                if (
-                    obj1.getStatus() != states.KNOCKEDBACK &&
-                    obj2.getStatus() != states.KNOCKEDBACK
-                ) {
-                    obj2.hit(obj1, step);
-                    updateStatus(obj2, obj1);
-                    updateHealth(obj2, obj1);
-                }
-            }
-        }
-    }
+			if (coinflip == 0) {
+				if (
+					obj1.getStatus() != states.KNOCKEDBACK &&
+					obj2.getStatus() != states.KNOCKEDBACK
+				) {
+					obj1.hit(obj2, step);
+					updateStatus(obj1, obj2);
+					updateHealth(obj1, obj2);
+				}
+			} else {
+				if (
+					obj1.getStatus() != states.KNOCKEDBACK &&
+					obj2.getStatus() != states.KNOCKEDBACK
+				) {
+					obj2.hit(obj1, step);
+					updateStatus(obj2, obj1);
+					updateHealth(obj2, obj1);
+				}
+			}
+		}
+	}
 }
 
 function handleCollisions(step) {
-    var allCollisions = findAllCollisions(step);
-    var uniqueCollisions = [];
-    var charactersSeen = [];
+	var allCollisions = findAllCollisions(step);
+	var uniqueCollisions = [];
+	var charactersSeen = [];
 
-    for (var i = 0; i < allCollisions.length; i++) {
-        let obj1 = allCollisions[i].getObj1();
-        let obj2 = allCollisions[i].getObj2();
+	for (var i = 0; i < allCollisions.length; i++) {
+		let obj1 = allCollisions[i].getObj1();
+		let obj2 = allCollisions[i].getObj2();
 
-        if (
-            charactersSeen.includes(obj1.getName()) ||
-            charactersSeen.includes(obj2.getName())
-        ) {
-            continue;
-        } else {
-            charactersSeen.push(obj1.getName());
-            charactersSeen.push(obj2.getName());
-            uniqueCollisions.push(allCollisions[i]);
-        }
-    }
+		if (
+			charactersSeen.includes(obj1.getName()) ||
+			charactersSeen.includes(obj2.getName())
+		) {
+			continue;
+		} else {
+			charactersSeen.push(obj1.getName());
+			charactersSeen.push(obj2.getName());
+			uniqueCollisions.push(allCollisions[i]);
+		}
+	}
 
-    for (var collision of uniqueCollisions) {
-        updateVelocities(collision, step);
-    }
+	for (var collision of uniqueCollisions) {
+		updateVelocities(collision, step);
+	}
 }
 
 function findAllCollisions(dt) {
-    var collisions = [];
-    for (var i = 0; i < characterList.length; ++i) {
-        for (var j = i + 1; j < characterList.length; ++j) {
-            var hit = findCollision(i, j, dt);
-            if (hit != null) {
-                collisions.push(hit);
-            }
-        }
-    }
-    return collisions;
+	var collisions = [];
+	for (var i = 0; i < characterList.length; ++i) {
+		for (var j = i + 1; j < characterList.length; ++j) {
+			var hit = findCollision(i, j, dt);
+			if (hit != null) {
+				collisions.push(hit);
+			}
+		}
+	}
+	return collisions;
 }
 
 function findFirstCollision(dt) {
-    for (var i = 0; i < characterList.length; i++) {
-        for (var j = i + 1; j < characterList.length; j++) {
-            var hit = findCollision(i, j, dt);
-            if (hit != null) {
-                return hit;
-            }
-        }
-    }
+	for (var i = 0; i < characterList.length; i++) {
+		for (var j = i + 1; j < characterList.length; j++) {
+			var hit = findCollision(i, j, dt);
+			if (hit != null) {
+				return hit;
+			}
+		}
+	}
 }
 
 function findCollision(i, j, dt) {
-    var obj1 = characterList[i];
-    var obj2 = characterList[j];
-    var obj1Pos = obj1.getPosition();
-    var obj2Pos = obj2.getPosition();
-    if (
-        obj1Pos.x <= obj2Pos.x + obj2.getWidth() &&
-        obj1Pos.x + obj1.getWidth() >= obj2Pos.x &&
-        obj1Pos.y + obj1.getHeight() >= obj2Pos.y &&
-        obj1Pos.y <= obj2Pos.y + obj2.getHeight()
-    ) {
-        var dir = 0;
-        let col = new Collision(obj1, obj2, dir, dt);
-        return col;
-    }
-    return null;
+	var obj1 = characterList[i];
+	var obj2 = characterList[j];
+	var obj1Pos = obj1.getPosition();
+	var obj2Pos = obj2.getPosition();
+	if (
+		obj1Pos.x <= obj2Pos.x + obj2.getWidth() &&
+		obj1Pos.x + obj1.getWidth() >= obj2Pos.x &&
+		obj1Pos.y + obj1.getHeight() >= obj2Pos.y &&
+		obj1Pos.y <= obj2Pos.y + obj2.getHeight()
+	) {
+		var dir = 0;
+		let col = new Collision(obj1, obj2, dir, dt);
+		return col;
+	}
+	return null;
 }
 
 function updateStatus(obj1, obj2) {
-    // obj1 is the hitter, obj2 is the hittee(is that a word?)
-    obj1.setStatus(states.ATTACKING);
-    obj1.setSprite(states.ATTACKING);
+	// obj1 is the hitter, obj2 is the hittee(is that a word?)
+	obj1.setStatus(states.ATTACKING);
+	obj1.setSprite(states.ATTACKING);
 
-    obj2.setStatus(states.KNOCKEDBACK);
-    obj2.setSprite(states.KNOCKEDBACK);
+	obj2.setStatus(states.KNOCKEDBACK);
+	obj2.setSprite(states.KNOCKEDBACK);
 }
 
 function updateHealth(obj1, obj2) {
-    // obj1 is the hitter, obj2 is the hittee
-    var dmg = obj1.getDmg();
-    obj2.minusHealth(dmg);
+	// obj1 is the hitter, obj2 is the hittee
+	var dmg = obj1.getDmg();
+	obj2.minusHealth(dmg);
 }
 
 function checkXYOverlap(xpos, ypos, characterList) {
-    for (const character of characterList) {
-        if (
-            character.getPosition().x == xpos &&
-            character.getPosition().y == ypos
-        ) {
-            return true;
-        }
-    }
-    return false;
+	for (const character of characterList) {
+		if (
+			character.getPosition().x == xpos &&
+			character.getPosition().y == ypos
+		) {
+			return true;
+		}
+	}
+	return false;
 }
 
 function getRandomTile(max_tiles) {
-    // tile size of 80x80 - 9 up, 12 across
-    return Math.floor(Math.random() * max_tiles);
+	// tile size of 80x80 - 9 up, 12 across
+	return Math.floor(Math.random() * max_tiles);
 }
 
 var canvas = document.getElementById("gameScreen");
@@ -366,82 +372,82 @@ var deathListNames = [];
 var deathListObjects = [];
 
 document.getElementById("start").addEventListener("click", () => {
-    names = $("#entries").val().split("\n");
-    for (var i = names.length - 1; i > -1; i--) {
-        if (names[i].trim() == "") {
-            names.splice(i, 1);
-        }
-    }
+	names = $("#entries").val().split("\n");
+	for (var i = names.length - 1; i > -1; i--) {
+		if (names[i].trim() == "") {
+			names.splice(i, 1);
+		}
+	}
 
-    if (names.length > 24) {
-        names = [];
-    }
+	if (names.length > 24) {
+		names = [];
+	}
 
-    beginning.push(names);
+	beginning.push(names);
 
-    deathListNames = [];
-    deathListObjects = [];
-    characterList = [];
+	deathListNames = [];
+	deathListObjects = [];
+	characterList = [];
 
-    PLAYERS = names.length;
+	PLAYERS = names.length;
 
-    for (var i = 0; i < names.length; i++) {
-        var xp = getRandomTile(6) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
-        var yp = getRandomTile(3) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+	for (var i = 0; i < names.length; i++) {
+		var xp = getRandomTile(6) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+		var yp = getRandomTile(3) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
 
-        while (checkXYOverlap(xp, yp, characterList)) {
-            xp = getRandomTile(6) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
-            yp = getRandomTile(4) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
-        }
+		while (checkXYOverlap(xp, yp, characterList)) {
+			xp = getRandomTile(6) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+			yp = getRandomTile(4) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+		}
 
-        let pos = { x: xp, y: yp };
+		let pos = { x: xp, y: yp };
 
-        let rand = Math.floor(Math.random() * 4);
+		let rand = Math.floor(Math.random() * 4);
 
-        if (rand == 0) {
-            var character = new Henry(
-                GAME_WIDTH,
-                GAME_HEIGHT,
-                names[i],
-                pos,
-                i,
-                henryAssets,
-                ctx
-            );
-        } else if (rand == 1) {
-            var character = new Firzen(
-                GAME_WIDTH,
-                GAME_HEIGHT,
-                names[i],
-                pos,
-                i,
-                firzenAssets,
-                ctx
-            );
-        } else if (rand == 2) {
-            var character = new Woody(
-                GAME_WIDTH,
-                GAME_HEIGHT,
-                names[i],
-                pos,
-                i,
-                woodyAssets,
-                ctx
-            );
-        } else if (rand == 3) {
-            var character = new Justin(
-                GAME_WIDTH,
-                GAME_HEIGHT,
-                names[i],
-                pos,
-                i,
-                justinAssets,
-                ctx
-            );
-        }
+		if (rand == 0) {
+			var character = new Henry(
+				GAME_WIDTH,
+				GAME_HEIGHT,
+				names[i],
+				pos,
+				i,
+				henryAssets,
+				ctx
+			);
+		} else if (rand == 1) {
+			var character = new Firzen(
+				GAME_WIDTH,
+				GAME_HEIGHT,
+				names[i],
+				pos,
+				i,
+				firzenAssets,
+				ctx
+			);
+		} else if (rand == 2) {
+			var character = new Woody(
+				GAME_WIDTH,
+				GAME_HEIGHT,
+				names[i],
+				pos,
+				i,
+				woodyAssets,
+				ctx
+			);
+		} else if (rand == 3) {
+			var character = new Justin(
+				GAME_WIDTH,
+				GAME_HEIGHT,
+				names[i],
+				pos,
+				i,
+				justinAssets,
+				ctx
+			);
+		}
 
-        characterList.push(character);
-    }
+		characterList.push(character);
+	}
 });
 
 let lastTime = 0;

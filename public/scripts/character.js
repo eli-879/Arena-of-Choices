@@ -95,8 +95,8 @@ export default class Character {
 	}
 
 	drawHealth(ctx) {
-		ctx.fillStyle = "green";
-		ctx.font = "14px Arial";
+		ctx.fillStyle = "lime";
+		ctx.font = "20px Arial";
 		ctx.fillRect(
 			this.position.x,
 			this.position.y + this.height + 35,
@@ -184,7 +184,13 @@ export default class Character {
 
 	drawSpriteKBed(ctx) {
 		var sprite = this.getSpriteOneLoop("knockedback");
-		ctx.fillText("KBed", this.position.x, this.position.y - 10);
+		ctx.fillText(
+			"KBed",
+			this.position.x +
+				this.width / 2 -
+				ctx.measureText("KBed").width / 2,
+			this.position.y - 10
+		);
 		if (this.facing == this.directions.RIGHT) {
 			ctx.drawImage(
 				this.image,
@@ -216,8 +222,14 @@ export default class Character {
 
 	drawSpriteWinning(ctx) {
 		var sprite = this.getSpriteConstantLoop("winning");
-		ctx.fillStyle = "purple";
-		ctx.fillText("WINNER", this.position.x + 30, this.position.y - 10);
+		ctx.fillStyle = "fuchsia";
+		ctx.fillText(
+			"WINNER",
+			this.position.x +
+				this.width / 2 -
+				ctx.measureText("WINNER").width / 2,
+			this.position.y - 10
+		);
 		if (this.facing == this.directions.RIGHT) {
 			ctx.drawImage(
 				this.imageWinning,
@@ -438,8 +450,8 @@ export default class Character {
 			this.velocity.x = 0;
 		}
 
-		if (this.position.y <= 1) {
-			this.position.y = 5;
+		if (this.position.y <= 80) {
+			this.position.y = 81;
 			this.velocity.y = 0;
 		}
 
