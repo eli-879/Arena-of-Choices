@@ -1,4 +1,4 @@
-import Character from './character.js';
+import Character from "./character.js";
 
 export default class Julian extends Character {
     constructor(gameWidth, gameHeight, name, pos, image, id, ctx) {
@@ -17,70 +17,100 @@ export default class Julian extends Character {
         this.image1.src = this.spriteSheetJulian1;
         this.image1.crossOrigin = true;
 
-        this.spriteLocs = [{"name":"sprite200","x":6,"y":10,"width":98,"height":82},
-                    {"name":"sprite201","x":132,"y":16,"width":74,"height":83},
-                    {"name":"sprite202","x":333,"y":21,"width":97,"height":78},
-                    {"name":"sprite203","x":220,"y":22,"width":105,"height":77},
-                    {"name":"sprite204","x":564,"y":27,"width":87,"height":52},
-                    {"name":"sprite205","x":454,"y":30,"width":92,"height":59},
-                    {"name":"sprite206","x":664,"y":62,"width":98,"height":36},
-                    {"name":"sprite207","x":17,"y":117,"width":82,"height":57},
-                    ]
+        this.spriteLocs = [
+            { name: "sprite200", x: 6, y: 10, width: 98, height: 82 },
+            { name: "sprite201", x: 132, y: 16, width: 74, height: 83 },
+            { name: "sprite202", x: 333, y: 21, width: 97, height: 78 },
+            { name: "sprite203", x: 220, y: 22, width: 105, height: 77 },
+            { name: "sprite204", x: 564, y: 27, width: 87, height: 52 },
+            { name: "sprite205", x: 454, y: 30, width: 92, height: 59 },
+            { name: "sprite206", x: 664, y: 62, width: 98, height: 36 },
+            { name: "sprite207", x: 17, y: 117, width: 82, height: 57 },
+        ];
 
-        this.spriteDict = {running: [[6, 2], [9, 2]],
-                            knockedback: [[4], [7]],
-                            attacking: [[1], [4]],
-                            winning: [[4, 1], [7, 1]]
-                        };
+        this.spriteDict = {
+            running: [
+                [6, 2],
+                [9, 2],
+            ],
+            knockedback: [[4], [7]],
+            attacking: [[1], [4]],
+            winning: [
+                [4, 1],
+                [7, 1],
+            ],
+        };
 
         this.frameCounter = 0;
-    
     }
 
     draw(ctx, dt) {
         this.imageTimer += dt;
         ctx.fillStyle = "#f00";
-        ctx.fillText(this.name, this.position.x - (this.nameLength.width / 2)  + 20, this.position.y + this.height + 20);
+        ctx.fillText(
+            this.name,
+            this.position.x - this.nameLength.width / 2 + 20,
+            this.position.y + this.height + 20
+        );
         this.drawHealth(ctx);
         this.drawAttackCD(ctx);
 
         switch (this.status) {
-            case (this.states.RUNNING):
+            case this.states.RUNNING:
                 this.drawSpriteRunning(ctx);
                 break;
-            case (this.states.KNOCKBACKED):
-                ctx.fillText("KBed", this.position.x, this.position.y - 10)
+            case this.states.KNOCKBACKED:
+                ctx.fillText("KBed", this.position.x, this.position.y - 10);
                 this.drawSpriteKBed(ctx);
                 break;
-            case (this.states.ATTACKING):
+            case this.states.ATTACKING:
                 this.drawSpriteAttacking(ctx);
                 break;
-            case (this.states.WINNING):
+            case this.states.WINNING:
                 break;
         }
 
         if (this.imageTimer > this.imageTimerMax) {
-            if (this.status == this.states.RUNNING || this.status == this.states.WINNING) {
-                this.col += 1
+            if (
+                this.status == this.states.RUNNING ||
+                this.status == this.states.WINNING
+            ) {
+                this.col += 1;
                 this.imageTimer = 0;
-            }
-            else {
+            } else {
                 this.frameCounter += 1;
                 this.imageTimer = 0;
             }
-            
         }
     }
 
-    
     drawSpriteAttacking(ctx) {
         var sprite = this.getSpriteOneLoop("attacking");
         if (this.facing == this.directions.RIGHT) {
-            ctx.drawImage(this.image1, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
-        }
-        else {
+            ctx.drawImage(
+                this.image1,
+                sprite.x,
+                sprite.y,
+                80,
+                80,
+                this.position.x,
+                this.position.y,
+                this.width,
+                this.height
+            );
+        } else {
             ctx.scale(-1, 1);
-            ctx.drawImage(this.image1, sprite.x, sprite.y, 80, 80, - this.position.x - this.width, this.position.y, this.width, this.height); 
+            ctx.drawImage(
+                this.image1,
+                sprite.x,
+                sprite.y,
+                80,
+                80,
+                -this.position.x - this.width,
+                this.position.y,
+                this.width,
+                this.height
+            );
             ctx.scale(-1, 1);
         }
     }
@@ -88,36 +118,92 @@ export default class Julian extends Character {
     drawSpriteRunning(ctx) {
         var sprite = this.getSpriteConstantLoop("running");
         if (this.facing == this.directions.RIGHT) {
-            ctx.drawImage(this.image0, sprite.x, sprite.y, this.width, this.height, this.position.x, this.position.y, this.width, this.height); 
-        }
-        else {
+            ctx.drawImage(
+                this.image0,
+                sprite.x,
+                sprite.y,
+                this.width,
+                this.height,
+                this.position.x,
+                this.position.y,
+                this.width,
+                this.height
+            );
+        } else {
             ctx.scale(-1, 1);
-            ctx.drawImage(this.image0, sprite.x, sprite.y, this.width, this.height, - this.position.x - this.width, this.position.y, this.width, this.height); 
+            ctx.drawImage(
+                this.image0,
+                sprite.x,
+                sprite.y,
+                this.width,
+                this.height,
+                -this.position.x - this.width,
+                this.position.y,
+                this.width,
+                this.height
+            );
             ctx.scale(-1, 1);
         }
-        
     }
 
-    drawSpriteKBed(ctx) {        
+    drawSpriteKBed(ctx) {
         var sprite = this.getSpriteOneLoop("knockedback");
         if (this.facing == this.directions.RIGHT) {
-            ctx.drawImage(this.image1, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
-        }
-        else {
+            ctx.drawImage(
+                this.image1,
+                sprite.x,
+                sprite.y,
+                80,
+                80,
+                this.position.x,
+                this.position.y,
+                this.width,
+                this.height
+            );
+        } else {
             ctx.scale(-1, 1);
-            ctx.drawImage(this.image1, sprite.x, sprite.y, 80, 80, - this.position.x - this.width, this.position.y, this.width, this.height); 
+            ctx.drawImage(
+                this.image1,
+                sprite.x,
+                sprite.y,
+                80,
+                80,
+                -this.position.x - this.width,
+                this.position.y,
+                this.width,
+                this.height
+            );
             ctx.scale(-1, 1);
         }
     }
 
-    drawSpriteWinning(ctx) {        
+    drawSpriteWinning(ctx) {
         var sprite = this.getSpriteKBed("winning");
         if (this.facing == this.directions.RIGHT) {
-            ctx.drawImage(this.image0, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height); 
-        }
-        else {
+            ctx.drawImage(
+                this.image0,
+                sprite.x,
+                sprite.y,
+                80,
+                80,
+                this.position.x,
+                this.position.y,
+                this.width,
+                this.height
+            );
+        } else {
             ctx.scale(-1, 1);
-            ctx.drawImage(this.image0, sprite.x, sprite.y, 80, 80, - this.position.x - this.width, this.position.y, this.width, this.height); 
+            ctx.drawImage(
+                this.image0,
+                sprite.x,
+                sprite.y,
+                80,
+                80,
+                -this.position.x - this.width,
+                this.position.y,
+                this.width,
+                this.height
+            );
             ctx.scale(-1, 1);
         }
     }
@@ -126,13 +212,10 @@ export default class Julian extends Character {
         try {
             const response = await fetch(url);
             const data = await response.text();
-
-        }
-        catch (err) {
+        } catch (err) {
             console.error(err);
         }
 
         return data;
     }
-
 }

@@ -1,49 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arena of Choices</title>
-    <link href="styles/styles.css" rel="stylesheet">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Arena of Choices</title>
+		<link href="styles/styles.css" rel="stylesheet" />
+	</head>
 
-</head>
+	<body>
+		<nav>
+			<a id="link" , href="index.html">Arena of Choices</a>
+			<a id="link" , href="history.html">Recent</a>
+		</nav>
 
-<body>
-    <nav>
-        <a id="link", href="index.html">Arena of Choices</a>
-        <a id="link", href="history.html">Recent</a>
-    </nav>
+		<div class="columns">
+			<div class="column is-3">
+				<h2 class="names">Death List</h2>
+				<p class="names" id="deathlist"></p>
+			</div>
+			<div class="column is-6">
+				<canvas id="gameScreen"></canvas>
+				<div id="info">
+					<h2 id="infotitle">How To Play</h2>
+					<p id="explanation">
+						Enter names of participants/choices into the text box on
+						the right with one name/item per line.
+					</p>
+					<p id="explanation">
+						When all items are entered, press start to begin
+						simulation.
+					</p>
+					<p id="explanation">
+						The order of deaths will appear on the left with the
+						first death as 1, second death as 2, and so on.
+					</p>
+					<p id="explanation">
+						<b>If you are using this to select your teams: </b>Use
+						the death list in any way to split the teams, be it odds
+						and evens, first X names, or however you like.
+					</p>
+					<p id="explanation">
+						<b
+							>If you are using this to choose one item from many: </b
+						>Take the winner at the end.
+					</p>
+					<p id="explanation">
+						Your data will from this run will be saved into a
+						database where it can be viewed later.
+					</p>
+					<p id="explanation">Credit to LF2.net for the sprites.</p>
+				</div>
+			</div>
 
-    <div class = "columns" >
-        <div class="column is-3">
-            <h2 class="names">Death List</h2>
-            <p class="names" id="deathlist"></p>
-        </div>
-        <div class="column is-6">
-            <canvas id="gameScreen"></canvas>
-            <div id="info">
-                <h2 id="infotitle">How To Play</h2>
-                <p id="explanation">Enter names of participants/choices into the text box on the right with one name/item per line. </p>
-                <p id="explanation">When all items are entered, press start to begin simulation.</p>
-                <p id="explanation">The order of deaths will appear on the left with the first death as 1,  second death as 2, and so on.</p>
-                <p id="explanation"><b>If you are using this to select your teams: </b>Use the death list in any way to split the teams, be it odds and evens, first X names, or however you like.</p>
-                <p id="explanation"><b>If you are using this to choose one item from many: </b>Take the winner at the end.</p>
-                <p id="explanation">Your data will from this run will be saved into a database where it can be viewed later.</p>
-                <p id="explanation">Credit to LF2.net for the sprites.</p>
-            </div>
-        </div>
+			<div class="column is-3">
+				<textarea
+					id="entries"
+					class="textarea"
+					spellcheck="true"
+					,
+					contenteditable="true"
+					,
+					placeholder="Enter one name/item per line here (maximum of 24 items)"
+				></textarea>
+				<button id="start">Start</button>
+			</div>
+		</div>
 
-        <div class="column is-3">
-            <textarea id="entries" class = "textarea" spellcheck = "true", contenteditable="true", placeholder="Enter one name/item per line here (maximum of 24 items)"></textarea>
-            <button id="start">Start</button>
-        </div>
-
-    </div>
-    
-
-    
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> 
-    <script src = "scripts/index.js" type="module"></script>
-</body>
+		<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+		<script src="scripts/index.js" type="module"></script>
+	</body>
 </html>

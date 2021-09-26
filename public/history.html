@@ -1,55 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arena of Choices</title>
-    <link href="styles/styles.css" rel="stylesheet">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Arena of Choices</title>
+		<link href="styles/styles.css" rel="stylesheet" />
+	</head>
 
-</head>
+	<body>
+		<nav>
+			<a id="link" , href="index.html">Arena of Choices</a>
+			<a id="link" , href="history.html">Recent</a>
+		</nav>
 
-<body>
-    <nav>
-        <a id="link", href="index.html">Arena of Choices</a>
-        <a id="link", href="history.html">Recent</a>
-    </nav>
+		<h2 id="recents">Recent Arena Showdowns</h2>
+		<br />
 
-    <h2 id="recents">Recent Arena Showdowns</h2>
-    <br>
+		<script>
+			async function getData() {
+				const response = await fetch("/api");
+				const data = await response.json();
 
-    <script>
-        async function getData() {
-            const response = await fetch('/api');
-            const data = await response.json();
+				for (item of data) {
+					const root = document.createElement("div");
+					const startOrder = document.createElement("div");
+					const deaths = document.createElement("div");
+					const time = document.createElement("div");
 
-            for (item of data) {
-                const root = document.createElement("div");
-                const startOrder = document.createElement("div");
-                const deaths = document.createElement("div");
-                const time = document.createElement("div");
+					startOrder.textContent = `Starting Order: ${item.beginning}`;
+					deaths.textContent = `Deaths: ${item.deathList}`;
 
-                startOrder.textContent = `Starting Order: ${item.beginning}`;
-                deaths.textContent = `Deaths: ${item.deathList}`;
-            
-                const dateString = new Date(item.timestamp).toLocaleString();
-                time.textContent = "Time: " + dateString;
+					const dateString = new Date(
+						item.timestamp
+					).toLocaleString();
+					time.textContent = "Time: " + dateString;
 
-                const br = document.createElement("br");
+					const br = document.createElement("br");
 
-                root.append(startOrder, deaths, time, br);
+					root.append(startOrder, deaths, time, br);
 
-                root.style.margin = "25px";
+					root.style.margin = "25px";
 
-                document.body.append(root);
-            }
-        }
+					document.body.append(root);
+				}
+			}
 
-        getData();
-        
-    </script>
-
-
-
-</body>
-
+			getData();
+		</script>
+	</body>
+</html>
