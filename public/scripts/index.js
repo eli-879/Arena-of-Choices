@@ -125,12 +125,12 @@ function updateGame(dt, ctx) {
             
         }
 
-        for (var i = 0; i < characterList.length; i++) {
-            characterList[i].draw(ctx, step);
-        }
-
         for (var i = 0; i < deathListObjects.length; i++) {
             deathListObjects[i].draw(ctx, step);
+        }
+
+        for (var i = 0; i < characterList.length; i++) {
+            characterList[i].draw(ctx, step);
         }
 
         if (characterList.length == 1) {
@@ -322,7 +322,6 @@ function updateHealth(obj1, obj2) {
 
 }
 
-
 function checkXYOverlap(xpos, ypos, characterList) {
     for (const character of characterList) {
         if (character.getPosition().x == xpos && character.getPosition().y == ypos) {
@@ -356,7 +355,7 @@ var deathListNames = [];
 var deathListObjects = [];
 
 
-document.getElementById("start").addEventListener("click", function(s) {
+document.getElementById("start").addEventListener("click", () => {
     names = $("#entries").val().split('\n');
         for (var i = names.length - 1; i > -1; i--) {
             if (names[i].trim() == "") {
@@ -364,6 +363,11 @@ document.getElementById("start").addEventListener("click", function(s) {
                 
             }
         }
+
+    if (names.length > 24) {
+        names = [];
+
+    }
 
     beginning.push(names);
 
@@ -374,12 +378,12 @@ document.getElementById("start").addEventListener("click", function(s) {
     PLAYERS = names.length;
 
     for (var i = 0; i < names.length; i++) {
-        var xp = getRandomTile(5) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+        var xp = getRandomTile(6) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
         var yp = getRandomTile(3) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
 
         while (checkXYOverlap(xp, yp, characterList)) {
-            xp = getRandomTile(5) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
-            yp = getRandomTile(3) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+            xp = getRandomTile(6) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+            yp = getRandomTile(4) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
         }
         
         
