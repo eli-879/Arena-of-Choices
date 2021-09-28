@@ -99,7 +99,7 @@ function gameLoop(timestamp) {
 			body: JSON.stringify(data),
 		};
 
-		fetch("/api", options)
+		fetch("/", options)
 			.then((response) => response.json())
 			.then((json) => {
 				console.log(json);
