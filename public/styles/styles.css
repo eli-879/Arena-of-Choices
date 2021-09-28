@@ -2,12 +2,7 @@
 *::before,
 *::after {
 	box-sizing: border-box;
-	font-family: BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-		Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, Arial,
-		sans-serif;
-}
-
-head {
+	font-family: "Roboto", sans-serif;
 }
 
 body {
@@ -52,9 +47,6 @@ body {
 	float: right;
 	height: 380px;
 	border: 2px solid #dbdbdb;
-	font-family: BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-		Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, Arial,
-		sans-serif;
 }
 
 #gameScreen {
@@ -72,17 +64,10 @@ nav {
 	height: 90px;
 }
 
-nav p {
-	padding-left: 50px;
-	padding-right: 50px;
-	overflow: auto;
-	display: flex;
-	font-size: 25px;
-}
-
-nav a {
+.a {
 	text-decoration: none;
 	display: block;
+	position: relative;
 	text-align: center;
 	padding: 25px 25px;
 	color: black;
@@ -90,8 +75,34 @@ nav a {
 	margin: 0;
 }
 
-nav a:hover {
-	background-color: #3ad5f8;
+.a.slide::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: -1;
+	transition: transform 300ms ease-in-out;
+
+	transform: scaleX(0);
+	transform-origin: left;
+}
+
+.a.slide:hover::before,
+.a.slide:focus::before {
+	transform: scaleX(1);
+}
+
+.a.slide {
+	transition: color 300ms ease-in-out;
+	z-index: 1;
+}
+
+.a.slide:hover,
+.a.slide:focus {
+	color: white;
+	z-index: 1;
 }
 
 #recents {
