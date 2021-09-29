@@ -51,7 +51,7 @@ body {
 
 #gameScreen {
 	width: 100%;
-	height: 720px;
+
 	border: 1px solid black;
 	image-rendering: -moz-crisp-edges;
 	image-rendering: -webkit-crisp-edges;
@@ -59,9 +59,36 @@ body {
 	image-rendering: crisp-edges;
 	background-color: white;
 }
-nav {
+.navbar {
+	margin: 0;
+	padding: 0;
 	display: flex;
-	height: 90px;
+	justify-content: space-between;
+	align-items: center;
+	height: 5%;
+}
+
+.a.slide.web-name {
+	font-size: 1.5rem;
+	margin: 1.4rem;
+}
+
+.navbar-links ul {
+	margin: 0;
+	padding: 0;
+	display: flex;
+}
+
+.navbar-links li {
+	list-style: none;
+}
+
+.navbar-links li a {
+	text-decoration: none;
+	color: black;
+	padding: 1rem;
+	display: block;
+	font-size: 1.25rem;
 }
 
 .a {
@@ -69,13 +96,15 @@ nav {
 	display: block;
 	position: relative;
 	text-align: center;
-	padding: 25px 25px;
 	color: black;
-	font-size: 25px;
 	margin: 0;
 }
 
-.a.slide::before {
+.slide.current {
+	color: blue;
+}
+
+.slide::before {
 	content: "";
 	position: absolute;
 	top: 0;
@@ -89,22 +118,96 @@ nav {
 	transform-origin: left;
 }
 
-.a.slide:hover::before,
-.a.slide:focus::before {
+.slide:hover::before,
+.slide:focus::before {
 	transform: scaleX(1);
 }
 
-.a.slide {
+.slide {
 	transition: color 300ms ease-in-out;
 	z-index: 1;
 }
 
-.a.slide:hover,
+.slide:hover,
 .a.slide:focus {
 	color: white;
 	z-index: 1;
 }
 
+.toggle-button {
+	position: absolute;
+	top: 1.6rem;
+	right: 1rem;
+	display: none;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 30px;
+	height: 21px;
+}
+
+.toggle-button .bar {
+	height: 3px;
+	width: 100%;
+	background-color: white;
+	border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+	.toggle-button {
+		display: flex;
+	}
+
+	.navbar-links {
+		display: none;
+		width: 100%;
+	}
+
+	.navbar {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.navbar-links ul {
+		width: 100%;
+		flex-direction: column;
+	}
+
+	.navbar-links li {
+		text-align: center;
+	}
+
+	.navbar-links li a {
+		padding: 0.5rem, 1rem;
+	}
+
+	.navbar-links.active {
+		display: flex;
+	}
+}
+
 #recents {
 	margin: 25px;
+}
+
+.characters_list {
+	width: 15%;
+	max-height: 100%;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+.card {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	transition: 0.3s;
+	width: 95%;
+	margin: 10px;
+}
+
+.card:hover {
+	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Add some padding inside the card container */
+.container {
+	padding: 2px 16px;
 }

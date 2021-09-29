@@ -39,40 +39,36 @@
 				
 			</a>
 		</nav>
-		<h2 id="recents">Recent Arena Showdowns</h2>
-		<br />
 
-		<script>
-			async function getData() {
-				const response = await fetch("/api");
-				const data = await response.json();
+		<div class="characters_list">
+			<div class="card">
+				<img src="Assets/woody_f.bmp" style="width: 100%" />
+				<div class="container">
+					<h4><b>Woody</b></h4>
+				</div>
+			</div>
 
-				for (item of data) {
-					const root = document.createElement("div");
-					const startOrder = document.createElement("div");
-					const deaths = document.createElement("div");
-					const time = document.createElement("div");
+			<div class="card">
+				<img src="Assets/firzen_f.bmp" style="width: 100%" />
+				<div class="container">
+					<h4><b>Firzen</b></h4>
+				</div>
+			</div>
 
-					startOrder.textContent = `Starting Order: ${item.beginning} `;
-					deaths.textContent = `Deaths: ${item.deathListNames} `;
+			<div class="card">
+				<img src="Assets/henry_f.bmp" style="width: 100%" />
+				<div class="container">
+					<h4><b>Henry</b></h4>
+				</div>
+			</div>
 
-					const dateString = new Date(
-						item.timestamp
-					).toLocaleString();
-					time.textContent = "Time: " + dateString;
-
-					const br = document.createElement("br");
-
-					root.append(startOrder, deaths, time, br);
-
-					root.style.margin = "25px";
-
-					document.body.append(root);
-				}
-			}
-
-			getData();
-		</script>
+			<div class="card">
+				<img src="Assets/justin_f.bmp" style="width: 100%" />
+				<div class="container">
+					<h4><b>Justin</b></h4>
+				</div>
+			</div>
+		</div>
 
 		<script src="scripts/scripts.js" type="module"></script>
 	</body>
