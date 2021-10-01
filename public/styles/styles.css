@@ -8,21 +8,30 @@
 body {
 	padding: 0;
 	margin: 0;
-	background: linear-gradient(to right, #77cefa, #7eecac);
+	background: #0a0a0a;
+	color: white;
 }
 
 .columns {
 	display: flex;
 	height: 100%;
+	padding-top: 2.5vh;
 }
 
 .column.is-3 {
 	width: 25%;
+	padding-left: 2vh;
+	padding-right: 2vh;
 }
 
 .column.is-6 {
 	flex: none;
 	width: 50%;
+}
+
+.names {
+	padding: 0px;
+	margin: 0px;
 }
 
 .textarea {
@@ -35,13 +44,6 @@ body {
 	box-shadow: inset 0 1px 2px rgb(10 10 10 / 10%);
 }
 
-.names {
-	padding: 10px;
-}
-
-#deathlist {
-}
-
 #entries {
 	overflow: auto;
 	float: right;
@@ -52,12 +54,11 @@ body {
 #gameScreen {
 	width: 100%;
 
-	border: 1px solid black;
+	border: 1px solid white;
 	image-rendering: -moz-crisp-edges;
 	image-rendering: -webkit-crisp-edges;
 	image-rendering: pixelated;
 	image-rendering: crisp-edges;
-	background-color: white;
 }
 .navbar {
 	margin: 0;
@@ -66,11 +67,16 @@ body {
 	justify-content: space-between;
 	align-items: center;
 	height: 5%;
+	background-color: black;
+	--background-color: black;
+	--border-size: 2px;
+	--accent-color: white;
 }
 
-.a.slide.web-name {
+.navbar .a.underline.web-name {
 	font-size: 1.5rem;
-	margin: 1.4rem;
+	font-weight: bold;
+	padding: 1.4rem;
 }
 
 .navbar-links ul {
@@ -85,8 +91,8 @@ body {
 
 .navbar-links li a {
 	text-decoration: none;
-	color: black;
-	padding: 1rem;
+	color: white;
+	padding: 1.4rem;
 	display: block;
 	font-size: 1.25rem;
 }
@@ -96,42 +102,26 @@ body {
 	display: block;
 	position: relative;
 	text-align: center;
-	color: black;
+	color: white;
 	margin: 0;
 }
 
-.slide.current {
-	color: blue;
-}
-
-.slide::before {
+.a.underline::before {
 	content: "";
 	position: absolute;
-	top: 0;
 	left: 0;
-	bottom: 0;
 	right: 0;
-	z-index: -1;
+	bottom: 0;
+	height: var(--border-size);
+	background-color: var(--accent-color);
 	transition: transform 300ms ease-in-out;
 
 	transform: scaleX(0);
-	transform-origin: left;
 }
 
-.slide:hover::before,
-.slide:focus::before {
+.a.underline:hover::before,
+.a.underline:focus::before {
 	transform: scaleX(1);
-}
-
-.slide {
-	transition: color 300ms ease-in-out;
-	z-index: 1;
-}
-
-.slide:hover,
-.a.slide:focus {
-	color: white;
-	z-index: 1;
 }
 
 .toggle-button {
@@ -191,7 +181,7 @@ body {
 
 .characters_list {
 	width: 15%;
-	max-height: 100%;
+	max-height: 100vh;
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
