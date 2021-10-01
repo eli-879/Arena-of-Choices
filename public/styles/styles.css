@@ -8,7 +8,7 @@
 body {
 	padding: 0;
 	margin: 0;
-	background: #0a0a0a;
+	background: #181a18;
 	color: white;
 }
 
@@ -67,8 +67,8 @@ body {
 	justify-content: space-between;
 	align-items: center;
 	height: 5%;
-	background-color: black;
-	--background-color: black;
+	background-color: #0e1111;
+	--background-color: #0e1111;
 	--border-size: 2px;
 	--accent-color: white;
 }
