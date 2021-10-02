@@ -12,153 +12,6 @@ body {
 	color: white;
 }
 
-@keyframes change-text {
-	0% {
-		content: "Got Too Many Choices?";
-		opacity: 0%;
-	}
-	33% {
-		content: "Too Many Things to Choose From?";
-		opacity: 0%;
-	}
-	66% {
-		content: "We Got You.";
-		opacity: 0%;
-	}
-	100% {
-		content: "Got Too Many Choices?";
-		opacity: 0%;
-	}
-}
-
-@keyframes fade-in {
-	from {
-		opacity: 0%;
-	}
-	to {
-		opacity: 100%;
-	}
-}
-
-.front {
-	height: 90vh;
-	text-align: center;
-	padding: 10vh;
-}
-
-.front .border {
-	height: 100%;
-	border: 5px solid white;
-	overflow: hidden;
-	display: flex;
-	flex-direction: column;
-	justify-content: center; /* align horizontal */
-	align-items: center; /* align vertical */
-}
-
-.front .border span {
-	display: none;
-	align-items: center;
-}
-
-.front .border::after {
-	content: "Got Too Many Choices?";
-	font-size: xx-large;
-	color: white;
-	margin: 0;
-	opacity: 0%;
-	line-height: 1.5;
-	display: inline-block;
-	vertical-align: middle;
-	animation: change-text 12s linear infinite, fade-in 4s linear infinite;
-}
-
-.front .border h1 {
-	font-size: xx-large;
-	margin: 0;
-	line-height: 1.5;
-	display: inline-block;
-	vertical-align: middle;
-}
-
-@keyframes up-and-down {
-	0% {
-		top: 83vh;
-	}
-	70% {
-		top: 82vh;
-	}
-	85% {
-		top: 84vh;
-	}
-	93% {
-		top: 82vh;
-	}
-	100% {
-		top: 83vh;
-	}
-}
-
-.front .arrow-icon {
-	position: absolute;
-	transform: translate(-50%, -50%);
-
-	top: 10vh;
-	animation: up-and-down 1.8s infinite;
-}
-
-.front .arrow-icon:hover {
-	cursor: pointer;
-}
-
-.columns {
-	display: flex;
-	height: 100%;
-	padding-top: 2.5vh;
-}
-
-.column.is-3 {
-	width: 25%;
-	padding-left: 2vh;
-	padding-right: 2vh;
-}
-
-.column.is-6 {
-	flex: none;
-	width: 50%;
-}
-
-.names {
-	padding: 0px;
-	margin: 0px;
-}
-
-.textarea {
-	display: block;
-	max-width: 100%;
-	min-width: 100%;
-	padding: 0.625em;
-	resize: vertical;
-	border: 1px solid transparent;
-	box-shadow: inset 0 1px 2px rgb(10 10 10 / 10%);
-}
-
-#entries {
-	overflow: auto;
-	float: right;
-	height: 380px;
-	border: 2px solid #dbdbdb;
-}
-
-#gameScreen {
-	width: 100%;
-
-	border: 1px solid white;
-	image-rendering: -moz-crisp-edges;
-	image-rendering: -webkit-crisp-edges;
-	image-rendering: pixelated;
-	image-rendering: crisp-edges;
-}
 .navbar {
 	margin: 0;
 	padding: 0;
@@ -274,6 +127,164 @@ body {
 	}
 }
 
+@keyframes change-text {
+	0% {
+		content: "Got Too Many Choices?";
+		opacity: 0%;
+	}
+	33% {
+		content: "Too Many Things to Choose From?";
+		opacity: 0%;
+	}
+	66% {
+		content: "We Got You.";
+		opacity: 0%;
+	}
+	100% {
+		content: "Got Too Many Choices?";
+		opacity: 0%;
+	}
+}
+
+@keyframes fade-in {
+	0% {
+		opacity: 0%;
+	}
+	50% {
+		opacity: 100%;
+	}
+
+	100% {
+		opacity: 100%;
+	}
+}
+
+.front {
+	height: 92.5vh;
+	text-align: center;
+	padding: 10vh;
+}
+
+.front .border {
+	height: 100%;
+	border: 5px solid white;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	justify-content: center; /* align horizontal */
+	align-items: center; /* align vertical */
+}
+
+.front .border span {
+	display: none;
+	align-items: center;
+}
+
+.front .border::after {
+	content: "Got Too Many Choices?";
+	font-size: xx-large;
+	color: white;
+	margin: 0;
+	opacity: 0%;
+	line-height: 1.5;
+	display: inline-block;
+	vertical-align: middle;
+	animation: change-text 12s 2.1s linear infinite, fade-in 4s linear infinite;
+}
+
+.front .border h1 {
+	font-size: xx-large;
+	margin: 0;
+	line-height: 1.5;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+@keyframes up-and-down {
+	0% {
+		top: 83vh;
+	}
+	70% {
+		top: 82vh;
+	}
+	85% {
+		top: 84vh;
+	}
+	93% {
+		top: 82vh;
+	}
+	100% {
+		top: 83vh;
+	}
+}
+
+.front .arrow-icon {
+	position: absolute;
+	transform: translate(-50%, -50%);
+
+	top: 10vh;
+	animation: up-and-down 1.8s infinite;
+}
+
+.front .arrow-icon:hover {
+	cursor: pointer;
+}
+
+.filler {
+	display: none;
+	width: 100%;
+	height: 98vh;
+}
+
+.columns {
+	display: flex;
+	height: 100%;
+	padding-top: 2.5vh;
+}
+
+.column.is-3 {
+	width: 25%;
+	padding-left: 2vh;
+	padding-right: 2vh;
+}
+
+.column.is-6 {
+	flex: none;
+	width: 50%;
+}
+
+.names {
+	padding: 0px;
+	margin: 0px;
+}
+
+.textarea {
+	display: block;
+	max-width: 100%;
+	min-width: 100%;
+	padding: 0.625em;
+	resize: vertical;
+	border: 1px solid transparent;
+	box-shadow: inset 0 1px 2px rgb(10 10 10 / 10%);
+}
+
+#entries {
+	overflow: auto;
+	float: right;
+	height: 380px;
+	border: 2px solid #dbdbdb;
+}
+
+#gameScreen {
+	width: 100%;
+
+	border: 1px solid white;
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -webkit-crisp-edges;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+}
+
 #recents {
 	margin: 25px;
 }
@@ -327,17 +338,19 @@ body {
 /* Characters Page */
 
 .characters_list {
-	width: 15%;
-	max-height: 100vh;
+	width: 200px;
+	height: 90vh;
 	overflow-y: scroll;
+	font-size: 100%;
 	overflow-x: hidden;
 }
 
 .card {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 	transition: 0.3s;
-	width: 95%;
-	margin: 10px;
+	width: 90%;
+	margin: 5%;
+	overflow: visible;
 }
 
 .card:hover {
