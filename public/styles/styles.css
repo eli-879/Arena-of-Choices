@@ -58,6 +58,7 @@ body {
 
 .front .border span {
 	display: none;
+	align-items: center;
 }
 
 .front .border::after {
@@ -100,6 +101,8 @@ body {
 
 .front .arrow-icon {
 	position: absolute;
+	transform: translate(-50%, -50%);
+
 	top: 10vh;
 	animation: up-and-down 1.8s infinite;
 }
