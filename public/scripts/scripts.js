@@ -26,3 +26,9 @@ function openInfoTab(tabname, tabid) {
 	//document.getElementById(tabname).classList.toggle("active");
 	document.getElementById(tabid).classList.toggle("active");
 }
+
+const arrowIcon = document.getElementsByClassName("arrow-icon")[0];
+
+arrowIcon.addEventListener("click", () => {
+	window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
+});

@@ -12,6 +12,102 @@ body {
 	color: white;
 }
 
+@keyframes change-text {
+	0% {
+		content: "Got Too Many Choices?";
+		opacity: 0%;
+	}
+	33% {
+		content: "Too Many Things to Choose From?";
+		opacity: 0%;
+	}
+	66% {
+		content: "We Got You.";
+		opacity: 0%;
+	}
+	100% {
+		content: "Got Too Many Choices?";
+		opacity: 0%;
+	}
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0%;
+	}
+	to {
+		opacity: 100%;
+	}
+}
+
+.front {
+	height: 90vh;
+	text-align: center;
+	padding: 10vh;
+}
+
+.front .border {
+	height: 100%;
+	border: 5px solid white;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	justify-content: center; /* align horizontal */
+	align-items: center; /* align vertical */
+}
+
+.front .border span {
+	display: none;
+}
+
+.front .border::after {
+	content: "Got Too Many Choices?";
+	font-size: xx-large;
+	color: white;
+	margin: 0;
+	opacity: 0%;
+	line-height: 1.5;
+	display: inline-block;
+	vertical-align: middle;
+	animation: change-text 6s linear 1.1s infinite, fade-in 2s linear infinite;
+}
+
+.front .border h1 {
+	font-size: xx-large;
+	margin: 0;
+	line-height: 1.5;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+@keyframes up-and-down {
+	0% {
+		top: 83vh;
+	}
+	70% {
+		top: 82vh;
+	}
+	85% {
+		top: 84vh;
+	}
+	93% {
+		top: 82vh;
+	}
+	100% {
+		top: 83vh;
+	}
+}
+
+.front .arrow-icon {
+	position: absolute;
+	top: 10vh;
+	animation: up-and-down 1.8s infinite;
+}
+
+.front .arrow-icon:hover {
+	cursor: pointer;
+}
+
 .columns {
 	display: flex;
 	height: 100%;
@@ -194,12 +290,19 @@ body {
 	border-right: 1px solid white;
 }
 
+.tab:hover,
+.tab:focus {
+	background-color: white;
+	color: black;
+	transition: background-color 0.5s, color 0.5s;
+}
+
 .tab.active {
 	background-color: white;
 	color: black;
-	border-top: 1px solid black;
-	border-left: 1px solid black;
-	border-right: 1px solid black;
+	border-top: 1px solid white;
+	border-left: 1px solid white;
+	border-right: 1px solid white;
 
 	transition: background-color 0.5s, color 0.5s;
 }
