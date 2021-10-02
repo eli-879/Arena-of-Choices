@@ -66,7 +66,7 @@ body {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	height: 5%;
+	height: 7.5%;
 	background-color: #0e1111;
 	--background-color: #0e1111;
 	--border-size: 2px;
@@ -178,6 +178,47 @@ body {
 #recents {
 	margin: 25px;
 }
+
+.tabs {
+	border-bottom: 1px solid white;
+}
+
+.tab {
+	text-decoration: none;
+	padding: 10px;
+	border: none;
+	background-color: black;
+	color: white;
+	border-top: 1px solid white;
+	border-left: 1px solid white;
+	border-right: 1px solid white;
+}
+
+.tab.active {
+	background-color: white;
+	color: black;
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+
+	transition: background-color 0.5s, color 0.5s;
+}
+
+@keyframes opac {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.info {
+	position: relative;
+	animation: opac 0.8s;
+}
+
+/* Characters Page */
 
 .characters_list {
 	width: 15%;

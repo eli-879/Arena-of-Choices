@@ -82,8 +82,7 @@ function gameLoop(timestamp) {
 	var element = document.getElementById("deathlist");
 	element.innerHTML = "";
 	for (var i = 0; i < deathListNames.length; i++) {
-		element.innerHTML =
-			element.innerHTML + (i + 1) + ". " + deathListNames[i] + "<br />";
+		element.innerHTML = element.innerHTML + (i + 1) + ". " + deathListNames[i] + "<br />";
 	}
 
 	if (deathListNames.length == PLAYERS - 1) {
@@ -169,10 +168,7 @@ function updateObjects(step) {
 		if (character.getStatus() == states.KNOCKEDBACK) {
 			character.setVX(v.x * 0.95);
 			character.setVY(v.y * 0.95);
-			character.setPosition(
-				pos.x + (step * v.x) / 1000,
-				pos.y + (step * v.y) / 1000
-			);
+			character.setPosition(pos.x + (step * v.x) / 1000, pos.y + (step * v.y) / 1000);
 			character.addTimeKnockedback(step);
 
 			if (character.getTimeKnockedback() > 1000) {
@@ -184,15 +180,11 @@ function updateObjects(step) {
 			character.setGoal(character.getClosestEnemy(characterList));
 			character.updateVelocities();
 
-			character.setPosition(
-				pos.x + (step * v.x) / 1000,
-				pos.y + (step * v.y) / 1000
-			);
+			character.setPosition(pos.x + (step * v.x) / 1000, pos.y + (step * v.y) / 1000);
 		}
 
 		if (
-			character.getAttackTimer() <
-				character.getTimeForAttackAnimation() &&
+			character.getAttackTimer() < character.getTimeForAttackAnimation() &&
 			character.getStatus() == states.ATTACKING
 		) {
 			character.setSprite(states.RUNNING);
@@ -210,19 +202,13 @@ function updateVelocities(collision, step) {
 	var obj2 = collision.getObj2();
 	if (obj1 != null && obj2 != null) {
 		if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() != 0) {
-			if (
-				obj1.getStatus() != states.KNOCKEDBACK &&
-				obj2.getStatus() != states.KNOCKEDBACK
-			) {
+			if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
 				obj1.hit(obj2, step);
 				updateStatus(obj1, obj2);
 				updateHealth(obj1, obj2);
 			}
 		} else if (obj1.getAttackTimer() != 0 && obj2.getAttackTimer() == 0) {
-			if (
-				obj1.getStatus() != states.KNOCKEDBACK &&
-				obj2.getStatus() != states.KNOCKEDBACK
-			) {
+			if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
 				obj2.hit(obj1, step);
 				updateStatus(obj2, obj1);
 				updateHealth(obj2, obj1);
@@ -231,19 +217,13 @@ function updateVelocities(collision, step) {
 			var coinflip = Math.floor(Math.random() * 2);
 
 			if (coinflip == 0) {
-				if (
-					obj1.getStatus() != states.KNOCKEDBACK &&
-					obj2.getStatus() != states.KNOCKEDBACK
-				) {
+				if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
 					obj1.hit(obj2, step);
 					updateStatus(obj1, obj2);
 					updateHealth(obj1, obj2);
 				}
 			} else {
-				if (
-					obj1.getStatus() != states.KNOCKEDBACK &&
-					obj2.getStatus() != states.KNOCKEDBACK
-				) {
+				if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
 					obj2.hit(obj1, step);
 					updateStatus(obj2, obj1);
 					updateHealth(obj2, obj1);
@@ -262,10 +242,7 @@ function handleCollisions(step) {
 		let obj1 = allCollisions[i].getObj1();
 		let obj2 = allCollisions[i].getObj2();
 
-		if (
-			charactersSeen.includes(obj1.getName()) ||
-			charactersSeen.includes(obj2.getName())
-		) {
+		if (charactersSeen.includes(obj1.getName()) || charactersSeen.includes(obj2.getName())) {
 			continue;
 		} else {
 			charactersSeen.push(obj1.getName());
@@ -338,10 +315,7 @@ function updateHealth(obj1, obj2) {
 
 function checkXYOverlap(xpos, ypos, characterList) {
 	for (const character of characterList) {
-		if (
-			character.getPosition().x == xpos &&
-			character.getPosition().y == ypos
-		) {
+		if (character.getPosition().x == xpos && character.getPosition().y == ypos) {
 			return true;
 		}
 	}
@@ -405,45 +379,13 @@ document.getElementById("start").addEventListener("click", () => {
 		let rand = Math.floor(Math.random() * 4);
 
 		if (rand == 0) {
-			var character = new Henry(
-				GAME_WIDTH,
-				GAME_HEIGHT,
-				names[i],
-				pos,
-				i,
-				henryAssets,
-				ctx
-			);
+			var character = new Henry(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, henryAssets, ctx);
 		} else if (rand == 1) {
-			var character = new Firzen(
-				GAME_WIDTH,
-				GAME_HEIGHT,
-				names[i],
-				pos,
-				i,
-				firzenAssets,
-				ctx
-			);
+			var character = new Firzen(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, firzenAssets, ctx);
 		} else if (rand == 2) {
-			var character = new Woody(
-				GAME_WIDTH,
-				GAME_HEIGHT,
-				names[i],
-				pos,
-				i,
-				woodyAssets,
-				ctx
-			);
+			var character = new Woody(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, woodyAssets, ctx);
 		} else if (rand == 3) {
-			var character = new Justin(
-				GAME_WIDTH,
-				GAME_HEIGHT,
-				names[i],
-				pos,
-				i,
-				justinAssets,
-				ctx
-			);
+			var character = new Justin(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, justinAssets, ctx);
 		}
 
 		characterList.push(character);

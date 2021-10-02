@@ -27,9 +27,7 @@ export default class Justin extends Character {
 		};
 		this.timeforAttackAnimation =
 			(this.attackCD -
-				(this.spriteDict["attacking"][1][0] -
-					this.spriteDict["attacking"][0][0]) *
-					this.imageTimerMax) *
+				(this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax) *
 			0.5;
 		if (this.timeforAttackAnimation <= 0) {
 			console.log("ERROR 0 for timeForAttackAnimation");
@@ -72,9 +70,7 @@ export default class Justin extends Character {
 		ctx.fillStyle = "fuchsia";
 		ctx.fillText(
 			"WINNER",
-			this.position.x +
-				this.width / 2 -
-				ctx.measureText("WINNER").width / 2,
+			this.position.x + this.width / 2 - ctx.measureText("WINNER").width / 2,
 			this.position.y - 10
 		);
 		if (this.facing == this.directions.RIGHT) {

@@ -60,11 +60,7 @@ export default class Character {
 	draw(ctx, dt) {
 		this.imageTimer += dt;
 		ctx.fillStyle = "#f00";
-		ctx.fillText(
-			this.name,
-			this.position.x - this.nameLength.width / 2 + 40,
-			this.position.y + this.height + 20
-		);
+		ctx.fillText(this.name, this.position.x - this.nameLength.width / 2 + 40, this.position.y + this.height + 20);
 
 		if (this.status != this.states.DEAD) {
 			this.drawHealth(ctx);
@@ -103,11 +99,7 @@ export default class Character {
 			(this.health / this.maxHealth) * this.width,
 			10
 		);
-		ctx.fillText(
-			this.health + " HP",
-			this.position.x,
-			this.position.y + this.height + 35
-		);
+		ctx.fillText(this.health + " HP", this.position.x, this.position.y + this.height + 35);
 	}
 
 	drawAttackCD(ctx) {
@@ -186,9 +178,7 @@ export default class Character {
 		var sprite = this.getSpriteOneLoop("knockedback");
 		ctx.fillText(
 			"KBed",
-			this.position.x +
-				this.width / 2 -
-				ctx.measureText("KBed").width / 2,
+			this.position.x + this.width / 2 - ctx.measureText("KBed").width / 2,
 			this.position.y - 10
 		);
 		if (this.facing == this.directions.RIGHT) {
@@ -225,9 +215,7 @@ export default class Character {
 		ctx.fillStyle = "fuchsia";
 		ctx.fillText(
 			"WINNER",
-			this.position.x +
-				this.width / 2 -
-				ctx.measureText("WINNER").width / 2,
+			this.position.x + this.width / 2 - ctx.measureText("WINNER").width / 2,
 			this.position.y - 10
 		);
 		if (this.facing == this.directions.RIGHT) {
@@ -538,23 +526,10 @@ export default class Character {
 
 			var otherV = other.getVelocity();
 
-			other.addPosition(
-				Math.sign(otherV.x) * -10,
-				Math.sign(otherV.y) * -10
-			);
+			other.addPosition(Math.sign(otherV.x) * -10, Math.sign(otherV.y) * -10);
 
-			other.setVX(
-				otherV.x * -7.5 +
-					(Math.floor(Math.random() * 5) * Math.random() < 0.5
-						? -1
-						: 1)
-			);
-			other.setVY(
-				otherV.y * -7.5 +
-					(Math.floor(Math.random() * 5) * Math.random() < 0.5
-						? -1
-						: 1)
-			);
+			other.setVX(otherV.x * -7.5 + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
+			other.setVY(otherV.y * -7.5 + (Math.floor(Math.random() * 5) * Math.random() < 0.5 ? -1 : 1));
 
 			this.attackTimer = this.attackCD;
 		}
