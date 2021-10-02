@@ -70,7 +70,7 @@ body {
 	line-height: 1.5;
 	display: inline-block;
 	vertical-align: middle;
-	animation: change-text 6s linear 1.1s infinite, fade-in 2s linear infinite;
+	animation: change-text 12s linear infinite, fade-in 4s linear infinite;
 }
 
 .front .border h1 {
