@@ -160,6 +160,7 @@ body {
 }
 
 .front {
+	position: relative;
 	height: 92.5vh;
 	text-align: center;
 	padding: 10vh;
@@ -202,19 +203,19 @@ body {
 
 @keyframes up-and-down {
 	0% {
-		top: 83vh;
+		top: 73vh;
 	}
 	70% {
-		top: 82vh;
+		top: 72vh;
 	}
 	85% {
-		top: 84vh;
+		top: 74vh;
 	}
 	93% {
-		top: 82vh;
+		top: 72vh;
 	}
 	100% {
-		top: 83vh;
+		top: 73vh;
 	}
 }
 
@@ -222,7 +223,6 @@ body {
 	position: absolute;
 	transform: translate(-50%, -50%);
 
-	top: 10vh;
 	animation: up-and-down 1.8s infinite;
 }
 
