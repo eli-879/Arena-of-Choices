@@ -1,10 +1,15 @@
 // Controlling the navbar when page gets too narrow
-
 const toggleButton = document.getElementsByClassName("toggle-button")[0];
-const navbarLinks = document.getElementsByClassName("navbar-links")[0];
+const mobileMenu = document.getElementsByClassName("mobile-nav")[0];
 
 toggleButton.addEventListener("click", () => {
-	navbarLinks.classList.toggle("active");
+	mobileMenu.classList.toggle("active");
+});
+
+window.addEventListener("resize", () => {
+	if (window.matchMedia("(min-width: 600px)").matches) {
+		mobileMenu.classList.remove("active");
+	}
 });
 
 // Controlling game info and how to
@@ -26,6 +31,8 @@ function openInfoTab(tabname, tabid) {
 	//document.getElementById(tabname).classList.toggle("active");
 	document.getElementById(tabid).classList.toggle("active");
 }
+
+// controlling arrow functions
 
 const arrowIcon = document.getElementsByClassName("arrow-icon")[0];
 
