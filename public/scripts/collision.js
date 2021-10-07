@@ -1,4 +1,5 @@
 export default class Collision {
+	// collision class that is used to handle collisions
 	constructor(obj1, obj2, dir, time) {
 		this.objectIndex1 = obj1;
 		this.objectIndex2 = obj2;

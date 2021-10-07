@@ -7,6 +7,8 @@ export default class Woody extends Character {
 		this.image = this.assets[0];
 		this.imageWinning = this.assets[1];
 
+		// custom column/row coords from sprite sheet
+
 		this.spriteDict = {
 			running: [
 				[0, 2],
@@ -26,10 +28,10 @@ export default class Woody extends Character {
 			],
 		};
 
+		// time needed for animation to attack
+		// catches error if time is  < 0
 		this.timeforAttackAnimation =
-			(this.attackCD -
-				(this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax) *
-			0.5;
+			(this.attackCD - (this.spriteDict["attacking"][1][0] - this.spriteDict["attacking"][0][0]) * this.imageTimerMax) * 0.5;
 		if (this.timeforAttackAnimation <= 0) {
 			console.log("ERROR 0 for timeForAttackAnimation");
 		}

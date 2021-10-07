@@ -12,7 +12,7 @@ window.addEventListener("resize", () => {
 	}
 });
 
-// Controlling game info and how to
+// Controlling game info and how to tabs
 
 function openInfoTab(tabname, tabid) {
 	var infoContainers = document.getElementsByClassName("info");
@@ -25,14 +25,12 @@ function openInfoTab(tabname, tabid) {
 
 	for (var i = 0; i < tabs.length; i++) {
 		tabs[i].classList.remove("active");
-		//info[i].classList.remove("active");
 	}
 	document.getElementById(tabname).style.display = "block";
-	//document.getElementById(tabname).classList.toggle("active");
 	document.getElementById(tabid).classList.toggle("active");
 }
 
-// controlling arrow functions
+// controlling bouncing arrow functions
 
 const arrowIcon = document.getElementsByClassName("arrow-icon")[0];
 

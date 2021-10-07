@@ -1,5 +1,5 @@
 import Character from "./character.js";
-
+//TODO: WORK IN PROGRESS
 export default class Julian extends Character {
 	constructor(gameWidth, gameHeight, name, pos, image, id, ctx) {
 		super(gameWidth, gameHeight, name, pos, image, id, ctx);
@@ -80,30 +80,10 @@ export default class Julian extends Character {
 	drawSpriteAttacking(ctx) {
 		var sprite = this.getSpriteOneLoop("attacking");
 		if (this.facing == this.directions.RIGHT) {
-			ctx.drawImage(
-				this.image1,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				this.position.x,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image1, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height);
 		} else {
 			ctx.scale(-1, 1);
-			ctx.drawImage(
-				this.image1,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				-this.position.x - this.width,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image1, sprite.x, sprite.y, 80, 80, -this.position.x - this.width, this.position.y, this.width, this.height);
 			ctx.scale(-1, 1);
 		}
 	}
@@ -111,17 +91,7 @@ export default class Julian extends Character {
 	drawSpriteRunning(ctx) {
 		var sprite = this.getSpriteConstantLoop("running");
 		if (this.facing == this.directions.RIGHT) {
-			ctx.drawImage(
-				this.image0,
-				sprite.x,
-				sprite.y,
-				this.width,
-				this.height,
-				this.position.x,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image0, sprite.x, sprite.y, this.width, this.height, this.position.x, this.position.y, this.width, this.height);
 		} else {
 			ctx.scale(-1, 1);
 			ctx.drawImage(
@@ -142,30 +112,10 @@ export default class Julian extends Character {
 	drawSpriteKBed(ctx) {
 		var sprite = this.getSpriteOneLoop("knockedback");
 		if (this.facing == this.directions.RIGHT) {
-			ctx.drawImage(
-				this.image1,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				this.position.x,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image1, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height);
 		} else {
 			ctx.scale(-1, 1);
-			ctx.drawImage(
-				this.image1,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				-this.position.x - this.width,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image1, sprite.x, sprite.y, 80, 80, -this.position.x - this.width, this.position.y, this.width, this.height);
 			ctx.scale(-1, 1);
 		}
 	}
@@ -173,30 +123,10 @@ export default class Julian extends Character {
 	drawSpriteWinning(ctx) {
 		var sprite = this.getSpriteKBed("winning");
 		if (this.facing == this.directions.RIGHT) {
-			ctx.drawImage(
-				this.image0,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				this.position.x,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image0, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height);
 		} else {
 			ctx.scale(-1, 1);
-			ctx.drawImage(
-				this.image0,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				-this.position.x - this.width,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image0, sprite.x, sprite.y, 80, 80, -this.position.x - this.width, this.position.y, this.width, this.height);
 			ctx.scale(-1, 1);
 		}
 	}

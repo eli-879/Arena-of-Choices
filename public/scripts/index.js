@@ -7,12 +7,10 @@ import Collision from "./collision.js";
 
 const MIN_STEP = 10;
 const SPRITE_HEIGHT = 80;
-const SPRITE_WIDTH = 80;
-const BORDER_WIDTH = 0;
-const SPACING_WIDTH = 0;
 
 var PLAYERS = 0;
 
+// states of each character
 const states = {
 	RUNNING: "running",
 	KNOCKEDBACK: "knockedback",
@@ -71,20 +69,25 @@ var bg = new Image();
 bg.src = "Assets/bg1.png";
 bg.crossOrigin = true;
 
+var element = document.getElementById("deathlist");
+
+// gameloop that controls the game
 function gameLoop(timestamp) {
 	let deltaTime = timestamp - lastTime;
 	lastTime = timestamp;
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+	// controls all calculations of each character
 	updateGame(deltaTime, ctx);
 
-	var element = document.getElementById("deathlist");
+	// updates list of dead characters based on characters that are in the deathListNames array
 	element.innerHTML = "";
 	for (var i = 0; i < deathListNames.length; i++) {
 		element.innerHTML = element.innerHTML + (i + 1) + ". " + deathListNames[i] + "<br />";
 	}
 
+	// Finds if game has ended and sends data to server as a JSON
 	if (deathListNames.length == PLAYERS - 1) {
 		deathListNames.push(characterList[0].getName());
 
@@ -110,28 +113,39 @@ function gameLoop(timestamp) {
 	requestAnimationFrame(gameLoop);
 }
 
+// handles all calculations of characters by time
 function updateGame(dt, ctx) {
 	let step = dt;
 	do {
+		// first finds if there is at least one collision between characters
 		var hit = findFirstCollision(step);
+
+		// if there is at least one collision, find all collisions by turning them into collision objects, handle them, and move each character
 		if (hit != null) {
 			step = Math.max(hit.getTime(), MIN_STEP);
 			updateObjects(step);
 			handleCollisions(step);
+			// else just move each character
 		} else {
 			updateObjects(step);
 		}
 
+		// drawing portion
+
+		// draw bg
 		ctx.drawImage(bg, 0, 0);
 
+		// draw dead characters as lying prone on the ground
 		for (var i = 0; i < deathListObjects.length; i++) {
 			deathListObjects[i].draw(ctx, step);
 		}
 
+		//draw alive characters either as KBed or running or winning
 		for (var i = 0; i < characterList.length; i++) {
 			characterList[i].draw(ctx, step);
 		}
 
+		// finds if there is only 1 character left alive and makes him celebrate
 		if (characterList.length == 1) {
 			if (characterList[0].getStatus() != states.WINNING) {
 				characterList[0].setSprite(states.WINNING);
@@ -144,16 +158,20 @@ function updateGame(dt, ctx) {
 	} while (dt > 0);
 }
 
+// function that handles moving the characters around and recognising when they are dead
 function updateObjects(step) {
 	for (var i = 0; i < characterList.length; i++) {
 		var character = characterList[i];
 		var pos = character.getPosition();
 		var v = character.getVelocity();
 
+		// keeps characters within a boundary
 		character.keepInside();
 
+		// if character has a cooldown on their attack, reduce it by time passed
 		character.cooldownAttackTimer(step);
 
+		// if character is dead, push him into dead list and remove him from alive list
 		if (character.isDead()) {
 			deathListNames.push(character.getName());
 
@@ -165,17 +183,21 @@ function updateObjects(step) {
 			continue;
 		}
 
+		// handles if character is KBed by another - pushes them back in the opposite direction they were running in
 		if (character.getStatus() == states.KNOCKEDBACK) {
 			character.setVX(v.x * 0.95);
 			character.setVY(v.y * 0.95);
 			character.setPosition(pos.x + (step * v.x) / 1000, pos.y + (step * v.y) / 1000);
 			character.addTimeKnockedback(step);
 
+			// if they reach the time limit on being KBed, reset them back to running state
 			if (character.getTimeKnockedback() > 1000) {
 				character.setStatus(states.RUNNING);
 				character.setSprite(states.RUNNING);
 				character.setTimeKnockedback(0);
 			}
+
+			// otherwise if they are not KBed, set a goal destination to the nearest enemy where they will run to
 		} else {
 			character.setGoal(character.getClosestEnemy(characterList));
 			character.updateVelocities();
@@ -183,6 +205,7 @@ function updateObjects(step) {
 			character.setPosition(pos.x + (step * v.x) / 1000, pos.y + (step * v.y) / 1000);
 		}
 
+		// if a character has completed an attack animation, reset them back to running state.
 		if (
 			character.getAttackTimer() < character.getTimeForAttackAnimation() &&
 			character.getStatus() == states.ATTACKING
@@ -191,28 +214,38 @@ function updateObjects(step) {
 			character.setStatus(states.RUNNING);
 		}
 
+		// if character is running, update the direction they face (left if negative movement, right if positive movement)
 		if (character.getStatus() == states.RUNNING) {
 			character.updateDirection();
 		}
 	}
 }
 
+// handles each collision - is passed a collision and decides who gets hit and who is the one hitting
 function updateVelocities(collision, step) {
 	var obj1 = collision.getObj1();
 	var obj2 = collision.getObj2();
+
+	// make sure that in the collision object, the two colliding objects are not null
 	if (obj1 != null && obj2 != null) {
+		//if they are not nulls, check their attack cooldown timers
+
+		//if obj1 is ready to attack but obj2 isn't, obj2 will definitely getting hit
 		if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() != 0) {
 			if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
 				obj1.hit(obj2, step);
 				updateStatus(obj1, obj2);
 				updateHealth(obj1, obj2);
 			}
+			//vice versa
 		} else if (obj1.getAttackTimer() != 0 && obj2.getAttackTimer() == 0) {
 			if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
 				obj2.hit(obj1, step);
 				updateStatus(obj2, obj1);
 				updateHealth(obj2, obj1);
 			}
+
+			// if both characters have their attack ready, it will be a 50/50 on who gets hit
 		} else if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() == 0) {
 			var coinflip = Math.floor(Math.random() * 2);
 
@@ -233,29 +266,34 @@ function updateVelocities(collision, step) {
 	}
 }
 
+// function that handles all collisions
 function handleCollisions(step) {
+	// finds all collisions, set up unique collisions and charactersSeen as an collision between Char1 and Char2 is also a collision between Char2 and Char1
+	// we don't want that to register as two seperate collisions
 	var allCollisions = findAllCollisions(step);
 	var uniqueCollisions = [];
 	var charactersSeen = [];
 
+	// look at each individual collision
 	for (var i = 0; i < allCollisions.length; i++) {
 		let obj1 = allCollisions[i].getObj1();
 		let obj2 = allCollisions[i].getObj2();
 
-		if (charactersSeen.includes(obj1.getName()) || charactersSeen.includes(obj2.getName())) {
-			continue;
-		} else {
-			charactersSeen.push(obj1.getName());
-			charactersSeen.push(obj2.getName());
+		// if they are both not in the characterSeen array, push their unique ID and their collision in
+		if (!charactersSeen.includes(obj1.getID()) && !charactersSeen.includes(obj2.getID())) {
+			charactersSeen.push(obj1.getID());
+			charactersSeen.push(obj2.getID());
 			uniqueCollisions.push(allCollisions[i]);
 		}
 	}
 
+	// using all unique collisions, handle each unique collision using the function above
 	for (var collision of uniqueCollisions) {
 		updateVelocities(collision, step);
 	}
 }
 
+// finds all collisions by comparing each character to see if their hitboxes overlap and returns a array of all collisions
 function findAllCollisions(dt) {
 	var collisions = [];
 	for (var i = 0; i < characterList.length; ++i) {
@@ -269,6 +307,7 @@ function findAllCollisions(dt) {
 	return collisions;
 }
 
+// function that finds 1 collision to see if we need to run findAllCollisions func
 function findFirstCollision(dt) {
 	for (var i = 0; i < characterList.length; i++) {
 		for (var j = i + 1; j < characterList.length; j++) {
@@ -280,6 +319,8 @@ function findFirstCollision(dt) {
 	}
 }
 
+// checks to see if there is a collision between characters at index i and j by checking overlaps of hitboxes
+// if there is, create a Collision object and return it to findAllCollisions func
 function findCollision(i, j, dt) {
 	var obj1 = characterList[i];
 	var obj2 = characterList[j];
@@ -298,6 +339,7 @@ function findCollision(i, j, dt) {
 	return null;
 }
 
+// updates statuses between two characters hitting each other - one hits, one gets KBed
 function updateStatus(obj1, obj2) {
 	// obj1 is the hitter, obj2 is the hittee(is that a word?)
 	obj1.setStatus(states.ATTACKING);
@@ -307,12 +349,15 @@ function updateStatus(obj1, obj2) {
 	obj2.setSprite(states.KNOCKEDBACK);
 }
 
+// updates health after a collision
 function updateHealth(obj1, obj2) {
 	// obj1 is the hitter, obj2 is the hittee
 	var dmg = obj1.getDmg();
 	obj2.minusHealth(dmg);
 }
 
+// function used when generating characters at the beginning to make sure when they spawn they
+// do not overlap - keeps generating random coords until no overlaps are found
 function checkXYOverlap(xpos, ypos, characterList) {
 	for (const character of characterList) {
 		if (character.getPosition().x == xpos && character.getPosition().y == ypos) {
@@ -322,11 +367,13 @@ function checkXYOverlap(xpos, ypos, characterList) {
 	return false;
 }
 
+// gets a random 80x80 tile
 function getRandomTile(max_tiles) {
 	// tile size of 80x80 - 9 up, 12 across
 	return Math.floor(Math.random() * max_tiles);
 }
 
+// canvas is the screen where action happens
 var canvas = document.getElementById("gameScreen");
 canvas.height = 720;
 canvas.width = 960;
@@ -339,13 +386,20 @@ const GAME_HEIGHT = 720;
 
 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+// arrays to store info
 var names = [];
 var characterList = [];
+
+// store all char at beginning
 var beginning = [];
+
+// arrays to store names and actual objects of dead chars
 var deathListNames = [];
 var deathListObjects = [];
 
+// adds an event listener to the start button to begin simulation
 document.getElementById("start").addEventListener("click", () => {
+	// gets all names entered in textbox, one name per each line, gets rid of lines with nothing in them
 	names = $("#entries").val().split("\n");
 	for (var i = names.length - 1; i > -1; i--) {
 		if (names[i].trim() == "") {
@@ -353,6 +407,7 @@ document.getElementById("start").addEventListener("click", () => {
 		}
 	}
 
+	// max names of 24 so screen doesn't get too overcrowded
 	if (names.length > 24) {
 		names = [];
 	}
@@ -364,6 +419,8 @@ document.getElementById("start").addEventListener("click", () => {
 	characterList = [];
 
 	PLAYERS = names.length;
+
+	// generates character location
 
 	for (var i = 0; i < names.length; i++) {
 		var xp = getRandomTile(6) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
@@ -378,6 +435,8 @@ document.getElementById("start").addEventListener("click", () => {
 
 		let rand = Math.floor(Math.random() * 4);
 
+		// generates a random character out of 4
+		// TODO: add more characters
 		if (rand == 0) {
 			var character = new Henry(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, henryAssets, ctx);
 		} else if (rand == 1) {

@@ -60,13 +60,16 @@ export default class Character {
 	draw(ctx, dt) {
 		this.imageTimer += dt;
 		ctx.fillStyle = "#f00";
+		// draws name
 		ctx.fillText(this.name, this.position.x - this.nameLength.width / 2 + 40, this.position.y + this.height + 20);
 
+		// if they are not dead, draw health and attack cooldown timer
 		if (this.status != this.states.DEAD) {
 			this.drawHealth(ctx);
 			this.drawAttackCD(ctx);
 		}
 
+		// decides what to draw depending on state of character
 		switch (this.status) {
 			case this.states.RUNNING:
 				this.drawSpriteRunning(ctx);
@@ -84,200 +87,104 @@ export default class Character {
 				this.drawSpriteDead(ctx);
 		}
 
+		// handles sprite images, depending on time length per sprite frame
+		// if timer for frame is up, move to next frame in animation
 		if (this.imageTimer > this.imageTimerMax) {
 			this.col += 1;
 			this.imageTimer = 0;
 		}
 	}
 
+	// draw health
 	drawHealth(ctx) {
 		ctx.fillStyle = "lime";
 		ctx.font = "20px Arial";
-		ctx.fillRect(
-			this.position.x,
-			this.position.y + this.height + 35,
-			(this.health / this.maxHealth) * this.width,
-			10
-		);
+		ctx.fillRect(this.position.x, this.position.y + this.height + 35, (this.health / this.maxHealth) * this.width, 10);
 		ctx.fillText(this.health + " HP", this.position.x, this.position.y + this.height + 35);
 	}
 
+	// draw attack cooldown
 	drawAttackCD(ctx) {
 		ctx.fillStyle = "blue";
-		ctx.fillRect(
-			this.position.x,
-			this.position.y + this.height + 50,
-			(this.attackTimer / this.attackCD) * this.width,
-			10
-		);
+		ctx.fillRect(this.position.x, this.position.y + this.height + 50, (this.attackTimer / this.attackCD) * this.width, 10);
 	}
 
+	// draw running
 	drawSpriteRunning(ctx) {
+		// sprite is constant loop over sprite animation
 		var sprite = this.getSpriteConstantLoop("running");
+
+		// draw reverse depending on velocity on x axis
 		if (this.facing == this.directions.RIGHT) {
-			ctx.drawImage(
-				this.image,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				this.position.x,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height);
 		} else {
 			ctx.scale(-1, 1);
-			ctx.drawImage(
-				this.image,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				-this.position.x - this.width,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, -this.position.x - this.width, this.position.y, this.width, this.height);
 			ctx.scale(-1, 1);
 		}
 	}
 
+	// draw attacking
 	drawSpriteAttacking(ctx) {
+		// sprite is only one loop - stops on last frame of animation
 		var sprite = this.getSpriteOneLoop("attacking");
+
+		// draw reverse depending on velocity on x axis
 		if (this.facing == this.directions.RIGHT) {
-			ctx.drawImage(
-				this.image,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				this.position.x,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height);
 		} else {
 			ctx.scale(-1, 1);
-			ctx.drawImage(
-				this.image,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				-this.position.x - this.width,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, -this.position.x - this.width, this.position.y, this.width, this.height);
 			ctx.scale(-1, 1);
 		}
 	}
 
+	// draws if character is KBed
 	drawSpriteKBed(ctx) {
+		// sprite is only one loop - stops on last frame of animation
 		var sprite = this.getSpriteOneLoop("knockedback");
-		ctx.fillText(
-			"KBed",
-			this.position.x + this.width / 2 - ctx.measureText("KBed").width / 2,
-			this.position.y - 10
-		);
+		ctx.fillText("KBed", this.position.x + this.width / 2 - ctx.measureText("KBed").width / 2, this.position.y - 10);
+
+		// draw reverse depending on velocity on x axis
 		if (this.facing == this.directions.RIGHT) {
-			ctx.drawImage(
-				this.image,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				this.position.x,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height);
 		} else {
 			ctx.scale(-1, 1);
-			ctx.drawImage(
-				this.image,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				-this.position.x - this.width,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, -this.position.x - this.width, this.position.y, this.width, this.height);
 			ctx.scale(-1, 1);
 		}
 	}
 
+	// draws if character has won
 	drawSpriteWinning(ctx) {
+		// runs on constant loop, draws WINNER text
 		var sprite = this.getSpriteConstantLoop("winning");
 		ctx.fillStyle = "fuchsia";
-		ctx.fillText(
-			"WINNER",
-			this.position.x + this.width / 2 - ctx.measureText("WINNER").width / 2,
-			this.position.y - 10
-		);
+		ctx.fillText("WINNER", this.position.x + this.width / 2 - ctx.measureText("WINNER").width / 2, this.position.y - 10);
+
+		// draw reverse depending on velocity on x axis
 		if (this.facing == this.directions.RIGHT) {
-			ctx.drawImage(
-				this.imageWinning,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				this.position.x,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.imageWinning, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height);
 		} else {
 			ctx.scale(-1, 1);
-			ctx.drawImage(
-				this.imageWinning,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				-this.position.x - this.width,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.imageWinning, sprite.x, sprite.y, 80, 80, -this.position.x - this.width, this.position.y, this.width, this.height);
 			ctx.scale(-1, 1);
 		}
 	}
 
+	// draws character lying prone on ground
 	drawSpriteDead(ctx) {
 		var sprite = this.getSpriteOneLoop("knockedback");
 		if (this.facing == this.directions.RIGHT) {
-			ctx.drawImage(
-				this.image,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				this.position.x,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height);
 		} else {
 			ctx.scale(-1, 1);
-			ctx.drawImage(
-				this.image,
-				sprite.x,
-				sprite.y,
-				80,
-				80,
-				-this.position.x - this.width,
-				this.position.y,
-				this.width,
-				this.height
-			);
+			ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, -this.position.x - this.width, this.position.y, this.width, this.height);
 			ctx.scale(-1, 1);
 		}
 	}
 
+	// each sprite frame is 80x80 so turns col/row into x/y coords
 	spritePositionToImagePosition(col, row) {
 		return {
 			x: this.border + col * (this.spacing + this.width),
@@ -285,6 +192,7 @@ export default class Character {
 		};
 	}
 
+	// constant loop - if column gets to end of sprite sheet, reset back to beginning
 	getSpriteConstantLoop(condition) {
 		if (this.col == this.spriteDict[condition][1][0]) {
 			this.col = this.spriteDict[condition][0][0];
@@ -293,6 +201,7 @@ export default class Character {
 		return this.spritePositionToImagePosition(this.col, this.row);
 	}
 
+	// one loop - if column gets to end, stay on the last frame
 	getSpriteOneLoop(condition) {
 		if (this.col == this.spriteDict[condition][1][0]) {
 			this.col = this.spriteDict[condition][1][0] - 1;
@@ -301,6 +210,7 @@ export default class Character {
 		return this.spritePositionToImagePosition(this.col, this.row);
 	}
 
+	// set sprite frame - called when character changes state so animation can change
 	setSprite(condition) {
 		this.col = this.spriteDict[condition][0][0];
 		this.row = this.spriteDict[condition][0][1];
@@ -427,6 +337,7 @@ export default class Character {
 
 	// Movement related methods
 
+	// keeps character inside field
 	keepInside() {
 		if (this.position.x <= 1) {
 			this.position.x = 5;
@@ -449,16 +360,13 @@ export default class Character {
 		}
 	}
 
+	// finds closest enemy and returns it
 	getClosestEnemy(characterList) {
 		let closest;
 		let closestDist = 999999;
 		for (var i = 0; i < characterList.length; i++) {
 			var dist = this.getDist(characterList[i]);
-			if (
-				dist < closestDist &&
-				characterList[i].getID() != this.id &&
-				characterList[i].getStatus() != this.states.KNOCKBACKED
-			) {
+			if (dist < closestDist && characterList[i].getID() != this.id && characterList[i].getStatus() != this.states.KNOCKBACKED) {
 				closestDist = dist;
 				closest = characterList[i];
 			}
@@ -466,6 +374,7 @@ export default class Character {
 		return closest;
 	}
 
+	// sets goal to closest enemy - if the goal is null,stop moving as character has won
 	setGoal(character) {
 		if (character != null) {
 			this.goal = character.getPosition();
@@ -476,10 +385,13 @@ export default class Character {
 		}
 	}
 
+	//some get functions relating to movement
+
 	getGoal() {
 		return this.goal;
 	}
 
+	// gets dist from character
 	getDist(character) {
 		let pos = character.getPosition();
 		let part1 = Math.pow(this.position.x - pos.x, 2);
@@ -488,6 +400,7 @@ export default class Character {
 		return Math.pow(part1 + part2, 0.5);
 	}
 
+	// turns distance into a unit vector
 	getUnitVector() {
 		let part1 = this.goal.x - this.position.x;
 		let part2 = this.goal.y - this.position.y;
@@ -496,6 +409,7 @@ export default class Character {
 		return { x: part1 / magnitude, y: part2 / magnitude };
 	}
 
+	// update movement of character based on goal
 	updateVelocities() {
 		let d1 = this.goal.x - this.position.x;
 		let d2 = this.goal.y - this.position.y;
@@ -511,6 +425,7 @@ export default class Character {
 		}
 	}
 
+	// changes this.facing variable based on velocity of x
 	updateDirection() {
 		if (this.velocity.x < 0) {
 			this.facing = "left";
@@ -519,6 +434,10 @@ export default class Character {
 		}
 	}
 
+	// hits the other player passed in
+	// changes other velocity
+	// sets this character attack on cooldown
+	// TODO: maybe random damage instead of 10?
 	hit(other, dt) {
 		if (this.status == this.states.ATTACKING) {
 		} else {
