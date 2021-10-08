@@ -12,6 +12,9 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet" />
 	</head>
 
 	<body>
@@ -62,61 +65,40 @@
 
 				<div class="b-tabs">
 					<div class="tabs">
-						<button id="tab1" , class="tab active" onclick="openInfoTab('HowToPlay', 'tab1')">
-							How To Play
-						</button>
-						<button id="tab2" , class="tab" onclick="openInfoTab('GameMechanics', 'tab2')">
-							Game Mechanics
-						</button>
+						<button id="tab1" , class="tab active" onclick="openInfoTab('HowToPlay', 'tab1')">How To Play</button>
+						<button id="tab2" , class="tab" onclick="openInfoTab('GameMechanics', 'tab2')">Game Mechanics</button>
 					</div>
 
 					<section class="tab-content">
 						<div id="HowToPlay" class="info" style="display: block">
 							<h2 id="infotitle">How To Play</h2>
 							<p>If you are on phone, it is recommended that you use landscape mode.</p>
-							<p>
-								Enter names of participants/choices into the text box on the right with one name/item
-								per line.
-							</p>
+							<p>Enter names of participants/choices into the text box on the right with one name/item per line.</p>
 							<p>When all items are entered, press start to begin simulation.</p>
+							<p>The order of deaths will appear on the left with the first death as 1, second death as 2, and so on.</p>
 							<p>
-								The order of deaths will appear on the left with the first death as 1, second death as
-								2, and so on.
+								<b>If you are using this to select your teams: </b>Use the death list in any way to split the teams, be it odds and
+								evens, first X names, or however you like.
 							</p>
-							<p>
-								<b>If you are using this to select your teams: </b>Use the death list in any way to
-								split the teams, be it odds and evens, first X names, or however you like.
-							</p>
-							<p>
-								<b>If you are using this to choose one item from many: </b>Take the winner at the end.
-							</p>
-							<p>
-								Your data will from this run will be saved into a database where it can be viewed later.
-							</p>
+							<p><b>If you are using this to choose one item from many: </b>Take the winner at the end.</p>
+							<p>Your data will from this run will be saved into a database where it can be viewed later.</p>
 							<p>Credit to LF2.net for the sprites.</p>
 						</div>
 
 						<div id="GameMechanics" , class="info" , style="display: none">
 							<h2 id="infotitle">Game Mechanics</h2>
 							<p><b style="color: red">Red Text:</b> Indicates name of character.</p>
+							<p><b style="color: lime">Green Bar:</b> Indicates current HP. Set at 100 for all characters.</p>
+							<p><b style="color: rgb(30, 199, 255)">Blue Bar:</b> Indicates cooldown timer where character is unable to attack.</p>
 							<p>
-								<b style="color: lime">Green Bar:</b> Indicates current HP. Set at 100 for all
-								characters.
-							</p>
-							<p>
-								<b style="color: rgb(30, 199, 255)">Blue Bar:</b> Indicates cooldown timer where
-								character is unable to attack.
-							</p>
-							<p>
-								<b style="color: rgb(30, 199, 255)">Blue Text:</b> Indicates when a character is
-								knockedback and is unable to attack or be attacked.
+								<b style="color: rgb(30, 199, 255)">Blue Text:</b> Indicates when a character is knockedback and is unable to attack
+								or be attacked.
 							</p>
 							<p>
 								All characters start with 100 health and do 10 damage per hit. <br /><br />
-								Given that both characters have an attack available, there is 50/50 chance on who
-								manages to hit the other. If a character encounters another character with time
-								remaining on his attack cooldown, the character who has the attack available will always
-								be able to hit the other.
+								Given that both characters have an attack available, there is 50/50 chance on who manages to hit the other. If a
+								character encounters another character with time remaining on his attack cooldown, the character who has the attack
+								available will always be able to hit the other.
 							</p>
 						</div>
 					</section>
