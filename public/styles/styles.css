@@ -374,12 +374,12 @@ body {
 
 .title h2 {
 	position: relative;
-	font-size: 3rem;
+	font-size: 3vw;
 	color: white;
 }
 
 .title h1 {
-	font-size: 7rem;
+	font-size: 7vw;
 }
 
 .characters-body {
