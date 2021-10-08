@@ -5,7 +5,7 @@
 }
 
 body {
-	font-family: "Permanent Marker", cursive;
+	font-family: "Roboto";
 	padding: 0;
 	margin: 0;
 	background: #181a18;
@@ -13,6 +13,7 @@ body {
 }
 
 .navbar {
+	font-family: "Permanent Marker", cursive;
 	margin: 0;
 	padding: 0;
 	display: flex;
@@ -353,20 +354,21 @@ body {
 /* Characters Page */
 
 .title {
+	font-family: "Permanent Marker", cursive;
 	align-items: center;
 	text-align: center;
-	text-shadow: 2px 2px red;
 
+	animation: animate-title-text 6s linear infinite alternate;
 	--background-color: #181a18;
 }
 
 @keyframes animate-title-text {
 	0% {
-		width: 0;
+		text-shadow: 4px 4px red;
 	}
 
-	70% {
-		width: 100%;
+	100% {
+		text-shadow: 4px 4px green;
 	}
 }
 
