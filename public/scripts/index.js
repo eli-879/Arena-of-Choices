@@ -453,6 +453,7 @@ document.getElementById("start").addEventListener("click", () => {
 	deathListNames = [];
 	deathListObjects = [];
 	characterList = [];
+	damageSplats = [];
 
 	PLAYERS = names.length;
 
