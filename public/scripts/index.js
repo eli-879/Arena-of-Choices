@@ -4,6 +4,7 @@ import Henry from "./henry.js";
 import Julian from "./julian.js";
 import Justin from "./justin.js";
 import Collision from "./collision.js";
+import DamageSplat from "./damagesplat.js";
 
 const MIN_STEP = 10;
 const SPRITE_HEIGHT = 80;
@@ -65,11 +66,20 @@ var damageSplatBlue = new Image();
 damageSplatRed.src = "Assets/dmgsplat_red.png";
 damageSplatBlue.src = "Assets/dmgsplat_blue.png";
 
+var damageSplatAssets = [damageSplatRed, damageSplatBlue];
+
 var element = document.getElementById("deathlist");
+
+// clamping frames so they are not too long or short
+var typicalFrame = 16;
+var smallestFrame = 14;
+var longestFrame = 50;
 
 // gameloop that controls the game
 function gameLoop(timestamp) {
 	let deltaTime = timestamp - lastTime;
+	if (deltaTime > longestFrame) deltaTime = typicalFrame;
+
 	lastTime = timestamp;
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -141,6 +151,17 @@ function updateGame(dt, ctx) {
 			characterList[i].draw(ctx, step);
 		}
 
+		// draw damage splats
+		for (var i = 0; i < damageSplats.length; i++) {
+			damageSplats[i].draw(ctx);
+
+			damageSplats[i].updateTime(step);
+			if (damageSplats[i].getTime() > 2000) {
+				damageSplats.splice(i, 1);
+				i--;
+			}
+		}
+
 		// finds if there is only 1 character left alive and makes him celebrate
 		if (characterList.length == 1) {
 			if (characterList[0].getStatus() != states.WINNING) {
@@ -175,6 +196,8 @@ function updateObjects(step) {
 			deathListObjects.push(character);
 
 			characterList.splice(i, 1);
+
+			i--;
 
 			continue;
 		}
@@ -215,9 +238,13 @@ function updateObjects(step) {
 }
 
 // handles each collision - is passed a collision and decides who gets hit and who is the one hitting
+// returns dmg number and character that gets hit
 function updateVelocities(collision, step) {
 	var obj1 = collision.getObj1();
 	var obj2 = collision.getObj2();
+
+	var rand = Math.floor(Math.random() * 15);
+	console.log(rand);
 
 	// make sure that in the collision object, the two colliding objects are not null
 	if (obj1 != null && obj2 != null) {
@@ -228,14 +255,16 @@ function updateVelocities(collision, step) {
 			if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
 				obj1.hit(obj2, step);
 				updateStatus(obj1, obj2);
-				updateHealth(obj1, obj2);
+				updateHealth(obj1, obj2, rand);
+				return [obj2, rand];
 			}
 			//vice versa
 		} else if (obj1.getAttackTimer() != 0 && obj2.getAttackTimer() == 0) {
 			if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
 				obj2.hit(obj1, step);
 				updateStatus(obj2, obj1);
-				updateHealth(obj2, obj1);
+				updateHealth(obj2, obj1, rand);
+				return [obj1, rand];
 			}
 
 			// if both characters have their attack ready, it will be a 50/50 on who gets hit
@@ -246,13 +275,15 @@ function updateVelocities(collision, step) {
 				if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
 					obj1.hit(obj2, step);
 					updateStatus(obj1, obj2);
-					updateHealth(obj1, obj2);
+					updateHealth(obj1, obj2, rand);
+					return [obj2, rand];
 				}
 			} else {
 				if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
 					obj2.hit(obj1, step);
 					updateStatus(obj2, obj1);
-					updateHealth(obj2, obj1);
+					updateHealth(obj2, obj1, rand);
+					return [obj1, rand];
 				}
 			}
 		}
@@ -282,7 +313,10 @@ function handleCollisions(step) {
 
 	// using all unique collisions, handle each unique collision using the function above
 	for (var collision of uniqueCollisions) {
-		updateVelocities(collision, step);
+		var info = updateVelocities(collision, step);
+		if (info != undefined) {
+			createDamageSplats(info[0].getPosition(), info[1]);
+		}
 	}
 }
 
@@ -332,6 +366,12 @@ function findCollision(i, j, dt) {
 	return null;
 }
 
+// creates damage splat object and appends it to the damage splat list
+function createDamageSplats(location, number) {
+	var damageSplat = new DamageSplat(location, number, damageSplatAssets);
+	damageSplats.push(damageSplat);
+}
+
 // updates statuses between two characters hitting each other - one hits, one gets KBed
 function updateStatus(obj1, obj2) {
 	// obj1 is the hitter, obj2 is the hittee(is that a word?)
@@ -343,9 +383,9 @@ function updateStatus(obj1, obj2) {
 }
 
 // updates health after a collision
-function updateHealth(obj1, obj2) {
+function updateHealth(obj1, obj2, dmg) {
 	// obj1 is the hitter, obj2 is the hittee
-	var dmg = obj1.getDmg();
+	//var dmg = obj1.getDmg();
 	obj2.minusHealth(dmg);
 }
 
@@ -389,6 +429,9 @@ var beginning = [];
 // arrays to store names and actual objects of dead chars
 var deathListNames = [];
 var deathListObjects = [];
+
+// array for damage splats
+var damageSplats = [];
 
 // adds an event listener to the start button to begin simulation
 document.getElementById("start").addEventListener("click", () => {
