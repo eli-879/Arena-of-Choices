@@ -23,51 +23,47 @@ const states = {
 
 var woodyImage = new Image();
 woodyImage.src = "Assets/woody.png";
-woodyImage.crossOrigin = true;
 
 var woodyImageWinning = new Image();
 woodyImageWinning.src = "Assets/woody2.png";
-woodyImageWinning.crossOrigin = true;
 
 var woodyAssets = [woodyImage, woodyImageWinning];
 
 var firzenImage = new Image();
 firzenImage.src = "Assets/firzen.png";
-firzenImage.crossOrigin = true;
 
 var firzenImageWinning = new Image();
 firzenImageWinning.src = "Assets/firzen1.png";
-firzenImageWinning.crossOrigin = true;
 
 var firzenAssets = [firzenImage, firzenImageWinning];
 
 var henryImage = new Image();
 henryImage.src = "Assets/henry.png";
-henryImage.crossOrigin = true;
 
 var henryImageAttacking = new Image();
 henryImageAttacking.src = "Assets/henryAttacking.png";
-henryImageAttacking.crossOrigin = true;
 
 var henryImageWinning = new Image();
 henryImageWinning.src = "Assets/henry2.png";
-henryImageWinning.crossOrigin = true;
 
 var henryAssets = [henryImage, henryImageAttacking, henryImageWinning];
 
 var justinImage = new Image();
 justinImage.src = "Assets/justin0.png";
-justinImage.crossOrigin = true;
 
 var justinImageAttacking = new Image();
 justinImageAttacking.src = "Assets/justin1.png";
-justinImageAttacking.crossOrigin = true;
 
 var justinAssets = [justinImage, justinImageAttacking];
 
 var bg = new Image();
 bg.src = "Assets/bg1.png";
-bg.crossOrigin = true;
+
+var damageSplatRed = new Image();
+var damageSplatBlue = new Image();
+
+damageSplatRed.src = "Assets/dmgsplat_red.png";
+damageSplatBlue.src = "Assets/dmgsplat_blue.png";
 
 var element = document.getElementById("deathlist");
 
@@ -206,10 +202,7 @@ function updateObjects(step) {
 		}
 
 		// if a character has completed an attack animation, reset them back to running state.
-		if (
-			character.getAttackTimer() < character.getTimeForAttackAnimation() &&
-			character.getStatus() == states.ATTACKING
-		) {
+		if (character.getAttackTimer() < character.getTimeForAttackAnimation() && character.getStatus() == states.ATTACKING) {
 			character.setSprite(states.RUNNING);
 			character.setStatus(states.RUNNING);
 		}

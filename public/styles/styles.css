@@ -358,7 +358,7 @@ body {
 	align-items: center;
 	text-align: center;
 
-	animation: animate-title-text 6s linear infinite alternate;
+	animation: animate-title-text 1s linear infinite alternate;
 	--background-color: #181a18;
 }
 
@@ -368,7 +368,7 @@ body {
 	}
 
 	100% {
-		text-shadow: 4px 4px green;
+		text-shadow: 4px 4px lime;
 	}
 }
 
@@ -376,9 +376,11 @@ body {
 	position: relative;
 	font-size: 3vw;
 	color: white;
+	margin: 10px;
 }
 
 .title h1 {
+	margin: 0;
 	font-size: 7vw;
 }
 
