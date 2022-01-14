@@ -474,14 +474,16 @@ document.getElementById("start").addEventListener("click", () => {
 
 		// generates a random character out of 4
 		// TODO: add more characters
+
+		let character;
 		if (rand == 0) {
-			let character = new Henry(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, henryAssets, ctx);
+			character = new Henry(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, henryAssets, ctx);
 		} else if (rand == 1) {
-			let character = new Firzen(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, firzenAssets, ctx);
+			character = new Firzen(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, firzenAssets, ctx);
 		} else if (rand == 2) {
-			let character = new Woody(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, woodyAssets, ctx);
+			character = new Woody(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, woodyAssets, ctx);
 		} else if (rand == 3) {
-			let character = new Justin(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, justinAssets, ctx);
+			character = new Justin(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, justinAssets, ctx);
 		}
 
 		characterList.push(character);
