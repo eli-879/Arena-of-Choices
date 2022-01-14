@@ -9,7 +9,7 @@ import DamageSplat from "./damagesplat.js";
 const MIN_STEP = 10;
 const SPRITE_HEIGHT = 80;
 
-var PLAYERS = 0;
+let PLAYERS = 0;
 
 // states of each character
 const states = {
@@ -22,58 +22,58 @@ const states = {
 
 // load all assets first
 
-var woodyImage = new Image();
+let woodyImage = new Image();
 woodyImage.src = "Assets/woody.png";
 
-var woodyImageWinning = new Image();
+let woodyImageWinning = new Image();
 woodyImageWinning.src = "Assets/woody2.png";
 
-var woodyAssets = [woodyImage, woodyImageWinning];
+let woodyAssets = [woodyImage, woodyImageWinning];
 
-var firzenImage = new Image();
+let firzenImage = new Image();
 firzenImage.src = "Assets/firzen.png";
 
-var firzenImageWinning = new Image();
+let firzenImageWinning = new Image();
 firzenImageWinning.src = "Assets/firzen1.png";
 
-var firzenAssets = [firzenImage, firzenImageWinning];
+let firzenAssets = [firzenImage, firzenImageWinning];
 
-var henryImage = new Image();
+let henryImage = new Image();
 henryImage.src = "Assets/henry.png";
 
-var henryImageAttacking = new Image();
+let henryImageAttacking = new Image();
 henryImageAttacking.src = "Assets/henryAttacking.png";
 
-var henryImageWinning = new Image();
+let henryImageWinning = new Image();
 henryImageWinning.src = "Assets/henry2.png";
 
-var henryAssets = [henryImage, henryImageAttacking, henryImageWinning];
+let henryAssets = [henryImage, henryImageAttacking, henryImageWinning];
 
-var justinImage = new Image();
+let justinImage = new Image();
 justinImage.src = "Assets/justin0.png";
 
-var justinImageAttacking = new Image();
+let justinImageAttacking = new Image();
 justinImageAttacking.src = "Assets/justin1.png";
 
-var justinAssets = [justinImage, justinImageAttacking];
+let justinAssets = [justinImage, justinImageAttacking];
 
-var bg = new Image();
+let bg = new Image();
 bg.src = "Assets/bg1.png";
 
-var damageSplatRed = new Image();
-var damageSplatBlue = new Image();
+let damageSplatRed = new Image();
+let damageSplatBlue = new Image();
 
 damageSplatRed.src = "Assets/dmgsplat_red.png";
 damageSplatBlue.src = "Assets/dmgsplat_blue.png";
 
-var damageSplatAssets = [damageSplatRed, damageSplatBlue];
+let damageSplatAssets = [damageSplatRed, damageSplatBlue];
 
-var element = document.getElementById("deathlist");
+let element = document.getElementById("deathlist");
 
 // clamping frames so they are not too long or short
-var typicalFrame = 16;
-var smallestFrame = 14;
-var longestFrame = 50;
+let typicalFrame = 16;
+let smallestFrame = 14;
+let longestFrame = 50;
 
 // gameloop that controls the game
 function gameLoop(timestamp) {
@@ -89,7 +89,7 @@ function gameLoop(timestamp) {
 
 	// updates list of dead characters based on characters that are in the deathListNames array
 	element.innerHTML = "";
-	for (var i = 0; i < deathListNames.length; i++) {
+	for (let i = 0; i < deathListNames.length; i++) {
 		element.innerHTML = element.innerHTML + (i + 1) + ". " + deathListNames[i] + "<br />";
 	}
 
@@ -124,7 +124,7 @@ function updateGame(dt, ctx) {
 	let step = dt;
 	do {
 		// first finds if there is at least one collision between characters
-		var hit = findFirstCollision(step);
+		let hit = findFirstCollision(step);
 
 		// if there is at least one collision, find all collisions by turning them into collision objects, handle them, and move each character
 		if (hit != null) {
@@ -142,17 +142,17 @@ function updateGame(dt, ctx) {
 		ctx.drawImage(bg, 0, 0);
 
 		// draw dead characters as lying prone on the ground
-		for (var i = 0; i < deathListObjects.length; i++) {
+		for (let i = 0; i < deathListObjects.length; i++) {
 			deathListObjects[i].draw(ctx, step);
 		}
 
 		//draw alive characters either as KBed or running or winning
-		for (var i = 0; i < characterList.length; i++) {
+		for (let i = 0; i < characterList.length; i++) {
 			characterList[i].draw(ctx, step);
 		}
 
 		// draw damage splats
-		for (var i = 0; i < damageSplats.length; i++) {
+		for (let i = 0; i < damageSplats.length; i++) {
 			damageSplats[i].draw(ctx);
 
 			damageSplats[i].updateTime(step);
@@ -177,10 +177,10 @@ function updateGame(dt, ctx) {
 
 // function that handles moving the characters around and recognising when they are dead
 function updateObjects(step) {
-	for (var i = 0; i < characterList.length; i++) {
-		var character = characterList[i];
-		var pos = character.getPosition();
-		var v = character.getVelocity();
+	for (let i = 0; i < characterList.length; i++) {
+		let character = characterList[i];
+		let pos = character.getPosition();
+		let v = character.getVelocity();
 
 		// keeps characters within a boundary
 		character.keepInside();
@@ -240,10 +240,10 @@ function updateObjects(step) {
 // handles each collision - is passed a collision and decides who gets hit and who is the one hitting
 // returns dmg number and character that gets hit
 function updateVelocities(collision, step) {
-	var obj1 = collision.getObj1();
-	var obj2 = collision.getObj2();
+	let obj1 = collision.getObj1();
+	let obj2 = collision.getObj2();
 
-	var rand = Math.floor(Math.random() * 15);
+	let rand = Math.floor(Math.random() * 15);
 	console.log(rand);
 
 	// make sure that in the collision object, the two colliding objects are not null
@@ -269,7 +269,7 @@ function updateVelocities(collision, step) {
 
 			// if both characters have their attack ready, it will be a 50/50 on who gets hit
 		} else if (obj1.getAttackTimer() == 0 && obj2.getAttackTimer() == 0) {
-			var coinflip = Math.floor(Math.random() * 2);
+			let coinflip = Math.floor(Math.random() * 2);
 
 			if (coinflip == 0) {
 				if (obj1.getStatus() != states.KNOCKEDBACK && obj2.getStatus() != states.KNOCKEDBACK) {
@@ -294,12 +294,12 @@ function updateVelocities(collision, step) {
 function handleCollisions(step) {
 	// finds all collisions, set up unique collisions and charactersSeen as an collision between Char1 and Char2 is also a collision between Char2 and Char1
 	// we don't want that to register as two seperate collisions
-	var allCollisions = findAllCollisions(step);
-	var uniqueCollisions = [];
-	var charactersSeen = [];
+	let allCollisions = findAllCollisions(step);
+	let uniqueCollisions = [];
+	let charactersSeen = [];
 
 	// look at each individual collision
-	for (var i = 0; i < allCollisions.length; i++) {
+	for (let i = 0; i < allCollisions.length; i++) {
 		let obj1 = allCollisions[i].getObj1();
 		let obj2 = allCollisions[i].getObj2();
 
@@ -312,8 +312,8 @@ function handleCollisions(step) {
 	}
 
 	// using all unique collisions, handle each unique collision using the function above
-	for (var collision of uniqueCollisions) {
-		var info = updateVelocities(collision, step);
+	for (let collision of uniqueCollisions) {
+		let info = updateVelocities(collision, step);
 		if (info != undefined) {
 			createDamageSplats(info[0].getPosition(), info[1]);
 		}
@@ -322,10 +322,10 @@ function handleCollisions(step) {
 
 // finds all collisions by comparing each character to see if their hitboxes overlap and returns a array of all collisions
 function findAllCollisions(dt) {
-	var collisions = [];
-	for (var i = 0; i < characterList.length; ++i) {
-		for (var j = i + 1; j < characterList.length; ++j) {
-			var hit = findCollision(i, j, dt);
+	let collisions = [];
+	for (let i = 0; i < characterList.length; ++i) {
+		for (let j = i + 1; j < characterList.length; ++j) {
+			let hit = findCollision(i, j, dt);
 			if (hit != null) {
 				collisions.push(hit);
 			}
@@ -336,9 +336,9 @@ function findAllCollisions(dt) {
 
 // function that finds 1 collision to see if we need to run findAllCollisions func
 function findFirstCollision(dt) {
-	for (var i = 0; i < characterList.length; i++) {
-		for (var j = i + 1; j < characterList.length; j++) {
-			var hit = findCollision(i, j, dt);
+	for (let i = 0; i < characterList.length; i++) {
+		for (let j = i + 1; j < characterList.length; j++) {
+			let hit = findCollision(i, j, dt);
 			if (hit != null) {
 				return hit;
 			}
@@ -349,17 +349,17 @@ function findFirstCollision(dt) {
 // checks to see if there is a collision between characters at index i and j by checking overlaps of hitboxes
 // if there is, create a Collision object and return it to findAllCollisions func
 function findCollision(i, j, dt) {
-	var obj1 = characterList[i];
-	var obj2 = characterList[j];
-	var obj1Pos = obj1.getPosition();
-	var obj2Pos = obj2.getPosition();
+	let obj1 = characterList[i];
+	let obj2 = characterList[j];
+	let obj1Pos = obj1.getPosition();
+	let obj2Pos = obj2.getPosition();
 	if (
 		obj1Pos.x <= obj2Pos.x + obj2.getWidth() &&
 		obj1Pos.x + obj1.getWidth() >= obj2Pos.x &&
 		obj1Pos.y + obj1.getHeight() >= obj2Pos.y &&
 		obj1Pos.y <= obj2Pos.y + obj2.getHeight()
 	) {
-		var dir = 0;
+		let dir = 0;
 		let col = new Collision(obj1, obj2, dir, dt);
 		return col;
 	}
@@ -368,7 +368,7 @@ function findCollision(i, j, dt) {
 
 // creates damage splat object and appends it to the damage splat list
 function createDamageSplats(location, number) {
-	var damageSplat = new DamageSplat(location, number, damageSplatAssets);
+	let damageSplat = new DamageSplat(location, number, damageSplatAssets);
 	damageSplats.push(damageSplat);
 }
 
@@ -385,7 +385,7 @@ function updateStatus(obj1, obj2) {
 // updates health after a collision
 function updateHealth(obj1, obj2, dmg) {
 	// obj1 is the hitter, obj2 is the hittee
-	//var dmg = obj1.getDmg();
+	//let dmg = obj1.getDmg();
 	obj2.minusHealth(dmg);
 }
 
@@ -407,11 +407,11 @@ function getRandomTile(max_tiles) {
 }
 
 // canvas is the screen where action happens
-var canvas = document.getElementById("gameScreen");
+let canvas = document.getElementById("gameScreen");
 canvas.height = 720;
 canvas.width = 960;
 
-var ctx = canvas.getContext("2d");
+let ctx = canvas.getContext("2d");
 ctx.font = "16px Arial";
 
 const GAME_WIDTH = 960;
@@ -420,24 +420,24 @@ const GAME_HEIGHT = 720;
 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 // arrays to store info
-var names = [];
-var characterList = [];
+let names = [];
+let characterList = [];
 
 // store all char at beginning
-var beginning = [];
+let beginning = [];
 
 // arrays to store names and actual objects of dead chars
-var deathListNames = [];
-var deathListObjects = [];
+let deathListNames = [];
+let deathListObjects = [];
 
 // array for damage splats
-var damageSplats = [];
+let damageSplats = [];
 
 // adds an event listener to the start button to begin simulation
 document.getElementById("start").addEventListener("click", () => {
 	// gets all names entered in textbox, one name per each line, gets rid of lines with nothing in them
 	names = $("#entries").val().split("\n");
-	for (var i = names.length - 1; i > -1; i--) {
+	for (let i = names.length - 1; i > -1; i--) {
 		if (names[i].trim() == "") {
 			names.splice(i, 1);
 		}
@@ -459,9 +459,9 @@ document.getElementById("start").addEventListener("click", () => {
 
 	// generates character location
 
-	for (var i = 0; i < names.length; i++) {
-		var xp = getRandomTile(6) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
-		var yp = getRandomTile(3) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+	for (let i = 0; i < names.length; i++) {
+		let xp = getRandomTile(6) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
+		let yp = getRandomTile(3) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
 
 		while (checkXYOverlap(xp, yp, characterList)) {
 			xp = getRandomTile(6) * SPRITE_HEIGHT * 2 + SPRITE_HEIGHT;
@@ -475,13 +475,13 @@ document.getElementById("start").addEventListener("click", () => {
 		// generates a random character out of 4
 		// TODO: add more characters
 		if (rand == 0) {
-			var character = new Henry(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, henryAssets, ctx);
+			let character = new Henry(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, henryAssets, ctx);
 		} else if (rand == 1) {
-			var character = new Firzen(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, firzenAssets, ctx);
+			let character = new Firzen(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, firzenAssets, ctx);
 		} else if (rand == 2) {
-			var character = new Woody(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, woodyAssets, ctx);
+			let character = new Woody(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, woodyAssets, ctx);
 		} else if (rand == 3) {
-			var character = new Justin(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, justinAssets, ctx);
+			let character = new Justin(GAME_WIDTH, GAME_HEIGHT, names[i], pos, i, justinAssets, ctx);
 		}
 
 		characterList.push(character);

@@ -39,7 +39,7 @@ export default class Justin extends Character {
 
 	// custom drawing methods as they use different sprite sheets
 	drawSpriteAttacking(ctx) {
-		var sprite = this.getSpriteOneLoop("attacking");
+		let sprite = this.getSpriteOneLoop("attacking");
 		if (this.facing == this.directions.RIGHT) {
 			ctx.drawImage(this.imageAttacking, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height);
 		} else {
@@ -50,7 +50,7 @@ export default class Justin extends Character {
 	}
 
 	drawSpriteWinning(ctx) {
-		var sprite = this.getSpriteConstantLoop("winning");
+		let sprite = this.getSpriteConstantLoop("winning");
 		ctx.fillStyle = "fuchsia";
 		ctx.fillText("WINNER", this.position.x + this.width / 2 - ctx.measureText("WINNER").width / 2, this.position.y - 10);
 		if (this.facing == this.directions.RIGHT) {

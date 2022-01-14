@@ -112,7 +112,7 @@ export default class Character {
 	// draw running
 	drawSpriteRunning(ctx) {
 		// sprite is constant loop over sprite animation
-		var sprite = this.getSpriteConstantLoop("running");
+		let sprite = this.getSpriteConstantLoop("running");
 
 		// draw reverse depending on velocity on x axis
 		if (this.facing == this.directions.RIGHT) {
@@ -127,7 +127,7 @@ export default class Character {
 	// draw attacking
 	drawSpriteAttacking(ctx) {
 		// sprite is only one loop - stops on last frame of animation
-		var sprite = this.getSpriteOneLoop("attacking");
+		let sprite = this.getSpriteOneLoop("attacking");
 
 		// draw reverse depending on velocity on x axis
 		if (this.facing == this.directions.RIGHT) {
@@ -142,7 +142,7 @@ export default class Character {
 	// draws if character is KBed
 	drawSpriteKBed(ctx) {
 		// sprite is only one loop - stops on last frame of animation
-		var sprite = this.getSpriteOneLoop("knockedback");
+		let sprite = this.getSpriteOneLoop("knockedback");
 		ctx.fillText("KBed", this.position.x + this.width / 2 - ctx.measureText("KBed").width / 2, this.position.y - 10);
 
 		// draw reverse depending on velocity on x axis
@@ -158,7 +158,7 @@ export default class Character {
 	// draws if character has won
 	drawSpriteWinning(ctx) {
 		// runs on constant loop, draws WINNER text
-		var sprite = this.getSpriteConstantLoop("winning");
+		let sprite = this.getSpriteConstantLoop("winning");
 		ctx.fillStyle = "fuchsia";
 		ctx.fillText("WINNER", this.position.x + this.width / 2 - ctx.measureText("WINNER").width / 2, this.position.y - 10);
 
@@ -174,7 +174,7 @@ export default class Character {
 
 	// draws character lying prone on ground
 	drawSpriteDead(ctx) {
-		var sprite = this.getSpriteOneLoop("knockedback");
+		let sprite = this.getSpriteOneLoop("knockedback");
 		if (this.facing == this.directions.RIGHT) {
 			ctx.drawImage(this.image, sprite.x, sprite.y, 80, 80, this.position.x, this.position.y, this.width, this.height);
 		} else {
@@ -364,8 +364,8 @@ export default class Character {
 	getClosestEnemy(characterList) {
 		let closest;
 		let closestDist = 999999;
-		for (var i = 0; i < characterList.length; i++) {
-			var dist = this.getDist(characterList[i]);
+		for (let i = 0; i < characterList.length; i++) {
+			let dist = this.getDist(characterList[i]);
 			if (dist < closestDist && characterList[i].getID() != this.id && characterList[i].getStatus() != this.states.KNOCKBACKED) {
 				closestDist = dist;
 				closest = characterList[i];
@@ -425,7 +425,7 @@ export default class Character {
 		}
 	}
 
-	// changes this.facing variable based on velocity of x
+	// changes this.facing letiable based on velocity of x
 	updateDirection() {
 		if (this.velocity.x < 0) {
 			this.facing = "left";
@@ -443,7 +443,7 @@ export default class Character {
 		} else {
 			other.setTimeKnockedback(dt);
 
-			var otherV = other.getVelocity();
+			let otherV = other.getVelocity();
 
 			other.addPosition(Math.sign(otherV.x) * -10, Math.sign(otherV.y) * -10);
 

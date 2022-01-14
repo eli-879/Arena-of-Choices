@@ -15,15 +15,15 @@ window.addEventListener("resize", () => {
 // Controlling game info and how to tabs
 
 function openInfoTab(tabname, tabid) {
-	var infoContainers = document.getElementsByClassName("info");
-	for (var i = 0; i < infoContainers.length; i++) {
+	let infoContainers = document.getElementsByClassName("info");
+	for (let i = 0; i < infoContainers.length; i++) {
 		infoContainers[i].style.display = "none";
 	}
 
-	var tabs = document.getElementsByClassName("tab");
-	var info = document.getElementsByClassName("info");
+	let tabs = document.getElementsByClassName("tab");
+	let info = document.getElementsByClassName("info");
 
-	for (var i = 0; i < tabs.length; i++) {
+	for (let i = 0; i < tabs.length; i++) {
 		tabs[i].classList.remove("active");
 	}
 	document.getElementById(tabname).style.display = "block";
