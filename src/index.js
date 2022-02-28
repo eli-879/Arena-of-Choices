@@ -562,6 +562,7 @@ UIManager.initArrow();
 UIManager.initResizeableNav();
 UIManager.initInfoTabs();
 //UIManager.initResizablePageLayout();
+//d
 
 const game = new Game();
 game.initAssets();
