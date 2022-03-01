@@ -231,7 +231,7 @@ class Game {
 		this.updateGame(deltaTime);
 
 		// Finds if game has ended and sends data to server as a JSON
-		if (this.deathListNames.length === this.players - 1) {
+		if (this.deathListObjects.length === this.players - 1) {
 			this.deathListNames.push(this.characterList[0].getName());
 
 			const data = { deathListNames: this.deathListNames, beginning: this.beginning };
@@ -561,8 +561,7 @@ const UIManager = new UI();
 UIManager.initArrow();
 UIManager.initResizeableNav();
 UIManager.initInfoTabs();
-//UIManager.initResizablePageLayout();
-//d
+UIManager.initResizablePageLayout();
 
 const game = new Game();
 game.initAssets();

@@ -31,25 +31,23 @@ export default class UI {
 				//const boundhandleHomeRestructure = this.handleHomeRestructureAll.bind(this);
 				this.handleHomeRestructureSmall();
 			}
+			if (window.matchMedia("(min-width: 601px)").matches) {
+				this.handleHomeRestructureLarge();
+			}
 		});
 	}
 
 	handleHomeRestructureSmall() {
-		const column6 = document.getElementsByClassName("column is-6")[0];
-		column6.classList.toggle("active");
-
-		const container = document.createElement("div");
-		container.classList.add("resized-container");
 		const gameScreen = document.getElementById("gameScreen");
+		const gameScreenContainer = document.querySelector(".gamescreen-container");
 
-		const deathlist = document.getElementsByClassName("column is-3")[0];
-		console.log(deathlist);
-		container.appendChild(deathlist);
+		gameScreenContainer.appendChild(gameScreen);
+	}
 
-		const input = document.getElementsByClassName("column is-3")[0];
-		container.appendChild(input);
-
-		gameScreen.after(container);
+	handleHomeRestructureLarge() {
+		const gameScreen = document.getElementById("gameScreen");
+		const column6 = document.getElementsByClassName("column is-6")[0];
+		column6.insertBefore(gameScreen, column6.firstChild);
 	}
 
 	initInfoTabs() {
